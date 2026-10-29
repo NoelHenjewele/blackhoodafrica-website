@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, ImageIcon } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { site } from '../config/site'
 import ForBrands from '../components/home/ForBrands'
 import TalentPreview from '../components/home/TalentPreview'
@@ -48,16 +48,14 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Hero photo: replace with Eladia Edwin's photo when it arrives */}
           <figure className="relative">
             <div className="relative aspect-[4/5] overflow-hidden rounded-sm border border-white/10 bg-ink-soft">
-              <div className="absolute inset-0 grid place-items-center p-8 text-center">
-                <div>
-                  <ImageIcon className="mx-auto text-stone/60" size={40} strokeWidth={1.2} />
-                  <p className="mt-4 text-xs uppercase tracking-[0.25em] text-stone">Photo coming</p>
-                  <p className="mt-1 text-sm text-stone/80">Eladia Edwin hero portrait</p>
-                </div>
-              </div>
+              <img
+                src="/talent/eladia-edwin/crowned-portrait.jpg"
+                alt="Eladia Edwin wearing the Miss Kinondoni crown"
+                className="absolute inset-0 h-full w-full object-cover object-[40%_center]"
+              />
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/70 to-transparent" />
             </div>
             <figcaption className="absolute -bottom-6 left-6 right-6 border border-gold/40 bg-ink/95 px-5 py-4 backdrop-blur sm:left-auto sm:right-[-1.5rem] sm:w-72">
               <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold">Trained at Blackhood</p>

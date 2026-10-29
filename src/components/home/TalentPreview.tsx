@@ -15,7 +15,12 @@ type Talent = {
 
 // Real roster goes here. Only confirmed talent is named; the rest are placeholders.
 const featured: Talent[] = [
-  { name: 'Eladia Edwin', boards: ['Women'], note: 'Miss Kinondoni 2027–2028' },
+  {
+    name: 'Eladia Edwin',
+    boards: ['Women'],
+    note: 'Miss Kinondoni 2027–2028',
+    photo: '/talent/eladia-edwin/runway-stage.jpg',
+  },
 ]
 
 const PLACEHOLDER_SLOTS = 7
@@ -71,7 +76,7 @@ export default function TalentPreview() {
                     src={t.photo}
                     alt={t.name}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover object-[30%_top] transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
                   <div className="grid h-full place-items-center border border-white/10 text-center">
