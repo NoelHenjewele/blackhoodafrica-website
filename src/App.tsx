@@ -12,6 +12,7 @@ import AcademyPage from './pages/AcademyPage'
 import CastingsPage from './pages/CastingsPage'
 import TrustPage from './pages/TrustPage'
 import AboutPage from './pages/AboutPage'
+import StoriesPage from './pages/StoriesPage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/castings" element={<CastingsPage />} />
           <Route path="/trust" element={<TrustPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/stories" element={<StoriesPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

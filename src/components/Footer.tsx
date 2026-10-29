@@ -23,6 +23,7 @@ const columns = [
     title: { en: 'Blackhood', sw: 'Blackhood' },
     links: [
       { to: '/about', label: { en: 'About us', sw: 'Kuhusu sisi' } },
+      { to: '/stories', label: { en: 'Success stories', sw: 'Hadithi za mafanikio' } },
       { to: '/trust', label: { en: 'Our promise', sw: 'Ahadi yetu' } },
     ],
   },

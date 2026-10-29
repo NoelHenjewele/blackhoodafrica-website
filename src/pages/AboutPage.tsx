@@ -78,6 +78,13 @@ export default function AboutPage() {
               })}
             </p>
             <p className="mt-4 text-ivory/70">{t(site.promise)}</p>
+            <Link
+              to="/stories"
+              className="group mt-8 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-gold hover:text-ivory"
+            >
+              {t({ en: 'More success stories', sw: 'Hadithi zaidi za mafanikio' })}
+              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
       </section>
