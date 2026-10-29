@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Clients from './pages/Clients'
 import Apply from './pages/Apply'
 import TalentPage from './pages/TalentPage'
+import AcademyPage from './pages/AcademyPage'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/clients" element={<Clients />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/talent" element={<TalentPage />} />
+          <Route path="/academy" element={<AcademyPage />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </main>

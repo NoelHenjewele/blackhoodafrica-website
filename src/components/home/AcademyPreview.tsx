@@ -1,30 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Check } from 'lucide-react'
 import { site } from '../../config/site'
-
-// Prices and dates still to confirm with the team. Leave `price` empty to show "Price to be announced".
-const programmes = [
-  {
-    name: 'Open masterclass',
-    level: 'Start here',
-    price: 'Free',
-    text: 'A taster session in walk, posing and confidence. Meet the coaches and see if modeling is for you.',
-  },
-  {
-    name: 'Weekend bootcamp',
-    level: 'Foundations',
-    price: '',
-    text: 'An intensive in runway, posing, grooming and camera basics, ending with your first test shoot.',
-  },
-  {
-    name: 'Full academy programme',
-    level: 'Career track',
-    price: '',
-    text: 'The complete path to professional work: portfolio, castings, contracts and a direct route onto our boards.',
-  },
-]
-
-const curriculum = ['Runway walk', 'Posing for camera', 'Grooming & style', 'Portfolio shoot', 'Castings & auditions', 'Contracts & safety']
+import { curriculum, programmes } from '../../data/academy'
 
 const path = [
   { n: '01', label: 'Train' },
@@ -82,9 +59,9 @@ export default function AcademyPreview() {
         <div className="mt-14 flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
           <ul className="flex flex-wrap gap-x-6 gap-y-3">
             {curriculum.map((c) => (
-              <li key={c} className="flex items-center gap-2 text-sm">
+              <li key={c.title} className="flex items-center gap-2 text-sm">
                 <Check size={16} className="text-gold-deep" />
-                {c}
+                {c.title}
               </li>
             ))}
           </ul>
