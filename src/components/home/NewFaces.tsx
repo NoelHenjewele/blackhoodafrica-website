@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Sparkles } from 'lucide-react'
+import { useLang } from '../../i18n'
 
 type NewFace = {
   name: string
@@ -13,6 +14,7 @@ const newFaces: NewFace[] = []
 const SLOTS = 5
 
 export default function NewFaces() {
+  const { t } = useLang()
   const placeholders = Math.max(0, SLOTS - newFaces.length)
 
   return (
@@ -23,15 +25,17 @@ export default function NewFaces() {
         <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
             <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-gold">
-              <Sparkles size={14} /> New faces
+              <Sparkles size={14} /> {t({ en: 'New faces', sw: 'Sura mpya' })}
             </p>
             <h2 className="mt-4 font-display text-4xl font-medium leading-tight sm:text-6xl">
-              Fresh from the academy.
+              {t({ en: 'Fresh from the academy.', sw: 'Wapya kutoka chuoni.' })}
             </h2>
           </div>
           <p className="max-w-lg text-ivory/70 lg:justify-self-end">
-            Our newest signings and recent graduates: trained, tested and ready for their first bookings. Brands get
-            first look at the faces everyone will know next.
+            {t({
+              en: 'Our newest signings and recent graduates: trained, tested and ready for their first bookings. Brands get first look at the faces everyone will know next.',
+              sw: 'Waliojiunga karibuni na wahitimu wetu wapya: wamefunzwa, wamejaribiwa na wako tayari kwa kazi zao za kwanza. Makampuni yanapata nafasi ya kwanza kuona sura zitakazojulikana kesho.',
+            })}
           </p>
         </div>
 
@@ -54,8 +58,10 @@ export default function NewFaces() {
                 }`}
               >
                 <div>
-                  <p className="font-display text-3xl italic text-gold/70">New face</p>
-                  <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-stone/70">Photo coming</p>
+                  <p className="font-display text-3xl italic text-gold/70">{t({ en: 'New face', sw: 'Sura mpya' })}</p>
+                  <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-stone/70">
+                    {t({ en: 'Photo coming', sw: 'Picha inakuja' })}
+                  </p>
                 </div>
               </div>
             </div>
@@ -64,21 +70,22 @@ export default function NewFaces() {
 
         <div className="mt-16 flex flex-col items-start justify-between gap-6 border-t border-white/10 pt-10 sm:flex-row sm:items-center">
           <p className="font-display text-2xl sm:text-3xl">
-            Think you could be next? <span className="italic text-gold">Applying is free.</span>
+            {t({ en: 'Think you could be next?', sw: 'Unadhani wewe ni anayefuata?' })}{' '}
+            <span className="italic text-gold">{t({ en: 'Applying is free.', sw: 'Kuomba ni bure.' })}</span>
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
               to="/apply"
               className="group inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ivory"
             >
-              Apply to join
+              {t({ en: 'Apply to join', sw: 'Omba kujiunga' })}
               <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               to="/talent?board=new-faces"
               className="inline-flex items-center justify-center rounded-full border border-ivory/30 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] hover:border-gold hover:text-gold"
             >
-              See all new faces
+              {t({ en: 'See all new faces', sw: 'Tazama sura mpya zote' })}
             </Link>
           </div>
         </div>

@@ -1,6 +1,14 @@
 export const boards = ['Women', 'Men', 'New Faces', 'Curve', 'Creators'] as const
 export type Board = (typeof boards)[number]
 
+export const boardLabels: Record<Board, { en: string; sw: string }> = {
+  Women: { en: 'Women', sw: 'Wanawake' },
+  Men: { en: 'Men', sw: 'Wanaume' },
+  'New Faces': { en: 'New Faces', sw: 'Sura Mpya' },
+  Curve: { en: 'Curve', sw: 'Curve' },
+  Creators: { en: 'Creators', sw: 'Watengeneza Maudhui' },
+}
+
 export type Talent = {
   slug: string
   name: string

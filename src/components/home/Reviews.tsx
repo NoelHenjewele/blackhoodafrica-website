@@ -1,15 +1,19 @@
 import { Quote } from 'lucide-react'
 import { reviews } from '../../data/reviews'
+import { useLang } from '../../i18n'
 
 export default function Reviews() {
+  const { t } = useLang()
   if (reviews.length === 0) return null
 
   return (
     <section className="border-t border-white/10 bg-ink-soft">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">In their words</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">
+          {t({ en: 'In their words', sw: 'Kwa maneno yao' })}
+        </p>
         <h2 className="mt-4 max-w-2xl font-display text-4xl font-medium leading-tight sm:text-5xl">
-          What models, parents and brands say.
+          {t({ en: 'What models, parents and brands say.', sw: 'Wanamitindo, wazazi na makampuni wanasema nini.' })}
         </h2>
 
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
