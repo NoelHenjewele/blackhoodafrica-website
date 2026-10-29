@@ -7,6 +7,7 @@ import AcademyPreview from '../components/home/AcademyPreview'
 import NewFaces from '../components/home/NewFaces'
 import OurPromise from '../components/home/OurPromise'
 import Castings from '../components/home/Castings'
+import Reviews from '../components/home/Reviews'
 
 export default function Home() {
   return (
@@ -71,6 +72,7 @@ export default function Home() {
       <NewFaces />
       <AcademyPreview />
       <OurPromise />
+      <Reviews />
       <Castings />
     </>
   )

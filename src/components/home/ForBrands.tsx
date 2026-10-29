@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Camera, Mic, Smartphone, Sparkles } from 'lucide-react'
 import { whatsappLink } from '../../config/site'
+import { clients } from '../../data/clients'
 
 const services = [
   {
@@ -101,20 +102,23 @@ export default function ForBrands({ standalone = false }: { standalone?: boolean
           </ol>
         </div>
 
-        {/* Client logos: replace placeholders once the team confirms past clients */}
-        <div className="mt-20 border-t border-white/10 pt-10">
-          <p className="text-center text-xs uppercase tracking-[0.3em] text-stone">Brands we've worked with</p>
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="grid h-16 place-items-center border border-dashed border-white/15 text-[11px] uppercase tracking-[0.2em] text-stone/70"
-              >
-                Client logo
-              </div>
-            ))}
+        {/* Hidden until real, confirmed client logos are added to src/data/clients.ts */}
+        {clients.length > 0 && (
+          <div className="mt-20 border-t border-white/10 pt-10">
+            <p className="text-center text-xs uppercase tracking-[0.3em] text-stone">Brands we've worked with</p>
+            <div className="mt-8 grid grid-cols-2 items-center gap-8 sm:grid-cols-3 lg:grid-cols-6">
+              {clients.map((c) => (
+                <img
+                  key={c.name}
+                  src={c.logo}
+                  alt={c.name}
+                  loading="lazy"
+                  className="mx-auto max-h-12 w-auto opacity-70 grayscale invert transition hover:opacity-100"
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   )
