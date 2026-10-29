@@ -9,6 +9,7 @@ import NewFaces from '../components/home/NewFaces'
 import OurPromise from '../components/home/OurPromise'
 import Castings from '../components/home/Castings'
 import Reviews from '../components/home/Reviews'
+import SocialFeed from '../components/home/SocialFeed'
 
 export default function Home() {
   const { t } = useLang()
@@ -81,6 +82,7 @@ export default function Home() {
       <OurPromise />
       <Reviews />
       <Castings />
+      <SocialFeed />
     </>
   )
 }
