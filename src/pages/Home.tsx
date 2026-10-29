@@ -4,6 +4,7 @@ import { site } from '../config/site'
 import ForBrands from '../components/home/ForBrands'
 import TalentPreview from '../components/home/TalentPreview'
 import AcademyPreview from '../components/home/AcademyPreview'
+import NewFaces from '../components/home/NewFaces'
 
 export default function Home() {
   return (
@@ -67,6 +68,7 @@ export default function Home() {
 
       <ForBrands />
       <TalentPreview />
+      <NewFaces />
       <AcademyPreview />
     </>
   )
