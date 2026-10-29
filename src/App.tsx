@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router-dom'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ScrollManager from './components/ScrollManager'
+import ChatWidget from './components/ChatWidget'
+import { useLang } from './i18n'
 import Home from './pages/Home'
 import Clients from './pages/Clients'
 import Apply from './pages/Apply'
@@ -13,6 +15,8 @@ import AboutPage from './pages/AboutPage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
+  const { lang } = useLang()
+
   return (
     <>
       <ScrollManager />
@@ -31,6 +35,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <ChatWidget lang={lang} />
     </>
   )
 }
