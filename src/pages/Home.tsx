@@ -3,6 +3,7 @@ import { ArrowRight, ImageIcon } from 'lucide-react'
 import { site } from '../config/site'
 import ForBrands from '../components/home/ForBrands'
 import TalentPreview from '../components/home/TalentPreview'
+import AcademyPreview from '../components/home/AcademyPreview'
 
 export default function Home() {
   return (
@@ -66,6 +67,7 @@ export default function Home() {
 
       <ForBrands />
       <TalentPreview />
+      <AcademyPreview />
     </>
   )
 }
