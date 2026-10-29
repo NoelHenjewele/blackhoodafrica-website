@@ -31,24 +31,29 @@ const steps = [
   { n: '03', title: 'Confirmed in 24 hours', text: 'We reply within a day with availability, rates and a clear contract.' },
 ]
 
-export default function ForBrands() {
+// `standalone` is used on the For brands page itself, where the "All services" link would point back to the same page.
+export default function ForBrands({ standalone = false }: { standalone?: boolean }) {
   return (
     <section className="border-t border-white/10 bg-ink-soft">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">For brands</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">
+              {standalone ? 'What we do' : 'For brands'}
+            </p>
             <h2 className="mt-4 font-display text-4xl font-medium leading-tight sm:text-5xl">
               The right face for every campaign, show and stage.
             </h2>
           </div>
-          <Link
-            to="/clients"
-            className="group inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-gold hover:text-ivory"
-          >
-            All services
-            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-          </Link>
+          {!standalone && (
+            <Link
+              to="/clients"
+              className="group inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-gold hover:text-ivory"
+            >
+              All services
+              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </Link>
+          )}
         </div>
 
         <div className="mt-14 grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
@@ -69,7 +74,7 @@ export default function ForBrands() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
-                to="/clients"
+                to="/clients#brief"
                 className="inline-flex items-center justify-center rounded-full bg-gold px-6 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ivory"
               >
                 Send a brief
