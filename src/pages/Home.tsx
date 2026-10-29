@@ -5,6 +5,8 @@ import ForBrands from '../components/home/ForBrands'
 import TalentPreview from '../components/home/TalentPreview'
 import AcademyPreview from '../components/home/AcademyPreview'
 import NewFaces from '../components/home/NewFaces'
+import OurPromise from '../components/home/OurPromise'
+import Castings from '../components/home/Castings'
 
 export default function Home() {
   return (
@@ -70,6 +72,8 @@ export default function Home() {
       <TalentPreview />
       <NewFaces />
       <AcademyPreview />
+      <OurPromise />
+      <Castings />
     </>
   )
 }

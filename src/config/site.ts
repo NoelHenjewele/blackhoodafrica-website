@@ -1,11 +1,12 @@
 // Central place for contact details and links.
-// TODO: add the WhatsApp number once confirmed (digits only, with country code, e.g. 2557XXXXXXXX).
 export const site = {
   name: 'Blackhood Africa',
   tagline: "Tanzania's most trusted talent house.",
   promise: 'Trained here, booked everywhere.',
   city: 'Dar es Salaam',
-  whatsappNumber: '',
+  // Digits only, with country code (used for wa.me links)
+  whatsappNumber: '255711505927',
+  phoneDisplay: '+255 711 505 927',
   socials: {
     instagram: 'https://instagram.com/blackhoodafrica',
     tiktok: 'https://tiktok.com/@blackhoodafrica',
