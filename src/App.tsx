@@ -1,7 +1,17 @@
-﻿export default function App() {
+﻿import { Route, Routes } from 'react-router-dom'
+import Header from './components/Header'
+import Home from './pages/Home'
+
+export default function App() {
   return (
-    <main className="min-h-screen grid place-items-center bg-white text-neutral-500">
-      <p>Blank canvas, ready for the new design.</p>
-    </main>
+    <>
+      <Header />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
+      </main>
+    </>
   )
 }

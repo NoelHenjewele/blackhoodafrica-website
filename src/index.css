@@ -1,2 +1,40 @@
-﻿@import 'tailwindcss';
+﻿@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
 
+@theme {
+  --color-ink: #0b0b0b;
+  --color-ink-soft: #161616;
+  --color-ivory: #f5f1ea;
+  --color-stone: #a8a29a;
+  --color-gold: #c9a45c;
+  --color-gold-deep: #a8843f;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Manrope', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-ivory font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-gold text-ink;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
