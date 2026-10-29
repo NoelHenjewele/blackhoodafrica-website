@@ -1,5 +1,8 @@
 // Vercel Function: returns the latest Instagram posts for the homepage grid.
-// The access token lives only in Vercel's environment variables (INSTAGRAM_TOKEN), never in the browser.
+// Secrets live only in Vercel's environment variables, never in the browser:
+//   INSTAGRAM_TOKEN    access token
+//   INSTAGRAM_USER_ID  set this when using "API setup with Facebook login" (a Page token + the Instagram
+//                      business account ID); leave it out for "API setup with Instagram login".
 
 type Media = {
   id: string
@@ -15,11 +18,16 @@ const FIELDS = 'id,caption,media_type,media_url,thumbnail_url,permalink,timestam
 
 export async function GET() {
   const token = process.env.INSTAGRAM_TOKEN
-  if (!token) return Response.json({ posts: [] }, { status: 200 })
+  const userId = process.env.INSTAGRAM_USER_ID
+  if (!token) return Response.json({ posts: [] })
+
+  const url = userId
+    ? `https://graph.facebook.com/v21.0/${userId}/media?fields=${FIELDS}&limit=6&access_token=${token}`
+    : `https://graph.instagram.com/me/media?fields=${FIELDS}&limit=6&access_token=${token}`
 
   try {
-    const res = await fetch(`https://graph.instagram.com/me/media?fields=${FIELDS}&limit=6&access_token=${token}`)
-    if (!res.ok) return Response.json({ posts: [] }, { status: 200 })
+    const res = await fetch(url)
+    if (!res.ok) return Response.json({ posts: [] })
     const data = (await res.json()) as { data?: Media[] }
 
     const posts = (data.data ?? []).map((m) => ({
@@ -36,6 +44,6 @@ export async function GET() {
       { headers: { 'Cache-Control': 's-maxage=3600, stale-while-revalidate=86400' } },
     )
   } catch {
-    return Response.json({ posts: [] }, { status: 200 })
+    return Response.json({ posts: [] })
   }
 }

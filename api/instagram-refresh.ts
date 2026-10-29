@@ -1,5 +1,5 @@
-// Vercel Cron (see vercel.json): extends the Instagram token's 60-day life once a week.
-// Instagram long-lived tokens can be refreshed while still valid; this keeps it from expiring.
+// Vercel Cron (see vercel.json): extends an Instagram-login token's 60-day life once a week.
+// Not needed with Facebook login: a Page token made from a long-lived user token does not expire.
 
 export async function GET(request: Request) {
   // Vercel sends CRON_SECRET as a bearer token on cron calls; reject anything else.
@@ -10,6 +10,7 @@ export async function GET(request: Request) {
 
   const token = process.env.INSTAGRAM_TOKEN
   if (!token) return Response.json({ ok: false, reason: 'no token' })
+  if (process.env.INSTAGRAM_USER_ID) return Response.json({ ok: true, reason: 'page token, no refresh needed' })
 
   const res = await fetch(`https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=${token}`)
   const body = (await res.json()) as { access_token?: string; expires_in?: number }
