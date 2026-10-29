@@ -13,6 +13,7 @@ import CastingsPage from './pages/CastingsPage'
 import TrustPage from './pages/TrustPage'
 import AboutPage from './pages/AboutPage'
 import StoriesPage from './pages/StoriesPage'
+import FaqPage from './pages/FaqPage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/trust" element={<TrustPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/stories" element={<StoriesPage />} />
+          <Route path="/faq" element={<FaqPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

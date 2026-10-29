@@ -25,6 +25,7 @@ const columns = [
       { to: '/about', label: { en: 'About us', sw: 'Kuhusu sisi' } },
       { to: '/stories', label: { en: 'Success stories', sw: 'Hadithi za mafanikio' } },
       { to: '/trust', label: { en: 'Our promise', sw: 'Ahadi yetu' } },
+      { to: '/faq', label: { en: 'FAQ', sw: 'Maswali' } },
     ],
   },
 ]
