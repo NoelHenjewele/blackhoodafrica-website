@@ -1,5 +1,6 @@
 import { site } from '../../config/site'
 import { useLang } from '../../i18n'
+import InstagramGrid from './InstagramGrid'
 
 // TikTok's live profile embed proved unreliable (blank boxes, rate-limit errors), so this links out instead.
 const channels = [
@@ -45,6 +46,9 @@ export default function SocialFeed() {
             </a>
           ))}
         </div>
+      </div>
+      <div className="mx-auto max-w-7xl px-5 pb-4 lg:px-10">
+        <InstagramGrid />
       </div>
     </section>
   )
