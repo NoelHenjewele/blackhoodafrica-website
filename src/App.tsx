@@ -7,6 +7,10 @@ import Clients from './pages/Clients'
 import Apply from './pages/Apply'
 import TalentPage from './pages/TalentPage'
 import AcademyPage from './pages/AcademyPage'
+import CastingsPage from './pages/CastingsPage'
+import TrustPage from './pages/TrustPage'
+import AboutPage from './pages/AboutPage'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
@@ -20,7 +24,10 @@ export default function App() {
           <Route path="/apply" element={<Apply />} />
           <Route path="/talent" element={<TalentPage />} />
           <Route path="/academy" element={<AcademyPage />} />
-          <Route path="*" element={<Home />} />
+          <Route path="/castings" element={<CastingsPage />} />
+          <Route path="/trust" element={<TrustPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />

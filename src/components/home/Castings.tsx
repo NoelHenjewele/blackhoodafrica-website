@@ -12,23 +12,26 @@ type Casting = {
 // Live casting calls. Add real ones here; the section shows a "coming soon" note while this is empty.
 const castings: Casting[] = []
 
-export default function Castings() {
+// `standalone` is used on the Castings page itself, where the heading and "Full calendar" link are redundant.
+export default function Castings({ standalone = false }: { standalone?: boolean }) {
   return (
     <section className="border-t border-white/10 bg-ink-soft">
-      <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-24">
-        <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-          <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Castings</p>
-            <h2 className="mt-4 font-display text-4xl font-medium leading-tight sm:text-5xl">Open calls & castings.</h2>
+      <div className={`mx-auto max-w-7xl px-5 lg:px-10 ${standalone ? 'py-12 lg:py-16' : 'py-20 lg:py-24'}`}>
+        {!standalone && (
+          <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Castings</p>
+              <h2 className="mt-4 font-display text-4xl font-medium leading-tight sm:text-5xl">Open calls & castings.</h2>
+            </div>
+            <Link
+              to="/castings"
+              className="group inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-gold hover:text-ivory"
+            >
+              Full calendar
+              <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
-          <Link
-            to="/castings"
-            className="group inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-gold hover:text-ivory"
-          >
-            Full calendar
-            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-          </Link>
-        </div>
+        )}
 
         {castings.length > 0 ? (
           <ul className="mt-12 divide-y divide-white/10 border-y border-white/10">
