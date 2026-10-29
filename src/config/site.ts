@@ -7,6 +7,10 @@ export const site = {
   // Digits only, with country code (used for wa.me links)
   whatsappNumber: '255711505927',
   phoneDisplay: '+255 711 505 927',
+  // Scouting and agency applications are free; the academy has a published application fee.
+  feeLine: 'Free to apply · Academy fees published upfront',
+  academyRegistrationFee: 'TZS 60,000',
+  academyFeeTerms: 'paid in full or in 2 instalments of TZS 30,000',
   socials: {
     instagram: 'https://instagram.com/blackhoodafrica',
     tiktok: 'https://tiktok.com/@blackhoodafrica',

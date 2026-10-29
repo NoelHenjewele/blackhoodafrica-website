@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Check } from 'lucide-react'
+import { site } from '../../config/site'
 
 // Prices and dates still to confirm with the team. Leave `price` empty to show "Price to be announced".
 const programmes = [
@@ -72,6 +73,11 @@ export default function AcademyPreview() {
             </article>
           ))}
         </div>
+
+        <p className="mt-6 text-sm text-ink/60">
+          Academy application fee: <strong className="text-ink">{site.academyRegistrationFee}</strong>,{' '}
+          {site.academyFeeTerms}.
+        </p>
 
         <div className="mt-14 flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
           <ul className="flex flex-wrap gap-x-6 gap-y-3">

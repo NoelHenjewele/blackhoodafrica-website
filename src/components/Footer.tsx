@@ -90,7 +90,7 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-col justify-between gap-4 border-t border-white/10 pt-8 text-xs text-ivory/45 sm:flex-row">
           <p>© {new Date().getFullYear()} Blackhood Africa. All rights reserved.</p>
-          <p>Applying is always free. We never ask for registration fees.</p>
+          <p>{site.feeLine}</p>
         </div>
       </div>
     </footer>

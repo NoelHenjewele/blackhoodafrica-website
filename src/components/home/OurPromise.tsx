@@ -4,8 +4,8 @@ import { ArrowRight, BadgeCheck, FileSignature, ShieldCheck, Wallet } from 'luci
 const promises = [
   {
     icon: Wallet,
-    title: 'Free to apply. Always.',
-    text: 'We never charge to join the agency. If anyone asks you for a "registration fee" in our name, it is a scam.',
+    title: 'Free to apply. Fees in the open.',
+    text: 'Joining the agency is always free. Academy fees are published on this site and paid only to our official accounts. Anyone asking for other fees in our name is a scam.',
   },
   {
     icon: FileSignature,
