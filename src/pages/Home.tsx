@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, ImageIcon } from 'lucide-react'
 import { site } from '../config/site'
+import ForBrands from '../components/home/ForBrands'
 
 export default function Home() {
   return (
@@ -61,6 +62,8 @@ export default function Home() {
           </figure>
         </div>
       </section>
+
+      <ForBrands />
     </>
   )
 }
