@@ -12,8 +12,8 @@ const groups: { title: L; items: QA[] }[] = [
       {
         q: { en: 'How do I apply?', sw: 'Ninaombaje?' },
         a: {
-          en: 'Fill in the form on our Apply page, or message us on WhatsApp with your name, age, height, city and 3 photos with no filters: a face close-up, full body and side profile.',
-          sw: 'Jaza fomu kwenye ukurasa wa Omba, au tuandikie WhatsApp jina lako, umri, urefu, mji na picha 3 bila filter: uso karibu, mwili mzima na ubavuni.',
+          en: 'Fill in the online form on our Apply page with your details and 3 photos with no filters: a face close-up, full body and side profile. It takes about 5 minutes, and you get a reference number and a confirmation email.',
+          sw: 'Jaza fomu ya mtandaoni kwenye ukurasa wa Omba ukiweka taarifa zako na picha 3 bila filter: uso karibu, mwili mzima na ubavuni. Inachukua takriban dakika 5, na utapata namba ya ombi na barua pepe ya uthibitisho.',
         },
       },
       {

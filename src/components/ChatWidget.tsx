@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 
 // Blackhood Africa help chat: rule-based, no API keys, no network calls.
 // Usage: <ChatWidget /> once in the app layout. Pass lang="sw" | "en" to follow the site toggle.
 
 type Lang = "en" | "sw";
-type Msg = { from: "bot" | "user"; text: string; wa?: string };
+type Msg = { from: "bot" | "user"; text: string; wa?: string; apply?: boolean };
 
 const WA_NUMBER = "255711505927";
 const waLink = (text: string) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
@@ -15,6 +16,7 @@ type Topic = {
   keywords: string[];
   answer: Record<Lang, string>;
   wa?: Record<Lang, string>;
+  apply?: boolean; // show an "Apply now" button that opens the /apply form
 };
 
 const TOPICS: Topic[] = [
@@ -23,10 +25,10 @@ const TOPICS: Topic[] = [
     label: { en: "How do I apply?", sw: "Ninaombaje?" },
     keywords: ["apply", "join", "become", "model", "omba", "jiunga", "kujiunga", "mwanamitindo"],
     answer: {
-      en: "Applying is FREE. Send us on WhatsApp:\n1. Full name\n2. Age\n3. Height\n4. Area / city\n5. 3 photos with no filters: face close-up, full body, side profile.",
-      sw: "Kuomba ni BURE. Tutumie kwenye WhatsApp:\n1. Jina kamili\n2. Umri\n3. Urefu\n4. Unapoishi\n5. Picha 3 bila filter: uso karibu, mwili mzima, pembeni.",
+      en: "Applying is FREE and takes about 5 minutes. Fill in our online application form: your details plus 3 photos with no filters (face close-up, full body, side profile). You'll get a reference number and a confirmation email.",
+      sw: "Kuomba ni BURE na inachukua takriban dakika 5. Jaza fomu yetu ya maombi mtandaoni: taarifa zako pamoja na picha 3 bila filter (uso karibu, mwili mzima, ubavuni). Utapata namba ya ombi na barua pepe ya uthibitisho.",
     },
-    wa: { en: "Hi Blackhood! I want to apply as a model.", sw: "Habari Blackhood! Nataka kuomba kuwa mwanamitindo." },
+    apply: true,
   },
   {
     id: "free",
@@ -36,6 +38,7 @@ const TOPICS: Topic[] = [
       en: "Yes. Applying and attending our castings are FREE. Blackhood never charges you to join the agency. If anyone asks for money to apply in our name, it isn't us. Only use +255 711 505 927.",
       sw: "Ndiyo. Kuomba na kuhudhuria casting ni BURE. Blackhood haitozi pesa kujiunga na agency. Mtu akikuomba pesa kwa jina letu, si sisi. Tumia +255 711 505 927 pekee.",
     },
+    apply: true,
   },
   {
     id: "academy",
@@ -52,18 +55,20 @@ const TOPICS: Topic[] = [
     label: { en: "I'm under 18", sw: "Nina chini ya miaka 18" },
     keywords: ["under 18", " age ", " old ", "young", "teen", "kid", "child", "parent", "umri", "mtoto", "mzazi", "miaka"],
     answer: {
-      en: "Under 18? You're welcome to apply, but please include your parent's or guardian's OK when you message us. A parent or guardian must be involved in every step.",
-      sw: "Una chini ya miaka 18? Unakaribishwa kuomba, ila tafadhali ambatanisha ruhusa ya mzazi au mlezi. Mzazi au mlezi lazima ahusike kila hatua.",
+      en: "Under 18? You're welcome to apply. The application form will ask for your parent's or guardian's name and phone. A parent or guardian must be involved in every step.",
+      sw: "Una chini ya miaka 18? Unakaribishwa kuomba. Fomu ya maombi itauliza jina na simu ya mzazi au mlezi wako. Mzazi au mlezi lazima ahusike kila hatua.",
     },
+    apply: true,
   },
   {
     id: "casting",
     label: { en: "Next casting", sw: "Casting ijayo" },
     keywords: ["casting", "audition", "when", "where", "date", "venue", "lini", "wapi", "tarehe", "ukaguzi"],
     answer: {
-      en: "We're announcing our open casting date and venue in Dar es Salaam soon. Apply on WhatsApp now and we'll message you the details first. Follow @blackhoodafrica on Instagram and TikTok for updates.",
-      sw: "Tutatangaza tarehe na mahali pa open casting Dar es Salaam hivi karibuni. Omba sasa kwenye WhatsApp na tutakutumia taarifa kwanza. Tufuate @blackhoodafrica Instagram na TikTok.",
+      en: "We're announcing our open casting date and venue in Dar es Salaam soon. Apply online now and we'll message you the details first. Follow @blackhoodafrica on Instagram and TikTok for updates.",
+      sw: "Tutatangaza tarehe na mahali pa open casting Dar es Salaam hivi karibuni. Omba sasa mtandaoni na tutakutumia taarifa kwanza. Tufuate @blackhoodafrica Instagram na TikTok.",
     },
+    apply: true,
   },
   {
     id: "brands",
@@ -85,6 +90,7 @@ const UI = {
     placeholder: "Type your question…",
     fallback: "I'm not sure about that one. Our team can help you directly on WhatsApp.",
     openWa: "Continue on WhatsApp",
+    applyNow: "Open the application form",
     open: "Chat with us",
     close: "Close chat",
     send: "Send",
@@ -96,6 +102,7 @@ const UI = {
     placeholder: "Andika swali lako…",
     fallback: "Sina uhakika na hilo. Timu yetu itakusaidia moja kwa moja kwenye WhatsApp.",
     openWa: "Endelea WhatsApp",
+    applyNow: "Fungua fomu ya maombi",
     open: "Ongea nasi",
     close: "Funga",
     send: "Tuma",
@@ -134,7 +141,7 @@ export default function ChatWidget({ lang: langProp }: { lang?: Lang }) {
 
   const reply = (userText: string, topic?: Topic) => {
     const bot: Msg = topic
-      ? { from: "bot", text: topic.answer[lang], wa: topic.wa?.[lang] }
+      ? { from: "bot", text: topic.answer[lang], wa: topic.wa?.[lang], apply: topic.apply }
       : { from: "bot", text: t.fallback, wa: userText };
     setMsgs((m) => [...m, { from: "user", text: userText }, bot]);
   };
@@ -186,6 +193,15 @@ export default function ChatWidget({ lang: langProp }: { lang?: Lang }) {
             {msgs.map((m, i) => (
               <div key={i} className="space-y-2">
                 <Bubble from={m.from} text={m.text} />
+                {m.apply && (
+                  <Link
+                    to="/apply"
+                    onClick={() => setOpen(false)}
+                    className="mr-2 inline-block rounded-full bg-gold px-4 py-2 text-xs font-semibold text-ink hover:brightness-110"
+                  >
+                    {t.applyNow} →
+                  </Link>
+                )}
                 {m.wa !== undefined && (
                   <a
                     href={waLink(m.wa)}
