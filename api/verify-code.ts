@@ -20,7 +20,8 @@ export async function GET(request: Request) {
     if (!result.ok) return Response.json({ ok: false }, { status: 502 })
     return Response.json(
       { ok: true, valid: !!result.valid, name: result.valid ? result.name : undefined },
-      { headers: { 'Cache-Control': 's-maxage=300' } },
+      // Short cache so a newly approved (or switched-off) code shows correctly within a minute.
+      { headers: { 'Cache-Control': 's-maxage=60' } },
     )
   } catch {
     return Response.json({ ok: false }, { status: 502 })
