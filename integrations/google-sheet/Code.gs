@@ -44,6 +44,7 @@ function doPost(e) {
       ])
 
       sendConfirmation(data, ref)
+      notifyTeam(data, ref, sheet, folder.getUrl())
       return json({ ok: true, ref: ref })
     } finally {
       lock.releaseLock()
@@ -93,6 +94,48 @@ function sendConfirmation(data, ref) {
     // Email quota or bad address: the application is still saved.
     console.warn('Confirmation email failed: ' + err)
   }
+}
+
+// Alert to the team for every new application.
+// Goes to the NOTIFY_EMAIL script property (comma-separate several addresses), or to the script owner if unset.
+function notifyTeam(data, ref, sheet, folderUrl) {
+  const to = PropertiesService.getScriptProperties().getProperty('NOTIFY_EMAIL') || Session.getEffectiveUser().getEmail()
+  if (!to) return
+  const minor = Number(data.age) < 18
+  const rows = [
+    ['Reference', ref],
+    ['Name', clean(data.name)],
+    ['Age', String(data.age) + (minor ? ' (under 18)' : '')],
+    ['Height', String(data.height) + ' cm'],
+    ['City / area', clean(data.city)],
+    ['Interested in', clean(data.interest)],
+    ['WhatsApp', clean(data.phone)],
+    ['Email', clean(data.email)],
+    ['Instagram / TikTok', clean(data.social)],
+  ]
+  if (minor) rows.push(['Guardian', clean(data.guardianName) + ' ' + clean(data.guardianPhone)])
+
+  const html =
+    '<p>New application on the website.</p><table cellpadding="4">' +
+    rows.map(function (r) { return '<tr><td><b>' + r[0] + '</b></td><td>' + escapeHtml(r[1]) + '</td></tr>' }).join('') +
+    '</table><p><a href="' + sheet.getParent().getUrl() + '">Open the applications sheet</a> · <a href="' + folderUrl + '">See photos</a></p>'
+
+  try {
+    MailApp.sendEmail({
+      to: to,
+      subject: 'New application: ' + clean(data.name) + ' (' + ref + ')',
+      body: rows.map(function (r) { return r[0] + ': ' + r[1] }).join('\n') + '\n\nPhotos: ' + folderUrl,
+      htmlBody: html,
+      name: 'Blackhood Website',
+      replyTo: String(data.email || '').trim() || undefined,
+    })
+  } catch (err) {
+    console.warn('Team notification failed: ' + err)
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
 function getSheet() {
