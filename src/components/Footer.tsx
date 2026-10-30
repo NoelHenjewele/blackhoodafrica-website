@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { MapPin, MessageCircle, Phone } from 'lucide-react'
 import { site, whatsappLink } from '../config/site'
 import { useLang } from '../i18n'
+import Newsletter from './Newsletter'
 
 const columns = [
   {
@@ -44,7 +45,8 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-ink">
       <div className="mx-auto max-w-7xl px-5 py-16 lg:px-10">
-        <div className="grid gap-12 lg:grid-cols-[1.2fr_2fr]">
+        <Newsletter />
+        <div className="mt-12 grid gap-12 lg:grid-cols-[1.2fr_2fr]">
           <div>
             <img src="/brand/logo-white.png" alt="Blackhood Africa" className="h-12 w-auto" />
             <p className="mt-6 max-w-xs font-display text-2xl italic text-gold">{t(site.promise)}</p>

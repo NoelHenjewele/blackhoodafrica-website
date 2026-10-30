@@ -31,7 +31,9 @@ function doPost(e) {
     const lock = LockService.getScriptLock()
     lock.waitLock(20000)
     try {
-      return json(data.type === 'booking' ? handleBooking(data) : handleApplication(data))
+      if (data.type === 'booking') return json(handleBooking(data))
+      if (data.type === 'subscribe') return json(handleSubscribe(data))
+      return json(handleApplication(data))
     } finally {
       lock.releaseLock()
     }
@@ -77,6 +79,62 @@ function handleBooking(data) {
   sendBookingConfirmation(data, ref)
   notifyBooking(data, ref, sheet)
   return { ok: true, ref: ref }
+}
+
+// Newsletter sign-up: one row per email (repeat sign-ups are ignored), plus a short welcome email.
+function handleSubscribe(data) {
+  const email = validEmail(data.email)
+  if (!email) return { ok: false, error: 'invalid email' }
+  const sheet = getSubscribersSheet()
+
+  const existing = sheet.getLastRow() > 1 ? sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getValues() : []
+  const already = existing.some(function (r) { return String(r[0]).toLowerCase() === email.toLowerCase() })
+  if (already) return { ok: true, already: true }
+
+  sheet.appendRow([new Date(), email, clean(data.name), clean(data.interest), clean(data.lang), clean(data.source), 'Subscribed'])
+
+  const sw = data.lang === 'sw'
+  const subject = sw ? 'Karibu kwenye jarida la Blackhood Africa' : 'Welcome to the Blackhood Africa newsletter'
+  const lines = sw
+    ? [
+        'Karibu!',
+        'Asante kwa kujiunga na jarida la Blackhood Africa. Utakuwa wa kwanza kupata habari za usaili, nafasi za chuo, sura mpya na kazi zetu.',
+        'Ili kuacha kupokea barua pepe hizi wakati wowote, jibu barua hii ukiandika "STOP".',
+        'Timu ya Blackhood Africa',
+      ]
+    : [
+        'Welcome!',
+        "Thanks for joining the Blackhood Africa newsletter. You'll be first to hear about castings, academy intakes, new faces and our latest work.",
+        'To stop receiving these emails at any time, just reply "STOP".',
+        'The Blackhood Africa team',
+      ]
+  try {
+    MailApp.sendEmail({
+      to: email,
+      subject: subject,
+      body: lines.join('\n\n'),
+      htmlBody: lines.map(function (l) { return '<p>' + l + '</p>' }).join(''),
+      name: 'Blackhood Africa',
+    })
+  } catch (err) {
+    console.warn('Welcome email failed: ' + err)
+  }
+  return { ok: true }
+}
+
+function getSubscribersSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet()
+  let sheet = ss.getSheetByName('Subscribers')
+  if (!sheet) {
+    sheet = ss.insertSheet('Subscribers')
+    const headers = ['Signed up', 'Email', 'Name', 'Interested in', 'Language', 'Signed up from', 'Status']
+    sheet.appendRow(headers)
+    sheet.setFrozenRows(1)
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold')
+    const rule = SpreadsheetApp.newDataValidation().requireValueInList(['Subscribed', 'Unsubscribed'], true).build()
+    sheet.getRange('G2:G').setDataValidation(rule)
+  }
+  return sheet
 }
 
 function makeRef(prefix, sheet) {
@@ -312,6 +370,7 @@ function json(obj) {
 function setup() {
   getSheet()
   getBookingsSheet()
+  getSubscribersSheet()
   getFolder()
   console.log('Emails left today: ' + MailApp.getRemainingDailyQuota())
 }
