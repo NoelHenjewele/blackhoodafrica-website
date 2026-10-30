@@ -56,8 +56,8 @@ const groups: { title: L; items: QA[] }[] = [
       {
         q: { en: 'How do I know a message is really from Blackhood?', sw: 'Nitajuaje ujumbe ni kweli kutoka Blackhood?' },
         a: {
-          en: `Our only official WhatsApp is ${site.phoneDisplay} and our social accounts are @blackhoodafrica. If in doubt, message that number to check.`,
-          sw: `WhatsApp yetu rasmi pekee ni ${site.phoneDisplay} na akaunti zetu za mitandao ni @blackhoodafrica. Ukiwa na shaka, tuma ujumbe kwa namba hiyo kuthibitisha.`,
+          en: `Our only official WhatsApp is ${site.phoneDisplay} and our social accounts are @blackhoodafrica. See the "Is it really us?" page (linked in the footer) for all official contacts and scam warning signs. If in doubt, message that number to check.`,
+          sw: `WhatsApp yetu rasmi pekee ni ${site.phoneDisplay} na akaunti zetu za mitandao ni @blackhoodafrica. Angalia ukurasa wa "Ni sisi kweli?" (kiungo kiko chini ya tovuti) kwa mawasiliano yote rasmi na dalili za utapeli. Ukiwa na shaka, tuma ujumbe kwa namba hiyo kuthibitisha.`,
         },
       },
       {

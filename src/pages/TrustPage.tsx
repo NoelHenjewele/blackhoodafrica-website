@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { AlertTriangle } from 'lucide-react'
 import OurPromise from '../components/home/OurPromise'
 import { site, whatsappLink } from '../config/site'
@@ -115,6 +116,9 @@ export default function TrustPage() {
             >
               {t({ en: 'Verify with us', sw: 'Thibitisha nasi' })}
             </a>
+            <Link to="/verify" className="ml-4 mt-8 inline-block text-sm font-semibold uppercase tracking-[0.12em] text-gold hover:text-ivory">
+              {t({ en: 'Full safety check →', sw: 'Ukaguzi kamili →' })}
+            </Link>
           </div>
           <ul className="space-y-4">
             {redFlags.map((r) => (

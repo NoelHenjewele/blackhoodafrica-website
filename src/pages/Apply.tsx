@@ -187,6 +187,9 @@ export default function Apply() {
               sw: 'Inachukua takriban dakika 5. Timu yetu ya usaili hupitia kila ombi na hujibu kwa WhatsApp. Huhitaji uzoefu.',
             })}
           </p>
+          <Link to="/verify" className="mt-4 inline-block text-sm text-gold underline-offset-4 hover:underline">
+            {t({ en: 'Contacted by someone claiming to be Blackhood? Check here →', sw: 'Umewasiliana na mtu anayedai ni Blackhood? Hakiki hapa →' })}
+          </Link>
         </div>
       </section>
 
