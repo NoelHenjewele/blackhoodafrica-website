@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ ...body, secret }),
+      body: JSON.stringify({ ...body, type: 'application', secret }),
       redirect: 'follow',
     })
     const result = (await res.json()) as { ok: boolean; ref?: string; error?: string }

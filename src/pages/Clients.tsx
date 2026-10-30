@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Send } from 'lucide-react'
+import { CheckCircle2, Loader2, Send } from 'lucide-react'
 import ForBrands from '../components/home/ForBrands'
 import { site, whatsappLink } from '../config/site'
 import { useLang } from '../i18n'
@@ -27,27 +27,54 @@ const field =
 const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/70'
 
 export default function Clients() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
   const [consent, setConsent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
+  const [done, setDone] = useState<{ ref: string; name: string } | null>(null)
 
-  function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setError('')
     const d = new FormData(e.currentTarget)
     const get = (k: string) => String(d.get(k) ?? '').trim()
-    const lines = [
-      'Hello Blackhood Africa, I would like to book talent.',
-      '',
-      `Name: ${get('name')}`,
-      get('company') && `Company: ${get('company')}`,
-      `Job type: ${get('jobType')}`,
-      `Dates: ${get('dates')}`,
-      get('location') && `Location: ${get('location')}`,
-      get('talent') && `Talent needed: ${get('talent')}`,
-      get('budget') && `Budget (TZS): ${get('budget')}`,
-      `Usage rights: ${get('usage')}`,
-      get('notes') && `Notes: ${get('notes')}`,
-    ].filter(Boolean)
-    window.open(whatsappLink(lines.join('\n')), '_blank', 'noopener')
+    const payload = {
+      name: get('name'),
+      company: get('company'),
+      phone: get('phone'),
+      email: get('email'),
+      jobType: get('jobType'),
+      dates: get('dates'),
+      location: get('location'),
+      talent: get('talent'),
+      budget: get('budget'),
+      usage: get('usage'),
+      notes: get('notes'),
+      lang,
+      website: get('website'),
+    }
+
+    setSending(true)
+    try {
+      const res = await fetch('/api/book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+      const result = (await res.json()) as { ok: boolean; ref?: string }
+      if (!result.ok) throw new Error('failed')
+      setDone({ ref: result.ref ?? '', name: payload.name })
+      document.getElementById('brief')?.scrollIntoView()
+    } catch {
+      setError(
+        t({
+          en: 'Something went wrong sending your brief. Please try again, or message us on WhatsApp.',
+          sw: 'Kuna tatizo katika kutuma maelezo yako. Tafadhali jaribu tena, au tuandikie WhatsApp.',
+        }),
+      )
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -83,8 +110,8 @@ export default function Clients() {
             </h2>
             <p className="mt-6 text-ivory/70">
               {t({
-                en: 'Fill in what you know. Your brief opens in WhatsApp, ready to send to our bookings team. Prefer to talk? Call or message',
-                sw: 'Jaza unachojua. Maelezo yako yatafunguka kwenye WhatsApp, tayari kutumwa kwa timu yetu. Ungependa kuongea? Piga simu au tuma ujumbe',
+                en: "Fill in what you know and we'll take it from there. You'll get a reference number and a confirmation email. Prefer to talk? Call or WhatsApp",
+                sw: 'Jaza unachojua nasi tutaendelea kutoka hapo. Utapata namba ya ombi na barua pepe ya uthibitisho. Ungependa kuongea? Piga simu au WhatsApp',
               })}{' '}
               {site.phoneDisplay}.
             </p>
@@ -101,15 +128,53 @@ export default function Clients() {
             </ul>
           </div>
 
+          {done ? (
+            <div className="grid place-items-center border border-gold/40 bg-ink-soft p-10 text-center">
+              <div>
+                <CheckCircle2 className="mx-auto text-gold" size={48} strokeWidth={1.4} />
+                <h3 className="mt-5 font-display text-4xl">{t({ en: 'Brief received.', sw: 'Maelezo yamepokelewa.' })}</h3>
+                <p className="mt-4 text-ivory/70">
+                  {t({
+                    en: `Thank you, ${done.name.split(' ')[0]}. We've emailed you a confirmation and will reply within 24 hours with suitable talent and a quote.`,
+                    sw: `Asante, ${done.name.split(' ')[0]}. Tumekutumia barua pepe ya uthibitisho na tutakujibu ndani ya saa 24 na vipaji vinavyofaa na bei.`,
+                  })}
+                </p>
+                {done.ref && (
+                  <p className="mt-6 inline-block border border-gold/50 px-5 py-2 font-display text-xl text-gold lining-nums">
+                    {t({ en: 'Reference:', sw: 'Namba:' })} {done.ref}
+                  </p>
+                )}
+                <div className="mt-8">
+                  <a
+                    href={whatsappLink(`Hello Blackhood Africa, I just sent a booking brief. Reference ${done.ref}.`)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm font-semibold uppercase tracking-[0.12em] text-gold hover:text-ivory"
+                  >
+                    {t({ en: 'Urgent? WhatsApp us →', sw: 'Ni haraka? Tuandikie WhatsApp →' })}
+                  </a>
+                </div>
+              </div>
+            </div>
+          ) : (
           <form onSubmit={onSubmit} className="grid gap-5 border border-white/10 bg-ink-soft p-6 sm:grid-cols-2 sm:p-10">
             <div>
               <label className={label} htmlFor="name">{t({ en: 'Your name *', sw: 'Jina lako *' })}</label>
-              <input id="name" name="name" required className={field} />
+              <input id="name" name="name" required autoComplete="name" className={field} />
             </div>
             <div>
               <label className={label} htmlFor="company">{t({ en: 'Company / brand', sw: 'Kampuni / chapa' })}</label>
-              <input id="company" name="company" className={field} />
+              <input id="company" name="company" autoComplete="organization" className={field} />
             </div>
+            <div>
+              <label className={label} htmlFor="phone">{t({ en: 'Phone / WhatsApp *', sw: 'Simu / WhatsApp *' })}</label>
+              <input id="phone" name="phone" type="tel" required autoComplete="tel" className={field} />
+            </div>
+            <div>
+              <label className={label} htmlFor="email">{t({ en: 'Email *', sw: 'Barua pepe *' })}</label>
+              <input id="email" name="email" type="email" required autoComplete="email" className={field} />
+            </div>
+            <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
             <div>
               <label className={label} htmlFor="jobType">{t({ en: 'Job type *', sw: 'Aina ya kazi *' })}</label>
               <select id="jobType" name="jobType" required className={field} defaultValue="">
@@ -166,14 +231,17 @@ export default function Clients() {
                 sw: 'Ninakubali Blackhood Africa itumie taarifa hizi kujibu ombi langu.',
               })}
             </label>
+            {error && <p className="border border-red-400/40 bg-red-400/10 p-4 text-sm text-red-200 sm:col-span-2">{error}</p>}
             <button
               type="submit"
-              disabled={!consent}
+              disabled={!consent || sending}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ivory disabled:cursor-not-allowed disabled:opacity-40 sm:col-span-2 sm:justify-self-start"
             >
-              <Send size={16} /> {t({ en: 'Send brief via WhatsApp', sw: 'Tuma maelezo kwa WhatsApp' })}
+              {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}{' '}
+              {sending ? t({ en: 'Sending…', sw: 'Inatuma…' }) : t({ en: 'Send brief', sw: 'Tuma maelezo' })}
             </button>
           </form>
+          )}
         </div>
       </section>
     </>

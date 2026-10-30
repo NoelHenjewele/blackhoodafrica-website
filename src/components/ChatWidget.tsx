@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 // Usage: <ChatWidget /> once in the app layout. Pass lang="sw" | "en" to follow the site toggle.
 
 type Lang = "en" | "sw";
-type Msg = { from: "bot" | "user"; text: string; wa?: string; apply?: boolean };
+type Msg = { from: "bot" | "user"; text: string; wa?: string; apply?: boolean; book?: boolean };
 
 const WA_NUMBER = "255711505927";
 const waLink = (text: string) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
@@ -17,6 +17,7 @@ type Topic = {
   answer: Record<Lang, string>;
   wa?: Record<Lang, string>;
   apply?: boolean; // show an "Apply now" button that opens the /apply form
+  book?: boolean; // show a button that opens the booking form on /clients
 };
 
 const TOPICS: Topic[] = [
@@ -79,6 +80,7 @@ const TOPICS: Topic[] = [
       sw: "Tunatoa wanamitindo, ma-host na creators kwa matangazo, matukio na content. Tuambie tarehe, mahali, idadi ya watu na aina ya kazi, tutakutumia machaguo.",
     },
     wa: { en: "Hi Blackhood! I'd like to book talent for a project.", sw: "Habari Blackhood! Nataka kukodi wanamitindo kwa kazi." },
+    book: true,
   },
 ];
 
@@ -91,6 +93,7 @@ const UI = {
     fallback: "I'm not sure about that one. Our team can help you directly on WhatsApp.",
     openWa: "Continue on WhatsApp",
     applyNow: "Open the application form",
+    bookNow: "Send a booking request",
     open: "Chat with us",
     close: "Close chat",
     send: "Send",
@@ -103,6 +106,7 @@ const UI = {
     fallback: "Sina uhakika na hilo. Timu yetu itakusaidia moja kwa moja kwenye WhatsApp.",
     openWa: "Endelea WhatsApp",
     applyNow: "Fungua fomu ya maombi",
+    bookNow: "Tuma ombi la kuajiri",
     open: "Ongea nasi",
     close: "Funga",
     send: "Tuma",
@@ -141,7 +145,7 @@ export default function ChatWidget({ lang: langProp }: { lang?: Lang }) {
 
   const reply = (userText: string, topic?: Topic) => {
     const bot: Msg = topic
-      ? { from: "bot", text: topic.answer[lang], wa: topic.wa?.[lang], apply: topic.apply }
+      ? { from: "bot", text: topic.answer[lang], wa: topic.wa?.[lang], apply: topic.apply, book: topic.book }
       : { from: "bot", text: t.fallback, wa: userText };
     setMsgs((m) => [...m, { from: "user", text: userText }, bot]);
   };
@@ -200,6 +204,15 @@ export default function ChatWidget({ lang: langProp }: { lang?: Lang }) {
                     className="mr-2 inline-block rounded-full bg-gold px-4 py-2 text-xs font-semibold text-ink hover:brightness-110"
                   >
                     {t.applyNow} →
+                  </Link>
+                )}
+                {m.book && (
+                  <Link
+                    to="/clients#brief"
+                    onClick={() => setOpen(false)}
+                    className="mr-2 inline-block rounded-full bg-gold px-4 py-2 text-xs font-semibold text-ink hover:brightness-110"
+                  >
+                    {t.bookNow} →
                   </Link>
                 )}
                 {m.wa !== undefined && (
