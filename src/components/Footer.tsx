@@ -20,6 +20,7 @@ const columns = [
       { to: '/apply', label: { en: 'Apply to join', sw: 'Omba kujiunga' } },
       { to: '/parents', label: { en: "Parents' guide", sw: 'Mwongozo kwa wazazi' } },
       { to: '/compcard', label: { en: 'Comp card maker', sw: 'Tengeneza comp card' } },
+      { to: '/account', label: { en: 'Model login', sw: 'Ingia (wanamitindo)' } },
     ],
   },
   {

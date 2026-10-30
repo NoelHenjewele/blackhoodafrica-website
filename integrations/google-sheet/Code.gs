@@ -39,6 +39,8 @@ function doPost(e) {
       if (data.type === 'booking') return json(handleBooking(data))
       if (data.type === 'subscribe') return json(handleSubscribe(data))
       if (data.type === 'verify') return json(handleVerify(data))
+      if (data.type === 'verify-email') return json(handleVerifyEmail(data))
+      if (data.type === 'login-code') return json(sendLoginCode(data))
       return json(handleApplication(data))
     } finally {
       lock.releaseLock()
@@ -443,6 +445,40 @@ function handleVerify(data) {
     }
   }
   return { ok: true, valid: false }
+}
+
+// Account sign-up check (server-to-server only): the code must be active AND belong to this email.
+function handleVerifyEmail(data) {
+  const code = String(data.code || '').trim().toUpperCase()
+  const email = validEmail(data.email).toLowerCase()
+  if (!/^BHA-T-\d{4}$/.test(code) || !email) return { ok: true, valid: false }
+  const sheet = getSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return { ok: true, valid: false }
+  const rows = sheet.getRange(2, 1, last - 1, COL.code).getValues()
+  for (let i = 0; i < rows.length; i++) {
+    if (String(rows[i][COL.code - 1]).toUpperCase() !== code) continue
+    const status = String(rows[i][COL.status - 1])
+    const active = status === 'Approved' || status === 'Signed'
+    const sameEmail = String(rows[i][COL.email - 1]).trim().toLowerCase() === email
+    return { ok: true, valid: active && sameEmail, name: active && sameEmail ? String(rows[i][COL.name - 1]) : '' }
+  }
+  return { ok: true, valid: false }
+}
+
+// 6-digit login code for the model account area.
+function sendLoginCode(data) {
+  const email = validEmail(data.email)
+  const code = String(data.code || '').replace(/\D/g, '')
+  if (!email || code.length !== 6) return { ok: false }
+  const sw = data.lang === 'sw'
+  const subject = sw ? 'Namba yako ya kuingia: ' + code : 'Your Blackhood login code: ' + code
+  const lines = sw
+    ? ['Namba yako ya kuingia Blackhood Africa ni:', code, 'Inatumika kwa dakika 10. Kama hukuomba, puuza barua hii.']
+    : ['Your Blackhood Africa login code is:', code, "It works for 10 minutes. If you didn't ask for it, you can ignore this email."]
+  const html = '<p>' + lines[0] + '</p><p style="font-size:28px;letter-spacing:6px"><strong>' + code + '</strong></p><p>' + lines[2] + '</p>'
+  MailApp.sendEmail({ to: email, subject: subject, body: lines.join('\n\n'), htmlBody: html, name: 'Blackhood Africa' })
+  return { ok: true }
 }
 
 function installTrigger() {

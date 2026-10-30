@@ -18,6 +18,7 @@ import FaqPage from './pages/FaqPage'
 import VerifyPage from './pages/VerifyPage'
 import ParentsPage from './pages/ParentsPage'
 import CompCardPage from './pages/CompCardPage'
+import AccountPage from './pages/AccountPage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
           <Route path="/verify" element={<VerifyPage />} />
           <Route path="/parents" element={<ParentsPage />} />
           <Route path="/compcard" element={<CompCardPage />} />
+          <Route path="/account" element={<AccountPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
