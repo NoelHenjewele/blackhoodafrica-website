@@ -1,4 +1,15 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
+import { supabase } from '../config/supabase'
+import { photoUrl } from '../components/ProfileEditor'
+
+async function toDataUrl(url: string) {
+  const blob = await (await fetch(url)).blob()
+  return new Promise<string>((resolve) => {
+    const r = new FileReader()
+    r.onload = () => resolve(String(r.result))
+    r.readAsDataURL(blob)
+  })
+}
 import { BadgeCheck, Camera, Download, Loader2, X } from 'lucide-react'
 import { useLang, type L } from '../i18n'
 import { shrinkPhoto } from '../utils/photo'
@@ -34,6 +45,33 @@ export default function CompCardPage() {
   const [extras, setExtras] = useState<string[]>([])
   const [building, setBuilding] = useState(false)
   const [error, setError] = useState('')
+
+  // Logged-in talent: fill the card from their saved profile and photos.
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const { data: s } = await supabase.auth.getSession()
+      const uid = s.session?.user.id
+      if (!uid) return
+      const { data: p } = await supabase.from('profiles').select('*').eq('id', uid).maybeSingle()
+      if (!p || cancelled) return
+      setVerified({ code: p.talent_code, name: p.full_name })
+      setName(p.full_name)
+      setStats({
+        height: p.height_cm ? `${p.height_cm} cm` : '',
+        bust: p.bust ?? '', waist: p.waist ?? '', hips: p.hips ?? '', shoes: p.shoes ?? '',
+        hair: p.hair ?? '', eyes: p.eyes ?? '', city: p.city ?? '',
+      })
+      const { data: ph } = await supabase.from('photos').select('path').eq('profile_id', uid).order('position').limit(5)
+      const urls = await Promise.all((ph ?? []).map((x) => toDataUrl(photoUrl(x.path))))
+      if (cancelled || !urls.length) return
+      setMain(urls[0])
+      setExtras(urls.slice(1))
+    })().catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   async function checkCode(e: FormEvent) {
     e.preventDefault()

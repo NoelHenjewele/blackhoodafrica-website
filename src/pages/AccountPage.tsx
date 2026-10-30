@@ -4,8 +4,9 @@ import type { Session } from '@supabase/supabase-js'
 import { BadgeCheck, Loader2, LogOut } from 'lucide-react'
 import { supabase } from '../config/supabase'
 import { useLang, type L } from '../i18n'
+import ProfileEditor, { type ProfileRow } from '../components/ProfileEditor'
 
-type Profile = { full_name: string; talent_code: string; email: string }
+type Profile = ProfileRow
 
 const errors: Record<string, L> = {
   'needs code': {
@@ -60,7 +61,7 @@ export default function AccountPage() {
     if (!session) return setProfile(null)
     supabase
       .from('profiles')
-      .select('full_name, talent_code, email')
+      .select('*')
       .eq('id', session.user.id)
       .maybeSingle()
       .then(({ data }) => setProfile(data as Profile | null))
@@ -120,7 +121,7 @@ export default function AccountPage() {
 
   return (
     <section className="min-h-[80vh] pt-20">
-      <div className="mx-auto max-w-xl px-5 py-16 lg:py-24">
+      <div className={`mx-auto px-5 py-16 lg:py-24 ${session ? 'max-w-3xl' : 'max-w-xl'}`}>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">{t({ en: 'Model account', sw: 'Akaunti ya mwanamitindo' })}</p>
 
         {!ready ? (
@@ -146,13 +147,8 @@ export default function AccountPage() {
                 </dl>
               </div>
             )}
-            <p className="mt-6 text-sm text-ivory/65">
-              {t({
-                en: 'Profile editing and photo uploads are coming next. For now you can make your comp card.',
-                sw: 'Kuhariri wasifu na kupakia picha kunakuja hivi karibuni. Kwa sasa unaweza kutengeneza comp card yako.',
-              })}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            {profile && <ProfileEditor profile={profile} onSaved={setProfile} />}
+            <div className="mt-12 flex flex-wrap gap-3 border-t border-white/10 pt-8">
               <Link to="/compcard" className={button}>{t({ en: 'Make my comp card', sw: 'Tengeneza comp card yangu' })}</Link>
               <button type="button" onClick={signOut} className="inline-flex items-center gap-2 rounded-full border border-ivory/30 px-6 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] hover:border-gold hover:text-gold">
                 <LogOut size={16} /> {t({ en: 'Log out', sw: 'Toka' })}
