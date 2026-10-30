@@ -6,7 +6,11 @@ import { useLang, type L } from '../i18n'
 type StaffMember = { name: string; role: L }
 
 // Real Blackhood staff who may contact applicants. The section stays hidden while this list is empty.
-const staff: StaffMember[] = []
+const staff: StaffMember[] = [
+  { name: 'Eng. Noel Henjewele', role: { en: 'CEO & Founder', sw: 'Mkurugenzi Mtendaji na Mwanzilishi' } },
+  { name: 'Mr. Godfrey Myinga', role: { en: 'Co-Founder & Managing Director', sw: 'Mwanzilishi Mwenza na Mkurugenzi Mwendeshaji' } },
+  { name: 'Eliud Mbwambo', role: { en: 'Head of Operations', sw: 'Mkuu wa Uendeshaji' } },
+]
 
 const officialChannels = [
   { icon: MessageCircle, label: { en: 'WhatsApp & phone', sw: 'WhatsApp na simu' }, value: site.phoneDisplay, href: whatsappLink('Hello Blackhood Africa, I want to check something is really from you.') },
