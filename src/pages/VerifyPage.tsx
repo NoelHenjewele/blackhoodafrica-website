@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { AlertTriangle, BadgeCheck, Globe, MessageCircle, ShieldCheck } from 'lucide-react'
 import { site, whatsappLink } from '../config/site'
 import { useLang, type L } from '../i18n'
+import CodeCheck from '../components/CodeCheck'
 
 type StaffMember = { name: string; role: L }
 
@@ -106,6 +107,9 @@ export default function VerifyPage() {
                 <a key={label.en} href={href} target="_blank" rel="noreferrer" className={cls}>{inner}</a>
               )
             })}
+          </div>
+          <div className="mt-10">
+            <CodeCheck />
           </div>
         </div>
       </section>

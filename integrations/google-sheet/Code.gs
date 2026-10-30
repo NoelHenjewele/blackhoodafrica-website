@@ -15,7 +15,11 @@ const HEADERS = [
   'Received', 'Reference', 'Status', 'Full name', 'Age', 'Gender', 'Height (cm)', 'City / area',
   'Phone (WhatsApp)', 'Email', 'Instagram / TikTok', 'Interested in', 'Experience',
   'Guardian name', 'Guardian phone', 'Language', 'Headshot', 'Full length', 'Side profile', 'Photo folder', 'Notes',
+  'Talent code', 'Approved on',
 ]
+// Column numbers in the Applications tab (1-based)
+const COL = { status: 3, name: 4, email: 10, lang: 16, code: 22, approvedOn: 23 }
+const APPLICATION_STATUSES = ['New', 'Contacted', 'Invited to casting', 'Academy', 'Approved', 'Signed', 'Not now']
 
 const BOOKING_HEADERS = [
   'Received', 'Reference', 'Status', 'Contact name', 'Company / brand', 'Phone', 'Email', 'Job type', 'Date(s)',
@@ -33,6 +37,7 @@ function doPost(e) {
     try {
       if (data.type === 'booking') return json(handleBooking(data))
       if (data.type === 'subscribe') return json(handleSubscribe(data))
+      if (data.type === 'verify') return json(handleVerify(data))
       return json(handleApplication(data))
     } finally {
       lock.releaseLock()
@@ -342,13 +347,104 @@ function getSheet() {
     sheet.appendRow(HEADERS)
     sheet.setFrozenRows(1)
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold')
-    // Status dropdown for tracking each applicant
-    const rule = SpreadsheetApp.newDataValidation()
-      .requireValueInList(['New', 'Contacted', 'Invited to casting', 'Academy', 'Signed', 'Not now'], true)
-      .build()
-    sheet.getRange('C2:C').setDataValidation(rule)
+    applyStatusDropdown(sheet)
   }
   return sheet
+}
+
+// Status dropdown for tracking each applicant
+function applyStatusDropdown(sheet) {
+  const rule = SpreadsheetApp.newDataValidation().requireValueInList(APPLICATION_STATUSES, true).build()
+  sheet.getRange('C2:C').setDataValidation(rule)
+}
+
+// ---- Talent approval ----------------------------------------------------------------------------
+// Installed by setup() as an "on edit" trigger. When a row's Status is set to "Approved",
+// the applicant gets a talent code (BHA-T-0001…) and a welcome email. Codes are never reused.
+function onStatusEdit(e) {
+  const range = e && e.range
+  if (!range) return
+  const sheet = range.getSheet()
+  if (sheet.getName() !== SHEET_NAME || range.getColumn() > COL.status || range.getLastColumn() < COL.status) return
+
+  for (let row = range.getRow(); row <= range.getLastRow(); row++) {
+    if (row < 2) continue
+    const status = String(sheet.getRange(row, COL.status).getValue())
+    const codeCell = sheet.getRange(row, COL.code)
+    if (status !== 'Approved' || codeCell.getValue()) continue
+
+    const code = nextTalentCode()
+    codeCell.setValue(code)
+    sheet.getRange(row, COL.approvedOn).setValue(new Date())
+    sendApprovalEmail({
+      name: String(sheet.getRange(row, COL.name).getValue()),
+      email: String(sheet.getRange(row, COL.email).getValue()),
+      lang: String(sheet.getRange(row, COL.lang).getValue()),
+    }, code)
+  }
+}
+
+function nextTalentCode() {
+  const props = PropertiesService.getScriptProperties()
+  const n = Number(props.getProperty('TALENT_COUNTER') || '0') + 1
+  props.setProperty('TALENT_COUNTER', String(n))
+  return 'BHA-T-' + String(n).padStart(4, '0')
+}
+
+function sendApprovalEmail(person, code) {
+  const email = validEmail(person.email)
+  if (!email) return
+  const first = clean(person.name).split(' ')[0] || ''
+  const sw = person.lang === 'sw'
+  const subject = sw ? 'Hongera! Umekubaliwa Blackhood Africa' : 'Congratulations – welcome to Blackhood Africa'
+  const lines = sw
+    ? [
+        'Hongera ' + first + '!',
+        'Tunafurahi kukujulisha kuwa umekubaliwa kujiunga na Blackhood Africa.',
+        'Namba yako ya kipaji ni: ' + code,
+        'Hifadhi namba hii. Makampuni na wazazi wanaweza kuithibitisha kwenye ukurasa wetu wa "Ni sisi kweli?". Timu yetu itawasiliana nawe kwa WhatsApp kuhusu hatua zinazofuata.',
+        'Karibu kwenye familia,',
+        'Timu ya Blackhood Africa',
+      ]
+    : [
+        'Congratulations ' + first + '!',
+        "We're delighted to tell you that you've been approved to join Blackhood Africa.",
+        'Your talent code is: ' + code,
+        'Keep this code safe. Brands and parents can check it on our "Is it really us?" page. Our team will contact you on WhatsApp about next steps.',
+        'Welcome to the family,',
+        'The Blackhood Africa team',
+      ]
+  const html = lines
+    .map(function (l, i) { return i === 2 ? '<p><strong style="font-size:18px">' + l + '</strong></p>' : '<p>' + l + '</p>' })
+    .join('')
+  try {
+    MailApp.sendEmail({ to: email, subject: subject, body: lines.join('\n\n'), htmlBody: html, name: 'Blackhood Africa' })
+  } catch (err) {
+    console.warn('Approval email failed: ' + err)
+  }
+}
+
+// Public code check for the website: returns the name only for a valid, approved code.
+function handleVerify(data) {
+  const code = String(data.code || '').trim().toUpperCase()
+  if (!/^BHA-T-\d{4}$/.test(code)) return { ok: true, valid: false }
+  const sheet = getSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return { ok: true, valid: false }
+  const rows = sheet.getRange(2, 1, last - 1, COL.code).getValues()
+  for (let i = 0; i < rows.length; i++) {
+    if (String(rows[i][COL.code - 1]).toUpperCase() === code) {
+      const status = String(rows[i][COL.status - 1])
+      const active = status === 'Approved' || status === 'Signed'
+      return { ok: true, valid: active, name: active ? String(rows[i][COL.name - 1]) : '' }
+    }
+  }
+  return { ok: true, valid: false }
+}
+
+function installTrigger() {
+  const exists = ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'onStatusEdit' })
+  if (!exists) ScriptApp.newTrigger('onStatusEdit').forSpreadsheet(SpreadsheetApp.getActive()).onEdit().create()
 }
 
 function getFolder() {
@@ -368,9 +464,13 @@ function json(obj) {
 
 // Run once from the editor to create the sheet/folder and approve permissions (Sheets, Drive, email).
 function setup() {
-  getSheet()
+  const sheet = getSheet()
+  // Bring an existing Applications tab up to date: new header columns and the "Approved" status option.
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold')
+  applyStatusDropdown(sheet)
   getBookingsSheet()
   getSubscribersSheet()
   getFolder()
+  installTrigger()
   console.log('Emails left today: ' + MailApp.getRemainingDailyQuota())
 }
