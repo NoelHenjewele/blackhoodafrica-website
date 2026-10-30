@@ -10,6 +10,7 @@
 const SHEET_NAME = 'Applications'
 const BOOKINGS_SHEET_NAME = 'Bookings'
 const DRIVE_FOLDER_NAME = 'Blackhood Applications – Photos'
+const SITE_URL = 'https://blackhoodafrica-website.vercel.app' // change when the custom domain is live
 
 const HEADERS = [
   'Received', 'Reference', 'Status', 'Full name', 'Age', 'Gender', 'Height (cm)', 'City / area',
@@ -403,6 +404,7 @@ function sendApprovalEmail(person, code) {
         'Tunafurahi kukujulisha kuwa umekubaliwa kujiunga na Blackhood Africa.',
         'Namba yako ya kipaji ni: ' + code,
         'Hifadhi namba hii. Makampuni na wazazi wanaweza kuithibitisha kwenye ukurasa wetu wa "Ni sisi kweli?". Timu yetu itawasiliana nawe kwa WhatsApp kuhusu hatua zinazofuata.',
+        'Tengeneza comp card yako yenye nembo ya Blackhood hapa: ' + SITE_URL + '/compcard',
         'Karibu kwenye familia,',
         'Timu ya Blackhood Africa',
       ]
@@ -411,6 +413,7 @@ function sendApprovalEmail(person, code) {
         "We're delighted to tell you that you've been approved to join Blackhood Africa.",
         'Your talent code is: ' + code,
         'Keep this code safe. Brands and parents can check it on our "Is it really us?" page. Our team will contact you on WhatsApp about next steps.',
+        'Make your Blackhood-branded comp card here: ' + SITE_URL + '/compcard',
         'Welcome to the family,',
         'The Blackhood Africa team',
       ]
