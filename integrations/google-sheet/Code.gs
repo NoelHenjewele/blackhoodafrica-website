@@ -120,15 +120,18 @@ function notifyTeam(data, ref, sheet, folderUrl) {
     rows.map(function (r) { return '<tr><td><b>' + r[0] + '</b></td><td>' + escapeHtml(r[1]) + '</td></tr>' }).join('') +
     '</table><p><a href="' + sheet.getParent().getUrl() + '">Open the applications sheet</a> · <a href="' + folderUrl + '">See photos</a></p>'
 
+  const message = {
+    to: to,
+    subject: 'New application: ' + clean(data.name) + ' (' + ref + ')',
+    body: rows.map(function (r) { return r[0] + ': ' + r[1] }).join('\n') + '\n\nPhotos: ' + folderUrl,
+    htmlBody: html,
+    name: 'Blackhood Website',
+  }
+  const applicantEmail = String(data.email || '').trim()
+  if (applicantEmail) message.replyTo = applicantEmail // "Reply" goes straight to the applicant
+
   try {
-    MailApp.sendEmail({
-      to: to,
-      subject: 'New application: ' + clean(data.name) + ' (' + ref + ')',
-      body: rows.map(function (r) { return r[0] + ': ' + r[1] }).join('\n') + '\n\nPhotos: ' + folderUrl,
-      htmlBody: html,
-      name: 'Blackhood Website',
-      replyTo: String(data.email || '').trim() || undefined,
-    })
+    MailApp.sendEmail(message)
   } catch (err) {
     console.warn('Team notification failed: ' + err)
   }
