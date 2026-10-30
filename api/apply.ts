@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
   const age = Number(body.age)
   const missing =
-    !body.name?.trim() || !body.phone?.trim() || !body.city?.trim() || !Number.isFinite(age) || !body.photos?.headshot || !body.photos?.full
+    !body.name?.trim() || !body.phone?.trim() || !body.email?.trim() || !body.city?.trim() || !Number.isFinite(age) || !body.photos?.headshot || !body.photos?.full
   if (missing) return Response.json({ ok: false, error: 'missing fields' }, { status: 400 })
   if (age < 18 && (!body.guardianName?.trim() || !body.guardianPhone?.trim())) {
     return Response.json({ ok: false, error: 'guardian required' }, { status: 400 })

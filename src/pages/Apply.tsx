@@ -135,8 +135,8 @@ export default function Apply() {
           </h1>
           <p className="mt-5 text-lg text-ivory/70">
             {t({
-              en: `Thank you, ${done.name.split(' ')[0]}. Our scouting team reviews every application and will contact you on WhatsApp.`,
-              sw: `Asante, ${done.name.split(' ')[0]}. Timu yetu ya usaili hupitia kila ombi na itawasiliana nawe kwa WhatsApp.`,
+              en: `Thank you, ${done.name.split(' ')[0]}. We've emailed you a confirmation. Our scouting team reviews every application and will contact you on WhatsApp.`,
+              sw: `Asante, ${done.name.split(' ')[0]}. Tumekutumia barua pepe ya uthibitisho. Timu yetu ya usaili hupitia kila ombi na itawasiliana nawe kwa WhatsApp.`,
             })}
           </p>
           {done.ref && (
@@ -234,8 +234,8 @@ export default function Apply() {
               <input id="phone" name="phone" type="tel" required autoComplete="tel" placeholder="+255 7XX XXX XXX" className={field} />
             </div>
             <div>
-              <label className={label} htmlFor="email">{t({ en: 'Email', sw: 'Barua pepe' })}</label>
-              <input id="email" name="email" type="email" autoComplete="email" className={field} />
+              <label className={label} htmlFor="email">{t({ en: 'Email *', sw: 'Barua pepe *' })}</label>
+              <input id="email" name="email" type="email" required autoComplete="email" className={field} />
             </div>
             <div className="sm:col-span-2">
               <label className={label} htmlFor="social">Instagram / TikTok</label>

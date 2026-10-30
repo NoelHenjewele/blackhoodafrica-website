@@ -43,12 +43,55 @@ function doPost(e) {
         links[0], links[1], links[2], folder.getUrl(), '',
       ])
 
+      sendConfirmation(data, ref)
       return json({ ok: true, ref: ref })
     } finally {
       lock.releaseLock()
     }
   } catch (err) {
     return json({ ok: false, error: String(err) })
+  }
+}
+
+// Confirmation email to the applicant, in the language they used on the site.
+// Sent from the Google account that owns this script (free Gmail allows ~100 emails a day).
+function sendConfirmation(data, ref) {
+  const email = String(data.email || '').trim()
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return
+  const first = clean(data.name).split(' ')[0] || ''
+  const sw = data.lang === 'sw'
+
+  const subject = sw
+    ? 'Tumepokea ombi lako – Blackhood Africa (' + ref + ')'
+    : 'We received your application – Blackhood Africa (' + ref + ')'
+
+  const lines = sw
+    ? [
+        'Habari ' + first + ',',
+        'Asante kwa kuomba kujiunga na Blackhood Africa. Tumepokea ombi lako na picha zako, na timu yetu ya usaili inalipitia sasa.',
+        'Namba yako ya ombi ni: ' + ref,
+        'Tutawasiliana nawe kupitia WhatsApp. Tafadhali amini ujumbe kutoka +255 711 505 927 pekee. Usaili na maombi ya wakala ni bure – hatutakuomba pesa kwa ajili ya kuomba.',
+        'Kila la heri,',
+        'Timu ya Blackhood Africa',
+      ]
+    : [
+        'Hi ' + first + ',',
+        'Thank you for applying to Blackhood Africa. We have received your application and photos, and our scouting team is reviewing it now.',
+        'Your application reference is: ' + ref,
+        'We will contact you on WhatsApp. Please only trust messages from +255 711 505 927. Scouting and agency applications are free – we will never ask you for money to apply.',
+        'Best wishes,',
+        'The Blackhood Africa team',
+      ]
+
+  const html = lines
+    .map(function (l, i) { return i === 2 ? '<p><strong>' + l + '</strong></p>' : '<p>' + l + '</p>' })
+    .join('')
+
+  try {
+    MailApp.sendEmail({ to: email, subject: subject, body: lines.join('\n\n'), htmlBody: html, name: 'Blackhood Africa' })
+  } catch (err) {
+    // Email quota or bad address: the application is still saved.
+    console.warn('Confirmation email failed: ' + err)
   }
 }
 
@@ -84,8 +127,9 @@ function json(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON)
 }
 
-// Run once from the editor to create the sheet/folder and approve permissions.
+// Run once from the editor to create the sheet/folder and approve permissions (Sheets, Drive, email).
 function setup() {
   getSheet()
   getFolder()
+  console.log('Emails left today: ' + MailApp.getRemainingDailyQuota())
 }
