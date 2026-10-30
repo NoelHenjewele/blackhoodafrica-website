@@ -91,8 +91,8 @@ export const faqs: { q: L; a: L }[] = [
   {
     q: { en: 'My child is under 18. Can they join?', sw: 'Mtoto wangu ana chini ya miaka 18. Anaweza kujiunga?' },
     a: {
-      en: 'Yes, with a parent or guardian’s consent. Guardians are welcome at classes, and minors are always chaperoned at jobs.',
-      sw: 'Ndiyo, kwa ridhaa ya mzazi au mlezi. Walezi wanakaribishwa darasani, na watoto husimamiwa kila wakati kazini.',
+      en: 'Yes, with a parent or guardian’s consent. Guardians are welcome at classes, and minors are always chaperoned at jobs. See our parents’ guide (linked in the footer) for details on safety, contracts, costs and school.',
+      sw: 'Ndiyo, kwa ridhaa ya mzazi au mlezi. Walezi wanakaribishwa darasani, na watoto husimamiwa kila wakati kazini. Angalia mwongozo wetu kwa wazazi (kiungo kiko chini ya tovuti) kwa maelezo ya usalama, mikataba, gharama na shule.',
     },
   },
   {

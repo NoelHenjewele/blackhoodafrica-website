@@ -346,7 +346,10 @@ export default function Apply() {
                 {t({
                   en: "You're under 18, so a parent or guardian needs to be part of your application.",
                   sw: 'Uko chini ya miaka 18, kwa hiyo mzazi au mlezi anahitajika kwenye ombi lako.',
-                })}
+                })}{' '}
+                <Link to="/parents" target="_blank" className="text-gold underline">
+                  {t({ en: 'Share our parents’ guide with them.', sw: 'Washirikishe mwongozo wetu kwa wazazi.' })}
+                </Link>
               </p>
               <div>
                 <label className={label} htmlFor="guardianName">{t({ en: 'Their name *', sw: 'Jina lake *' })}</label>

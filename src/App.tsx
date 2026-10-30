@@ -16,6 +16,7 @@ import AboutPage from './pages/AboutPage'
 import StoriesPage from './pages/StoriesPage'
 import FaqPage from './pages/FaqPage'
 import VerifyPage from './pages/VerifyPage'
+import ParentsPage from './pages/ParentsPage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="/stories" element={<StoriesPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/verify" element={<VerifyPage />} />
+          <Route path="/parents" element={<ParentsPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
