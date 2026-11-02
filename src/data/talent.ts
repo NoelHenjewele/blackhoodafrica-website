@@ -61,7 +61,8 @@ let cache: Talent[] | null = null
 // Featured talent first, then approved profiles from model accounts.
 export function useTalent() {
   const [list, setList] = useState<Talent[]>(cache ?? talent)
-  const [loaded, setLoaded] = useState(!!cache)
+  // "loaded" means this visit's fresh fetch finished; a model page waits for it before saying "not found".
+  const [loaded, setLoaded] = useState(false)
 
   // Always refresh on mount (the last result shows meanwhile), so a just-approved model appears without a reload.
   useEffect(() => {
