@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 export const boards = ['Women', 'Men', 'New Faces', 'Curve', 'Creators'] as const
 export type Board = (typeof boards)[number]
 
@@ -17,10 +19,16 @@ export type Talent = {
   heightCm?: number
   note?: string
   photo?: string
+  gallery?: string[]
+  stats?: Partial<Record<'bust' | 'waist' | 'hips' | 'shoes' | 'hair' | 'eyes', string | null>>
+  instagram?: string | null
+  tiktok?: string | null
+  bio?: string | null
+  minor?: boolean
   featured?: boolean
 }
 
-// The roster. Only confirmed talent goes here; empty boards show placeholders on the site.
+// Hand-added talent (featured proof). Approved model accounts are added automatically from /api/talent.
 export const talent: Talent[] = [
   {
     slug: 'eladia-edwin',
@@ -29,9 +37,60 @@ export const talent: Talent[] = [
     city: 'Dar es Salaam',
     note: 'Miss Kinondoni 2027–2028',
     photo: '/talent/eladia-edwin/runway-stage.jpg',
+    gallery: ['/talent/eladia-edwin/runway-stage.jpg', '/talent/eladia-edwin/crowned-portrait.jpg', '/talent/eladia-edwin/crowned-with-host.jpg'],
     featured: true,
   },
 ]
+
+type ApiTalent = {
+  slug: string
+  name: string
+  board: string | null
+  city?: string | null
+  heightCm?: number | null
+  stats?: Talent['stats']
+  instagram?: string | null
+  tiktok?: string | null
+  bio?: string | null
+  photos: string[]
+  minor?: boolean
+}
+
+let cache: Talent[] | null = null
+
+// Featured talent first, then approved profiles from model accounts.
+export function useTalent() {
+  const [list, setList] = useState<Talent[]>(cache ?? talent)
+  const [loaded, setLoaded] = useState(!!cache)
+
+  useEffect(() => {
+    if (cache) return
+    fetch('/api/talent')
+      .then((r) => r.json())
+      .then((r: { talent?: ApiTalent[] }) => {
+        const live: Talent[] = (r.talent ?? []).map((a) => ({
+          slug: a.slug,
+          name: a.name,
+          boards: boards.includes(a.board as Board) ? [a.board as Board] : [],
+          city: a.city ?? '',
+          heightCm: a.heightCm ?? undefined,
+          photo: a.photos[0],
+          gallery: a.photos,
+          stats: a.stats,
+          instagram: a.instagram,
+          tiktok: a.tiktok,
+          bio: a.bio,
+          minor: a.minor,
+        }))
+        cache = [...talent, ...live.filter((l) => !talent.some((s) => s.slug === l.slug))]
+        setList(cache)
+      })
+      .catch(() => {})
+      .finally(() => setLoaded(true))
+  }, [])
+
+  return [list, loaded] as const
+}
 
 export function formatHeight(cm?: number) {
   if (!cm) return ''

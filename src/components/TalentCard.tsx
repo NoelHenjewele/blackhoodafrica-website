@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Plus, User } from 'lucide-react'
 import { formatHeight, type Talent } from '../data/talent'
 import { useLang } from '../i18n'
@@ -6,7 +7,7 @@ export function TalentCard({ person }: { person: Talent }) {
   const { t } = useLang()
 
   return (
-    <article className="group">
+    <Link to={`/talent/${person.slug}`} className="group block">
       <div className="relative aspect-[3/4] overflow-hidden bg-ink-soft">
         {person.photo ? (
           <img
@@ -34,7 +35,7 @@ export function TalentCard({ person }: { person: Talent }) {
       <h3 className="mt-4 font-display text-2xl">{person.name}</h3>
       {person.note && <p className="text-sm text-gold">{person.note}</p>}
       <p className="text-sm text-ivory/60">{[person.city, formatHeight(person.heightCm)].filter(Boolean).join(' · ')}</p>
-    </article>
+    </Link>
   )
 }
 

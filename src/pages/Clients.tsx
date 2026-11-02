@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { CheckCircle2, Loader2, Send } from 'lucide-react'
 import ForBrands from '../components/home/ForBrands'
 import { site, whatsappLink } from '../config/site'
@@ -28,6 +29,9 @@ const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text
 
 export default function Clients() {
   const { t, lang } = useLang()
+  // "Book <model>" buttons on model pages arrive with ?model=<name>
+  const [params] = useSearchParams()
+  const requestedModel = params.get('model') ?? ''
   const [consent, setConsent] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
@@ -194,7 +198,7 @@ export default function Clients() {
             </div>
             <div>
               <label className={label} htmlFor="talent">{t({ en: 'Talent needed', sw: 'Vipaji vinavyohitajika' })}</label>
-              <input id="talent" name="talent" placeholder={t({ en: 'e.g. 2 women, 1 man, 25–35', sw: 'mf. wanawake 2, mwanaume 1, miaka 25–35' })} className={field} />
+              <input id="talent" name="talent" defaultValue={requestedModel} placeholder={t({ en: 'e.g. 2 women, 1 man, 25–35', sw: 'mf. wanawake 2, mwanaume 1, miaka 25–35' })} className={field} />
             </div>
             <div>
               <label className={label} htmlFor="budget">{t({ en: 'Budget (TZS)', sw: 'Bajeti (TZS)' })}</label>

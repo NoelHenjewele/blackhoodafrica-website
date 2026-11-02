@@ -148,6 +148,10 @@ export default function AccountPage() {
               </div>
             )}
             {profile && <ProfileEditor profile={profile} onSaved={setProfile} />}
+            <p className="mt-8 text-sm text-ivory/60">
+              {t({ en: 'Blackhood team member?', sw: 'Mwanatimu wa Blackhood?' })}{' '}
+              <Link to="/admin" className="text-gold underline">{t({ en: 'Open profile review', sw: 'Fungua ukaguzi wa wasifu' })}</Link>
+            </p>
             <div className="mt-12 flex flex-wrap gap-3 border-t border-white/10 pt-8">
               <Link to="/compcard" className={button}>{t({ en: 'Make my comp card', sw: 'Tengeneza comp card yangu' })}</Link>
               <button type="button" onClick={signOut} className="inline-flex items-center gap-2 rounded-full border border-ivory/30 px-6 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] hover:border-gold hover:text-gold">

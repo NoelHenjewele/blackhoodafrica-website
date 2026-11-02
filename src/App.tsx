@@ -19,6 +19,8 @@ import VerifyPage from './pages/VerifyPage'
 import ParentsPage from './pages/ParentsPage'
 import CompCardPage from './pages/CompCardPage'
 import AccountPage from './pages/AccountPage'
+import AdminPage from './pages/AdminPage'
+import ModelPage from './pages/ModelPage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -44,6 +46,8 @@ export default function App() {
           <Route path="/parents" element={<ParentsPage />} />
           <Route path="/compcard" element={<CompCardPage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/talent/:slug" element={<ModelPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

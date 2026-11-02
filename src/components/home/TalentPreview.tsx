@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { boardLabels, boards, talent, type Board } from '../../data/talent'
+import { boardLabels, boards, useTalent, type Board } from '../../data/talent'
 import { TalentCard, TalentPlaceholder } from '../TalentCard'
 import { useLang } from '../../i18n'
 
@@ -9,6 +9,7 @@ const SLOTS = 8
 
 export default function TalentPreview() {
   const { t } = useLang()
+  const [talent] = useTalent()
   const [active, setActive] = useState<Board>('Women')
   const named = talent.filter((p) => p.boards.includes(active)).slice(0, SLOTS)
   const placeholders = Math.max(0, SLOTS - named.length)

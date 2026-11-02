@@ -20,7 +20,12 @@ export async function POST(request: Request) {
 
   const { data: existing } = await db.from('profiles').select('id').eq('email', email).maybeSingle()
 
-  if (!existing) {
+  const { data: admin } = await db.from('admins').select('email').eq('email', email).maybeSingle()
+
+  if (!existing && admin) {
+    // Team members log in without a talent profile; "already registered" just means the login exists.
+    await db.auth.admin.createUser({ email, email_confirm: true })
+  } else if (!existing) {
     const talentCode = String(body.talentCode ?? '').trim().toUpperCase()
     if (!/^BHA-T-\d{4}$/.test(talentCode)) return Response.json({ ok: false, error: 'needs code' })
 

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { boardLabels, boards, talent, type Board } from '../data/talent'
+import { boardLabels, boards, useTalent, type Board } from '../data/talent'
 import { TalentCard, TalentPlaceholder } from '../components/TalentCard'
 import { useLang } from '../i18n'
 
@@ -20,12 +20,13 @@ const select =
 
 export default function TalentPage() {
   const { t } = useLang()
+  const [talent] = useTalent()
   const [params, setParams] = useSearchParams()
   const active = boards.find((b) => toSlug(b) === params.get('board')) ?? ALL
   const [city, setCity] = useState(ALL)
   const [height, setHeight] = useState(0)
 
-  const cities = useMemo(() => [ALL, ...Array.from(new Set(talent.map((p) => p.city)))], [])
+  const cities = useMemo(() => [ALL, ...Array.from(new Set(talent.map((p) => p.city).filter(Boolean)))], [talent])
 
   const results = talent.filter((p) => {
     const range = heightRanges[height]
