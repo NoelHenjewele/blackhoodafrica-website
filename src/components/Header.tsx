@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
+import { Menu, ShieldCheck, UserRound, X } from 'lucide-react'
+import { useAuthStatus } from '../auth'
 import { useLang } from '../i18n'
 
 const nav = [
@@ -46,6 +47,8 @@ export default function Header() {
   }, [])
 
   const bookLabel = t({ en: 'Book talent', sw: 'Ajiri kipaji' })
+  const { loggedIn, isAdmin } = useAuthStatus()
+  const accountLabel = loggedIn ? t({ en: 'My account', sw: 'Akaunti yangu' }) : t({ en: 'Log in', sw: 'Ingia' })
 
   return (
     <header
@@ -76,6 +79,22 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <LangToggle />
+          {isAdmin && (
+            <Link
+              to="/admin"
+              title="Admin"
+              className="inline-flex items-center gap-1.5 rounded-full border border-gold/60 px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-gold hover:bg-gold hover:text-ink"
+            >
+              <ShieldCheck size={15} /> <span className="hidden md:inline">Admin</span>
+            </Link>
+          )}
+          <Link
+            to="/account"
+            title={accountLabel}
+            className="inline-flex items-center gap-1.5 text-[13px] font-medium uppercase tracking-[0.12em] text-ivory/80 hover:text-gold"
+          >
+            <UserRound size={18} /> <span className="hidden md:inline">{accountLabel}</span>
+          </Link>
           <Link
             to="/clients"
             className="hidden rounded-full bg-gold px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ivory sm:inline-block"
