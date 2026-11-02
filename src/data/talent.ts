@@ -63,8 +63,8 @@ export function useTalent() {
   const [list, setList] = useState<Talent[]>(cache ?? talent)
   const [loaded, setLoaded] = useState(!!cache)
 
+  // Always refresh on mount (the last result shows meanwhile), so a just-approved model appears without a reload.
   useEffect(() => {
-    if (cache) return
     fetch('/api/talent')
       .then((r) => r.json())
       .then((r: { talent?: ApiTalent[] }) => {

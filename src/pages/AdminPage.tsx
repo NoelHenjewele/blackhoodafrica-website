@@ -179,8 +179,11 @@ export default function AdminPage() {
                       <input type="checkbox" checked={p.is_minor} disabled={busy === p.id} onChange={(e) => act(p.id, { is_minor: e.target.checked })} className="h-4 w-4 accent-[#c9a45c]" />
                       Under 18 (first name + photos only)
                     </label>
-                    {p.status === 'approved' && p.slug && (
+                    {p.status === 'approved' && p.slug && p.photos.length > 0 && (
                       <Link to={`/talent/${p.slug}`} className="text-sm text-gold underline">View public page</Link>
+                    )}
+                    {p.status === 'approved' && p.photos.length === 0 && (
+                      <span className="text-sm text-gold">Not on the Talent page yet: needs at least 1 photo</span>
                     )}
                   </div>
                 </article>
