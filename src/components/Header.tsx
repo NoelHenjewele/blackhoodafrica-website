@@ -82,22 +82,25 @@ export default function Header() {
           {isAdmin && (
             <Link
               to="/admin"
-              title="Admin"
-              className="inline-flex items-center gap-1.5 rounded-full border border-gold/60 px-3 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-gold hover:bg-gold hover:text-ink"
+              title="Admin: profile review"
+              aria-label="Admin: profile review"
+              className="grid h-9 w-9 place-items-center rounded-full border border-gold/60 text-gold transition-colors hover:bg-gold hover:text-ink"
             >
-              <ShieldCheck size={15} /> <span className="hidden md:inline">Admin</span>
+              <ShieldCheck size={16} />
             </Link>
           )}
           <Link
             to="/account"
             title={accountLabel}
-            className="inline-flex items-center gap-1.5 text-[13px] font-medium uppercase tracking-[0.12em] text-ivory/80 hover:text-gold"
+            aria-label={accountLabel}
+            className="relative grid h-9 w-9 place-items-center rounded-full border border-white/20 text-ivory/85 transition-colors hover:border-gold hover:text-gold"
           >
-            <UserRound size={18} /> <span className="hidden md:inline">{accountLabel}</span>
+            <UserRound size={17} />
+            {loggedIn && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-ink bg-gold" />}
           </Link>
           <Link
             to="/clients"
-            className="hidden rounded-full bg-gold px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ivory sm:inline-block"
+            className="hidden whitespace-nowrap rounded-full bg-gold px-5 py-2.5 text-[13px] font-semibold uppercase tracking-[0.12em] text-ink transition-colors hover:bg-ivory sm:inline-block"
           >
             {bookLabel}
           </Link>
