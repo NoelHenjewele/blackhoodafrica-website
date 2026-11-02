@@ -64,6 +64,18 @@ async function loadLogo(url: string) {
   return c.toDataURL('image/jpeg', 0.92)
 }
 
+// Writes one line of text, stepping the font size down until it fits maxW (letter spacing included).
+function fitText(doc: jsPDF, text: string, x: number, y: number, maxW: number, size: number, minSize: number, charSpace: number) {
+  let s = size
+  const width = () => doc.getTextWidth(text) + charSpace * (s / size) * (text.length - 1)
+  doc.setFontSize(s)
+  while (width() > maxW && s > minSize) {
+    s -= 1
+    doc.setFontSize(s)
+  }
+  doc.text(text, x, y, { charSpace: charSpace * (s / size) })
+}
+
 export async function buildCompCard(data: CardData) {
   const doc = new jsPDF({ unit: 'mm', format: 'a5', orientation: 'portrait' })
   const logo = await loadLogo('/brand/logo-black.png')
@@ -74,16 +86,16 @@ export async function buildCompCard(data: CardData) {
   const photoH = H - 48
   doc.addImage(await crop(data.main, (W - 2 * m) / photoH), 'JPEG', m, m, W - 2 * m, photoH)
 
+  // Name on its own line across the full width, shrunk to fit; logo and code on the line below.
   doc.setFont('times', 'normal')
   doc.setTextColor(...INK)
-  doc.setFontSize(26)
-  doc.text(data.name.toUpperCase(), m, H - 24, { charSpace: 1 })
-  doc.addImage(logo, 'JPEG', W - m - 42, H - 32, 42, 10.2, 'logo')
+  fitText(doc, data.name.toUpperCase(), m, H - 26, W - 2 * m, 26, 12, 1)
+  doc.addImage(logo, 'JPEG', W - m - 34, H - 19, 34, 8.25, 'logo')
 
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(8)
   doc.setTextColor(...GOLD)
-  doc.text(verified ? `BLACKHOOD AFRICA TALENT · ${data.code}` : 'APPLICANT · NOT YET REPRESENTED', m, H - 14, { charSpace: 0.8 })
+  doc.text(verified ? `BLACKHOOD AFRICA TALENT · ${data.code}` : 'APPLICANT · NOT YET REPRESENTED', m, H - 13, { charSpace: 0.8 })
 
   // ---- Page 2 ----
   doc.addPage()
@@ -100,9 +112,8 @@ export async function buildCompCard(data: CardData) {
 
   let y = m + 2 * cellH + gap + 10
   doc.setFont('times', 'normal')
-  doc.setFontSize(16)
   doc.setTextColor(...INK)
-  doc.text(data.name.toUpperCase(), m, y, { charSpace: 0.6 })
+  fitText(doc, data.name.toUpperCase(), m, y, W - 2 * m, 16, 10, 0.6)
   y += 7
 
   doc.setFont('helvetica', 'normal')
