@@ -27,5 +27,6 @@ create trigger photos_need_review after insert or update or delete on public.pho
 
 -- >>> Replace with your team's emails, one line each, then Run <<<
 insert into public.admins (email) values
+  ('noel.henje@gmail.com'),
   ('emersonpkiondo@gmail.com')
 on conflict do nothing;
