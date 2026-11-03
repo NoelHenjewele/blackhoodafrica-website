@@ -4,6 +4,7 @@ import { Check, EyeOff, Loader2, RotateCcw } from 'lucide-react'
 import { supabase } from '../config/supabase'
 import AdminCastings from '../components/AdminCastings'
 import AdminBookings from '../components/AdminBookings'
+import AdminPackages from '../components/AdminPackages'
 
 // Team-only review page. English only: it's an internal tool.
 type AdminProfile = {
@@ -46,7 +47,7 @@ export default function AdminPage() {
   const [filter, setFilter] = useState<(typeof filters)[number]>('pending')
   const [busy, setBusy] = useState<string | null>(null)
   const [freeOn, setFreeOn] = useState('')
-  const [tab, setTab] = useState<'profiles' | 'bookings' | 'castings'>('profiles')
+  const [tab, setTab] = useState<'profiles' | 'bookings' | 'packages' | 'castings'>('profiles')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setToken(data.session?.access_token ?? null))
@@ -89,7 +90,7 @@ export default function AdminPage() {
     <section className="min-h-[80vh] pt-20">
       <div className="mx-auto max-w-6xl px-5 py-12 lg:px-10">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Team only</p>
-        <h1 className="mt-3 font-display text-5xl font-medium">{tab === 'castings' ? 'Castings' : tab === 'bookings' ? 'Bookings' : 'Profile review'}</h1>
+        <h1 className="mt-3 font-display text-5xl font-medium">{tab === 'castings' ? 'Castings' : tab === 'bookings' ? 'Bookings' : tab === 'packages' ? 'Client packages' : 'Profile review'}</h1>
 
         {token === undefined || (token && state === 'loading') ? (
           <Loader2 className="mt-10 animate-spin text-gold" />
@@ -104,7 +105,7 @@ export default function AdminPage() {
         ) : (
           <>
             <div className="mt-6 flex gap-6 border-b border-white/10">
-              {(['profiles', 'bookings', 'castings'] as const).map((k) => (
+              {(['profiles', 'bookings', 'packages', 'castings'] as const).map((k) => (
                 <button
                   key={k}
                   type="button"
@@ -121,6 +122,8 @@ export default function AdminPage() {
               <AdminCastings token={token} />
             ) : tab === 'bookings' ? (
               <AdminBookings token={token} />
+            ) : tab === 'packages' ? (
+              <AdminPackages token={token} />
             ) : (
             <>
             <div className="mt-8 flex flex-wrap gap-2">

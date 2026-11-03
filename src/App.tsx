@@ -23,6 +23,7 @@ import AccountPage from './pages/AccountPage'
 import AdminPage from './pages/AdminPage'
 import ModelPage from './pages/ModelPage'
 import GalleryPage from './pages/GalleryPage'
+import PackagePage from './pages/PackagePage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/account" element={<AccountPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/talent/:slug" element={<ModelPage />} />
+          <Route path="/p/:token" element={<PackagePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

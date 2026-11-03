@@ -5,6 +5,8 @@ import { photosByProfile } from './_lib/profiles.js'
 export async function GET(request: Request) {
   const page = new URL(request.url).searchParams.get('page')
   if (page) return modelPage(request, page)
+  const pkg = new URL(request.url).searchParams.get('package')
+  if (pkg) return packageLookup(pkg)
   const db = adminClient()
   if (!db) return Response.json({ ok: true, talent: [] })
 
@@ -85,4 +87,16 @@ async function modelPage(request: Request, slug: string) {
   return new Response(out, {
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 's-maxage=300, stale-while-revalidate=3600' },
   })
+}
+// Client package page (/p/:token): the title, note and chosen model slugs. Client name stays private.
+async function packageLookup(token: string) {
+  const db = adminClient()
+  if (!db || !/^[A-Za-z0-9]{8,32}$/.test(token)) return Response.json({ ok: false }, { status: 404 })
+  const { data } = await db.from('packages').select('id, title, note, slugs, views').eq('token', token).maybeSingle()
+  if (!data) return Response.json({ ok: false }, { status: 404 })
+  await db.from('packages').update({ views: data.views + 1 }).eq('id', data.id)
+  return Response.json(
+    { ok: true, title: data.title, note: data.note, slugs: data.slugs },
+    { headers: { 'Cache-Control': 'private, no-store', 'X-Robots-Tag': 'noindex' } },
+  )
 }

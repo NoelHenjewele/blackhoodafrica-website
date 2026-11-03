@@ -1,4 +1,5 @@
 // Team review API for /admin. Only emails in the `admins` table can use it.
+import { randomBytes } from 'node:crypto'
 import { adminClient, callSheet } from '../_lib/supabaseAdmin.js'
 import { photosByProfile, requireAdmin, slugify } from '../_lib/profiles.js'
 
@@ -10,6 +11,10 @@ export async function GET(request: Request) {
   if (new URL(request.url).searchParams.has('check')) return Response.json({ admin: !!db && !!(await requireAdmin(db, request)) })
   if (!db) return Response.json({ ok: false }, { status: 503 })
   if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
+  if (new URL(request.url).searchParams.has('packages')) {
+    const { data: packages, error } = await db.from('packages').select('*').order('created_at', { ascending: false })
+    return Response.json({ ok: !error, packages: packages ?? [] })
+  }
 
   const { data } = await db.from('profiles').select('*').order('updated_at', { ascending: false })
   const rows = data ?? []
@@ -30,6 +35,7 @@ export async function POST(request: Request) {
   const db = adminClient()
   if (!db) return Response.json({ ok: false }, { status: 503 })
   if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
+  if (new URL(request.url).searchParams.has('packages')) return packagesPOST(db, request)
 
   let body: Action
   try {
@@ -58,4 +64,33 @@ export async function POST(request: Request) {
     await callSheet({ type: 'profile-live', email: current.email, name: current.full_name, slug: patch.slug })
   }
   return Response.json({ ok: true })
+}
+
+// Client packages (?packages=1): create or delete a private link with a hand-picked set of models.
+type PackageBody = { action?: 'create' | 'delete'; id?: string; title?: string; client?: string; note?: string; slugs?: unknown }
+
+async function packagesPOST(db: NonNullable<ReturnType<typeof adminClient>>, request: Request) {
+  let body: PackageBody
+  try {
+    body = (await request.json()) as PackageBody
+  } catch {
+    return Response.json({ ok: false }, { status: 400 })
+  }
+  if (body.action === 'delete' && body.id) {
+    const { error } = await db.from('packages').delete().eq('id', body.id)
+    return Response.json({ ok: !error })
+  }
+  const slugs = Array.isArray(body.slugs) ? body.slugs.map(String).filter((s) => /^[a-z0-9-]{1,80}$/.test(s)).slice(0, 30) : []
+  const title = String(body.title ?? '').trim().slice(0, 120)
+  if (!title || !slugs.length) return Response.json({ ok: false, error: 'title and models needed' }, { status: 400 })
+  // 12 letters/numbers: unguessable, still short enough for WhatsApp.
+  const token = randomBytes(9).toString('base64').replace(/[^A-Za-z0-9]/g, '').slice(0, 12).padEnd(12, 'x')
+  const { error } = await db.from('packages').insert({
+    token,
+    title,
+    client: String(body.client ?? '').trim().slice(0, 120),
+    note: String(body.note ?? '').trim().slice(0, 1000),
+    slugs,
+  })
+  return Response.json({ ok: !error, token }, { status: error ? 500 : 200 })
 }
