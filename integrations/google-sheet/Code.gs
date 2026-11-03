@@ -495,6 +495,7 @@ function sendProfileLiveEmail(data) {
     page,
     'Share this link on your Instagram and TikTok bio. To update your photos or details, log in at ' + SITE_URL + '/account (changes are checked by our team before they go live).',
     'Your comp card is ready to download at ' + SITE_URL + '/compcard',
+    'Need help? Call or WhatsApp us on +255 711 505 927.',
     'The Blackhood Africa team',
   ]
   const sw = [
@@ -503,6 +504,7 @@ function sendProfileLiveEmail(data) {
     page,
     'Weka kiungo hiki kwenye bio yako ya Instagram na TikTok. Kubadilisha picha au taarifa, ingia ' + SITE_URL + '/account (timu yetu itakagua mabadiliko kabla hayajaonekana).',
     'Comp card yako iko tayari kupakua: ' + SITE_URL + '/compcard',
+    'Unahitaji msaada? Tupigie au tuandikie WhatsApp +255 711 505 927.',
     'Timu ya Blackhood Africa',
   ]
   const toHtml = function (lines) {
