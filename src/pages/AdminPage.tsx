@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Check, EyeOff, Loader2, RotateCcw } from 'lucide-react'
 import { supabase } from '../config/supabase'
+import AdminCastings from '../components/AdminCastings'
 
 // Team-only review page. English only: it's an internal tool.
 type AdminProfile = {
@@ -42,6 +43,7 @@ export default function AdminPage() {
   const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading')
   const [filter, setFilter] = useState<(typeof filters)[number]>('pending')
   const [busy, setBusy] = useState<string | null>(null)
+  const [tab, setTab] = useState<'profiles' | 'castings'>('profiles')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setToken(data.session?.access_token ?? null))
@@ -84,7 +86,7 @@ export default function AdminPage() {
     <section className="min-h-[80vh] pt-20">
       <div className="mx-auto max-w-6xl px-5 py-12 lg:px-10">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Team only</p>
-        <h1 className="mt-3 font-display text-5xl font-medium">Profile review</h1>
+        <h1 className="mt-3 font-display text-5xl font-medium">{tab === 'castings' ? 'Castings' : 'Profile review'}</h1>
 
         {token === undefined || (token && state === 'loading') ? (
           <Loader2 className="mt-10 animate-spin text-gold" />
@@ -98,6 +100,24 @@ export default function AdminPage() {
           <p className="mt-8 text-red-300">Couldn't load profiles. Refresh to try again.</p>
         ) : (
           <>
+            <div className="mt-6 flex gap-6 border-b border-white/10">
+              {(['profiles', 'castings'] as const).map((k) => (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => setTab(k)}
+                  className={`-mb-px border-b-2 pb-3 text-sm font-semibold uppercase tracking-[0.15em] ${
+                    tab === k ? 'border-gold text-gold' : 'border-transparent text-ivory/60 hover:text-ivory'
+                  }`}
+                >
+                  {k}
+                </button>
+              ))}
+            </div>
+            {tab === 'castings' ? (
+              <AdminCastings token={token} />
+            ) : (
+            <>
             <div className="mt-8 flex flex-wrap gap-2">
               {filters.map((f) => (
                 <button
@@ -189,6 +209,8 @@ export default function AdminPage() {
                 </article>
               ))}
             </div>
+            </>
+            )}
           </>
         )}
       </div>

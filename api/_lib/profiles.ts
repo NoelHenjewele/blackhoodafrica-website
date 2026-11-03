@@ -18,12 +18,18 @@ export async function photosByProfile(db: SupabaseClient, ids: string[]) {
   return map
 }
 
-// Returns the signed-in admin's email, or null. The browser sends its Supabase access token.
-export async function requireAdmin(db: SupabaseClient, request: Request) {
+// The signed-in user (id + email), or null. The browser sends its Supabase access token.
+export async function userFromRequest(db: SupabaseClient, request: Request) {
   const token = request.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
   if (!token) return null
   const { data } = await db.auth.getUser(token)
   const email = data.user?.email?.toLowerCase()
+  return data.user && email ? { id: data.user.id, email } : null
+}
+
+// Returns the signed-in admin's email, or null.
+export async function requireAdmin(db: SupabaseClient, request: Request) {
+  const email = (await userFromRequest(db, request))?.email
   if (!email) return null
   const { data: admin } = await db.from('admins').select('email').eq('email', email).maybeSingle()
   return admin ? email : null
