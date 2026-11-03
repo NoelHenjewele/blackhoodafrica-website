@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/sitemap.xml", "destination": "/api/talent?sitemap=1" },
     { "source": "/talent/:slug", "destination": "/api/talent?page=:slug" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],

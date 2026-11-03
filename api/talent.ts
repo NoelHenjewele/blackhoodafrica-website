@@ -5,6 +5,7 @@ import { photosByProfile } from './_lib/profiles.js'
 export async function GET(request: Request) {
   const page = new URL(request.url).searchParams.get('page')
   if (page) return modelPage(request, page)
+  if (new URL(request.url).searchParams.has('sitemap')) return sitemap(request)
   const pkg = new URL(request.url).searchParams.get('package')
   if (pkg) return packageLookup(pkg)
   const db = adminClient()
@@ -99,4 +100,22 @@ async function packageLookup(token: string) {
     { ok: true, title: data.title, note: data.note, slugs: data.slugs },
     { headers: { 'Cache-Control': 'private, no-store', 'X-Robots-Tag': 'noindex' } },
   )
+}
+// /sitemap.xml (rewritten here): every public page plus each live model page, for Google.
+const PAGES = ['', '/talent', '/clients', '/apply', '/academy', '/castings', '/gallery', '/stories', '/trust', '/about', '/faq', '/parents', '/verify']
+
+async function sitemap(request: Request) {
+  const origin = new URL(request.url).origin
+  const db = adminClient()
+  const slugs = new Set(Object.keys(STATIC))
+  if (db) {
+    const { data } = await db.from('profiles').select('slug').eq('status', 'approved').not('slug', 'is', null)
+    for (const r of data ?? []) slugs.add(r.slug)
+  }
+  const urls = [...PAGES, ...[...slugs].map((s) => `/talent/${s}`)]
+  const xml =
+    '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    urls.map((u) => `  <url><loc>${esc(origin + u)}</loc></url>`).join('\n') +
+    '\n</urlset>\n'
+  return new Response(xml, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 's-maxage=3600' } })
 }

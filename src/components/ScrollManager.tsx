@@ -1,10 +1,33 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
-// Scrolls to the top on page change, or to #anchor when the link has one.
+const BRAND = 'Blackhood Africa'
+// Browser tab / Google title for each page. Model pages get theirs from the server (api/talent.ts).
+const TITLES: Record<string, string> = {
+  '/': ${BRAND} · Talent House, Dar es Salaam,
+  '/talent': Models & talent · ,
+  '/clients': Book models for your brand · ,
+  '/apply': Become a model · Apply to ,
+  '/academy': Modelling academy in Dar es Salaam · ,
+  '/castings': Castings & open calls · ,
+  '/gallery': Training gallery · ,
+  '/stories': Success stories · ,
+  '/trust': Our promise · ,
+  '/about': About us · ,
+  '/faq': FAQ · ,
+  '/parents': For parents · ,
+  '/verify': Is it really us? · ,
+  '/compcard': Comp card maker · ,
+  '/account': Model login · ,
+}
+
+// Scrolls to the top on page change, or to #anchor when the link has one. Also sets the page title.
 export default function ScrollManager() {
   const { pathname, hash } = useLocation()
 
+  useEffect(() => {
+    if (TITLES[pathname]) document.title = TITLES[pathname]
+  }, [pathname])
   useEffect(() => {
     if (hash) {
       const el = document.getElementById(hash.slice(1))

@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin
+Disallow: /account
+Disallow: /p/
+
+Sitemap: https://blackhoodafrica-website.vercel.app/sitemap.xml
