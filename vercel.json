@@ -1,4 +1,7 @@
 {
-  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }],
+  "rewrites": [
+    { "source": "/talent/:slug", "destination": "/api/talent?page=:slug" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ],
   "crons": [{ "path": "/api/instagram-refresh", "schedule": "0 6 * * 1" }]
 }

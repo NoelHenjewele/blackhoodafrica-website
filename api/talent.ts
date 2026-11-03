@@ -2,7 +2,9 @@
 import { adminClient } from './_lib/supabaseAdmin.js'
 import { photosByProfile } from './_lib/profiles.js'
 
-export async function GET() {
+export async function GET(request: Request) {
+  const page = new URL(request.url).searchParams.get('page')
+  if (page) return modelPage(request, page)
   const db = adminClient()
   if (!db) return Response.json({ ok: true, talent: [] })
 
@@ -37,4 +39,50 @@ export async function GET() {
     })
 
   return Response.json({ ok: true, talent }, { headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=600' } })
+}
+
+// /talent/:slug is rewritten here (vercel.json) so WhatsApp, Instagram and Google see the model's
+// name and photo in link previews. Returns the normal app page with those tags swapped in.
+const STATIC: Record<string, { name: string; photo: string; note: string }> = {
+  'eladia-edwin': { name: 'Eladia Edwin', photo: '/talent/eladia-edwin/runway-stage.jpg', note: 'Miss Kinondoni 2027–2028 · Dar es Salaam' },
+}
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
+
+async function modelPage(request: Request, slug: string) {
+  const origin = new URL(request.url).origin
+  const html = await fetch(`${origin}/index.html`).then((r) => r.text())
+
+  let person = STATIC[slug] ?? null
+  const db = adminClient()
+  if (!person && db) {
+    const { data: r } = await db
+      .from('profiles')
+      .select('id, full_name, board, city, height_cm, is_minor')
+      .eq('slug', slug)
+      .eq('status', 'approved')
+      .maybeSingle()
+    if (r) {
+      const photo = (await photosByProfile(db, [r.id])).get(r.id)?.[0]
+      const name = r.is_minor ? r.full_name.split(' ')[0] : r.full_name
+      const note = r.is_minor ? r.board ?? '' : [r.board, r.city, r.height_cm ? `${r.height_cm} cm` : ''].filter(Boolean).join(' · ')
+      if (photo) person = { name, photo, note }
+    }
+  }
+  if (!person) return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
+
+  const image = person.photo.startsWith('http') ? person.photo : origin + person.photo
+  const title = `${person.name} · Blackhood Africa`
+  const description = `${person.note ? person.note + '. ' : ''}Book ${person.name.split(' ')[0]} through Blackhood Africa, Dar es Salaam.`
+  const tags = [
+    `<title>${esc(title)}</title>`,
+    `<meta property="og:title" content="${esc(title)}" />`,
+    `<meta property="og:description" content="${esc(description)}" />`,
+    `<meta property="og:image" content="${esc(image)}" />`,
+    `<meta property="og:url" content="${esc(`${origin}/talent/${slug}`)}" />`,
+  ].join('\n    ')
+  const out = html.replace(/<!--og-->[\s\S]*?<!--\/og-->/, tags)
+  return new Response(out, {
+    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 's-maxage=300, stale-while-revalidate=3600' },
+  })
 }
