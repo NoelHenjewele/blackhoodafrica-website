@@ -1,11 +1,12 @@
 // Public talent boards: approved profiles only, with privacy rules for under-18s.
 import { adminClient } from './_lib/supabaseAdmin.js'
-import { photosByProfile } from './_lib/profiles.js'
+import { photosByProfile, photoUrl } from './_lib/profiles.js'
 
 export async function GET(request: Request) {
   const page = new URL(request.url).searchParams.get('page')
   if (page) return modelPage(request, page)
   if (new URL(request.url).searchParams.has('sitemap')) return sitemap(request)
+  if (new URL(request.url).searchParams.has('news')) return newsList()
   const pkg = new URL(request.url).searchParams.get('package')
   if (pkg) return packageLookup(pkg)
   const db = adminClient()
@@ -102,7 +103,7 @@ async function packageLookup(token: string) {
   )
 }
 // /sitemap.xml (rewritten here): every public page plus each live model page, for Google.
-const PAGES = ['', '/talent', '/clients', '/apply', '/academy', '/castings', '/gallery', '/stories', '/trust', '/about', '/faq', '/parents', '/verify']
+const PAGES = ['', '/talent', '/clients', '/apply', '/academy', '/castings', '/gallery', '/news', '/stories', '/trust', '/about', '/faq', '/parents', '/verify']
 
 async function sitemap(request: Request) {
   const origin = new URL(request.url).origin
@@ -118,4 +119,12 @@ async function sitemap(request: Request) {
     urls.map((u) => `  <url><loc>${esc(origin + u)}</loc></url>`).join('\n') +
     '\n</urlset>\n'
   return new Response(xml, { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 's-maxage=3600' } })
+}
+// News & events page: latest posts first.
+async function newsList() {
+  const db = adminClient()
+  if (!db) return Response.json({ ok: true, posts: [] })
+  const { data } = await db.from('news').select('id, title, body, photo_path, created_at').order('created_at', { ascending: false }).limit(50)
+  const posts = (data ?? []).map(({ photo_path, ...p }) => ({ ...p, photo: photo_path ? photoUrl(photo_path) : null }))
+  return Response.json({ ok: true, posts }, { headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=600' } })
 }

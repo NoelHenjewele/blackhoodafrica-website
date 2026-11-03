@@ -36,6 +36,7 @@ export async function POST(request: Request) {
   if (!db) return Response.json({ ok: false }, { status: 503 })
   if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
   if (new URL(request.url).searchParams.has('packages')) return packagesPOST(db, request)
+  if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
 
   let body: Action
   try {
@@ -93,4 +94,33 @@ async function packagesPOST(db: NonNullable<ReturnType<typeof adminClient>>, req
     slugs,
   })
   return Response.json({ ok: !error, token }, { status: error ? 500 : 200 })
+}
+// News posts (?news=1): create (with an optional JPEG, base64) or delete. The public list is in api/talent.ts.
+type NewsBody = { action?: 'create' | 'delete'; id?: string; title?: string; body?: string; photo?: string }
+
+async function newsPOST(db: NonNullable<ReturnType<typeof adminClient>>, request: Request) {
+  let body: NewsBody
+  try {
+    body = (await request.json()) as NewsBody
+  } catch {
+    return Response.json({ ok: false }, { status: 400 })
+  }
+  if (body.action === 'delete' && body.id) {
+    const { data } = await db.from('news').select('photo_path').eq('id', body.id).maybeSingle()
+    if (data?.photo_path) await db.storage.from('talent-photos').remove([data.photo_path])
+    const { error } = await db.from('news').delete().eq('id', body.id)
+    return Response.json({ ok: !error })
+  }
+  const title = String(body.title ?? '').trim().slice(0, 160)
+  if (!title) return Response.json({ ok: false, error: 'title' }, { status: 400 })
+  let photo_path: string | null = null
+  if (body.photo) {
+    const bytes = Buffer.from(body.photo, 'base64')
+    if (bytes.length > 2_000_000) return Response.json({ ok: false, error: 'photo too big' }, { status: 400 })
+    photo_path = `news/${crypto.randomUUID()}.jpg`
+    const { error } = await db.storage.from('talent-photos').upload(photo_path, bytes, { contentType: 'image/jpeg' })
+    if (error) return Response.json({ ok: false, error: 'upload' }, { status: 500 })
+  }
+  const { error } = await db.from('news').insert({ title, body: String(body.body ?? '').trim().slice(0, 4000), photo_path })
+  return Response.json({ ok: !error }, { status: error ? 500 : 200 })
 }

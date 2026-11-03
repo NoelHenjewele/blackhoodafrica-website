@@ -24,6 +24,7 @@ import AdminPage from './pages/AdminPage'
 import ModelPage from './pages/ModelPage'
 import GalleryPage from './pages/GalleryPage'
 import PackagePage from './pages/PackagePage'
+import NewsPage from './pages/NewsPage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/stories" element={<StoriesPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/news" element={<NewsPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/verify" element={<VerifyPage />} />
           <Route path="/parents" element={<ParentsPage />} />

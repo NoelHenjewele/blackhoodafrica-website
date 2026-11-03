@@ -11,6 +11,7 @@ const TITLES: Record<string, string> = {
   '/academy': `Modelling academy in Dar es Salaam · ${BRAND}`,
   '/castings': `Castings & open calls · ${BRAND}`,
   '/gallery': `Training gallery · ${BRAND}`,
+  '/news': `News & events · ${BRAND}`,
   '/stories': `Success stories · ${BRAND}`,
   '/trust': `Our promise · ${BRAND}`,
   '/about': `About us · ${BRAND}`,
