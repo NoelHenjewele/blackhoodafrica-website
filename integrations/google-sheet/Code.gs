@@ -490,38 +490,39 @@ function sendProfileLiveEmail(data) {
   const first = clean(data.name).split(' ')[0] || ''
   const page = SITE_URL + '/talent/' + slug
   const en = [
-    'Hi ' + first + ',',
-    'Great news: your Blackhood Africa profile is now live on our website. Brands can see your photos and details and book you from there.',
+    'Dear ' + first + ',',
+    "It gives me great pleasure to tell you that your Blackhood Africa profile is now live on our website. From today, brands can see your photos and details and book you directly.",
     page,
-    'Share this link on your Instagram and TikTok bio. To update your photos or details, log in at ' + SITE_URL + '/account (changes are checked by our team before they go live).',
-    'Your comp card is ready to download at ' + SITE_URL + '/compcard',
-    'Need help? Call or WhatsApp us on +255 711 505 927.',
-    'The Blackhood Africa team',
+    'Share this link proudly on your Instagram and TikTok bio. You can update your photos or details any time at ' + SITE_URL + '/account, and our team will review changes before they go live.',
+    'Your Blackhood comp card is ready to download at ' + SITE_URL + '/compcard',
+    "If you ever need support, call or WhatsApp us on +255 711 505 927. We are proud to have you with us, and I can't wait to see where your career goes.",
+    'Warm regards,\nEng. Noel Henjewele\nFounder & CEO, Blackhood Africa',
   ]
   const sw = [
-    'Habari ' + first + ',',
-    'Habari njema: wasifu wako wa Blackhood Africa sasa uko hewani kwenye tovuti yetu. Makampuni yanaweza kuona picha na taarifa zako na kukuajiri kupitia hapo.',
+    'Mpendwa ' + first + ',',
+    'Nina furaha kubwa kukujulisha kuwa wasifu wako wa Blackhood Africa sasa uko hewani kwenye tovuti yetu. Kuanzia leo, makampuni yanaweza kuona picha na taarifa zako na kukuajiri moja kwa moja.',
     page,
-    'Weka kiungo hiki kwenye bio yako ya Instagram na TikTok. Kubadilisha picha au taarifa, ingia ' + SITE_URL + '/account (timu yetu itakagua mabadiliko kabla hayajaonekana).',
-    'Comp card yako iko tayari kupakua: ' + SITE_URL + '/compcard',
-    'Unahitaji msaada? Tupigie au tuandikie WhatsApp +255 711 505 927.',
-    'Timu ya Blackhood Africa',
+    'Weka kiungo hiki kwa fahari kwenye bio yako ya Instagram na TikTok. Unaweza kubadilisha picha au taarifa wakati wowote kupitia ' + SITE_URL + '/account, na timu yetu itakagua mabadiliko kabla hayajaonekana.',
+    'Comp card yako ya Blackhood iko tayari kupakua: ' + SITE_URL + '/compcard',
+    'Ukihitaji msaada wowote, tupigie au tuandikie WhatsApp +255 711 505 927. Tunajivunia kuwa nawe, na natarajia kuona safari yako ikifika mbali.',
+    'Kwa heshima,\nEng. Noel Henjewele\nMwanzilishi na Mkurugenzi Mtendaji, Blackhood Africa',
   ]
   const toHtml = function (lines) {
     return lines
       .map(function (l, i) {
-        return i === 2 ? '<p><a href="' + l + '" style="font-size:18px;font-weight:bold;color:#b8935a">' + l + '</a></p>' : '<p>' + escapeHtml(l) + '</p>'
+        return i === 2 ? '<p><a href="' + l + '" style="font-size:18px;font-weight:bold;color:#b8935a">' + l + '</a></p>' : '<p>' + escapeHtml(l).replace(/\n/g, '<br>') + '</p>'
       })
       .join('')
   }
   MailApp.sendEmail({
     to: email,
     subject: 'Your Blackhood profile is live / Wasifu wako uko hewani',
+    replyTo: notifyTo(),
     body: en.join('\n\n') + '\n\n— — —\n\n' + sw.join('\n\n'),
     htmlBody:
       '<p><img src="' + SITE_URL + '/brand/logo-black.png" alt="Blackhood Africa" height="48" style="height:48px;width:auto"></p>' +
       toHtml(en) + '<hr>' + toHtml(sw),
-    name: 'Blackhood Africa',
+    name: 'Noel Henjewele, Blackhood Africa',
   })
   return { ok: true }
 }
