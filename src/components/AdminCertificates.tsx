@@ -16,6 +16,7 @@ async function download(c: Cert, token: string) {
       .catch(() => ({ png: undefined })),
   ])
   const signature = sig.png ? `data:image/png;base64,${sig.png}` : undefined
+  if (!signature) alert('Signature not found. Check Supabase Storage has a private bucket named private-files containing signature.png. This PDF uses the typed name instead.')
   const doc = await buildCertificate({ name: c.name, course: c.course, code: c.code, issuedOn: c.issued_on, signature })
   doc.save(certificateFileName(c.name))
 }
