@@ -516,7 +516,9 @@ function sendProfileLiveEmail(data) {
     to: email,
     subject: 'Your Blackhood profile is live / Wasifu wako uko hewani',
     body: en.join('\n\n') + '\n\n— — —\n\n' + sw.join('\n\n'),
-    htmlBody: toHtml(en) + '<hr>' + toHtml(sw),
+    htmlBody:
+      '<p><img src="' + SITE_URL + '/brand/logo-black.png" alt="Blackhood Africa" height="48" style="height:48px;width:auto"></p>' +
+      toHtml(en) + '<hr>' + toHtml(sw),
     name: 'Blackhood Africa',
   })
   return { ok: true }
