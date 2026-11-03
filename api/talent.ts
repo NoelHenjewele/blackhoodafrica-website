@@ -124,7 +124,7 @@ async function sitemap(request: Request) {
 async function newsList() {
   const db = adminClient()
   if (!db) return Response.json({ ok: true, posts: [] })
-  const { data } = await db.from('news').select('id, title, body, photo_path, created_at').order('created_at', { ascending: false }).limit(50)
+  const { data } = await db.from('news').select('id, title, body, photo_path, video_url, created_at').order('created_at', { ascending: false }).limit(50)
   const posts = (data ?? []).map(({ photo_path, ...p }) => ({ ...p, photo: photo_path ? photoUrl(photo_path) : null }))
   return Response.json({ ok: true, posts }, { headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=600' } })
 }

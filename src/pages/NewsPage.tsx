@@ -2,7 +2,32 @@ import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { useLang } from '../i18n'
 
-type Post = { id: string; title: string; body: string | null; photo: string | null; created_at: string }
+type Post = { id: string; title: string; body: string | null; photo: string | null; video_url: string | null; created_at: string }
+
+// Turns a TikTok or YouTube link into an embeddable player address (null if we can't read it).
+function embedFor(url: string) {
+  const tiktok = url.match(/tiktok\.com\/.*\/video\/(\d+)/)
+  if (tiktok) return { src: `https://www.tiktok.com/player/v1/${tiktok[1]}?rel=0&description=0`, tall: true }
+  const yt = url.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/)([\w-]{11})/)
+  if (yt) return { src: `https://www.youtube-nocookie.com/embed/${yt[1]}?rel=0`, tall: url.includes('/shorts/') }
+  return null
+}
+
+function Video({ url, title }: { url: string; title: string }) {
+  const embed = embedFor(url)
+  if (!embed) {
+    return (
+      <a href={url} target="_blank" rel="noreferrer" className="mb-6 inline-block text-gold underline">
+        Watch the video
+      </a>
+    )
+  }
+  return (
+    <div className={`relative mb-6 overflow-hidden border border-white/10 bg-ink-soft ${embed.tall ? 'mx-auto aspect-[9/16] max-w-[340px]' : 'aspect-video'}`}>
+      <iframe src={embed.src} title={title} loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowFullScreen className="absolute inset-0 h-full w-full" />
+    </div>
+  )
+}
 
 // News & events, posted by the team on /admin.
 export default function NewsPage() {
@@ -45,6 +70,7 @@ export default function NewsPage() {
           <div className="space-y-16">
             {posts?.map((p) => (
               <article key={p.id}>
+                {p.video_url && <Video url={p.video_url} title={p.title} />}
                 {p.photo && (
                   <div className="mb-6 overflow-hidden border border-white/10">
                     <img src={p.photo} alt="" loading="lazy" className="max-h-[560px] w-full object-cover" />

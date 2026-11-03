@@ -96,7 +96,7 @@ async function packagesPOST(db: NonNullable<ReturnType<typeof adminClient>>, req
   return Response.json({ ok: !error, token }, { status: error ? 500 : 200 })
 }
 // News posts (?news=1): create (with an optional JPEG, base64) or delete. The public list is in api/talent.ts.
-type NewsBody = { action?: 'create' | 'delete'; id?: string; title?: string; body?: string; photo?: string }
+type NewsBody = { action?: 'create' | 'delete'; id?: string; title?: string; body?: string; photo?: string; video?: string }
 
 async function newsPOST(db: NonNullable<ReturnType<typeof adminClient>>, request: Request) {
   let body: NewsBody
@@ -121,6 +121,9 @@ async function newsPOST(db: NonNullable<ReturnType<typeof adminClient>>, request
     const { error } = await db.storage.from('talent-photos').upload(photo_path, bytes, { contentType: 'image/jpeg' })
     if (error) return Response.json({ ok: false, error: 'upload' }, { status: 500 })
   }
-  const { error } = await db.from('news').insert({ title, body: String(body.body ?? '').trim().slice(0, 4000), photo_path })
+  const video = String(body.video ?? '').trim()
+  const video_url = /^https:\/\/([a-z]+\.)?(tiktok\.com|youtube\.com|youtu\.be)\//i.test(video) ? video.slice(0, 300) : null
+  if (video && !video_url) return Response.json({ ok: false, error: 'video link' }, { status: 400 })
+  const { error } = await db.from('news').insert({ title, body: String(body.body ?? '').trim().slice(0, 4000), photo_path, video_url })
   return Response.json({ ok: !error }, { status: error ? 500 : 200 })
 }

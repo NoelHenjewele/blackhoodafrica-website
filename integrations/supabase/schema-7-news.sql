@@ -9,5 +9,8 @@ create table if not exists public.news (
   created_at  timestamptz not null default now()
 );
 
+-- Optional video: a TikTok or YouTube link, shown as an embedded player.
+alter table public.news add column if not exists video_url text;
+
 -- Only the website's server (secret key) reads and writes posts.
 alter table public.news enable row level security;

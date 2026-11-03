@@ -3,7 +3,7 @@ import { ImagePlus, Loader2, Plus, Trash2 } from 'lucide-react'
 import { shrinkPhoto } from '../utils/photo'
 
 // Team-only: write News & events posts for /news.
-type Post = { id: string; title: string; body: string | null; photo: string | null; created_at: string }
+type Post = { id: string; title: string; body: string | null; photo: string | null; video_url: string | null; created_at: string }
 
 const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none'
 
@@ -35,7 +35,7 @@ export default function AdminNews({ token }: { token: string }) {
       body: JSON.stringify(body),
     })
     setBusy(false)
-    if (!res.ok) setError('That didn’t save. Has the news SQL been run in Supabase?')
+    if (!res.ok) setError('That didn’t save. Check the video link is from TikTok or YouTube, and that the news SQL has been run.')
     await load()
     return res.ok
   }
@@ -44,7 +44,7 @@ export default function AdminNews({ token }: { token: string }) {
     e.preventDefault()
     const form = e.currentTarget
     const d = new FormData(form)
-    const ok = await send({ action: 'create', title: d.get('title'), body: d.get('body'), photo: photo?.base64 })
+    const ok = await send({ action: 'create', title: d.get('title'), body: d.get('body'), video: d.get('video'), photo: photo?.base64 })
     if (ok) {
       form.reset()
       setPhoto(null)
@@ -57,6 +57,7 @@ export default function AdminNews({ token }: { token: string }) {
         <h2 className="font-display text-3xl">New post</h2>
         <input name="title" required placeholder="Title, e.g. Eladia crowned Miss Kinondoni" className={field} />
         <textarea name="body" rows={5} placeholder="The story (optional)" className={field} />
+        <input name="video" type="url" placeholder="Video link (optional): paste a TikTok or YouTube link" className={field} />
         <div className="flex flex-wrap items-center gap-4">
           <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
             <ImagePlus size={14} /> {photo ? 'Change photo' : 'Add photo'}
@@ -88,7 +89,7 @@ export default function AdminNews({ token }: { token: string }) {
             {p.photo && <img src={p.photo} alt="" className="h-20 w-28 shrink-0 object-cover" />}
             <div className="min-w-0 flex-1">
               <h3 className="font-display text-2xl">{p.title}</h3>
-              <p className="text-sm text-ivory/55">{new Date(p.created_at).toLocaleDateString('en-GB')}</p>
+              <p className="text-sm text-ivory/55">{new Date(p.created_at).toLocaleDateString('en-GB')}{p.video_url && ' · with video'}</p>
             </div>
             <button
               type="button"
