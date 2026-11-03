@@ -7,9 +7,16 @@ type Cert = { id: string; code: string; name: string; course: string; issued_on:
 const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none [color-scheme:dark]'
 const DEFAULT_COURSE = 'Professional Modelling Course'
 
-async function download(c: Cert) {
-  const { buildCertificate, certificateFileName } = await import('../utils/certificate')
-  const doc = await buildCertificate({ name: c.name, course: c.course, code: c.code, issuedOn: c.issued_on })
+// The CEO's signature is only given to signed-in team members, so it's fetched with the login token.
+async function download(c: Cert, token: string) {
+  const [{ buildCertificate, certificateFileName }, sig] = await Promise.all([
+    import('../utils/certificate'),
+    fetch('/api/admin/profiles?signature=1', { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.json() as Promise<{ png?: string }>)
+      .catch(() => ({ png: undefined })),
+  ])
+  const signature = sig.png ? `data:image/png;base64,${sig.png}` : undefined
+  const doc = await buildCertificate({ name: c.name, course: c.course, code: c.code, issuedOn: c.issued_on, signature })
   doc.save(certificateFileName(c.name))
 }
 
@@ -56,7 +63,7 @@ export default function AdminCertificates({ token }: { token: string }) {
     const cert = await send({ action: 'create', name: d.get('name'), course: d.get('course'), issued_on: d.get('issued_on') })
     if (cert) {
       form.reset()
-      await download(cert)
+      await download(cert, token)
     }
   }
 
@@ -87,7 +94,7 @@ export default function AdminCertificates({ token }: { token: string }) {
               <p className="font-medium">{c.name}</p>
               <p className="text-sm text-ivory/55">{c.course} · {new Date(c.issued_on + 'T00:00').toLocaleDateString('en-GB')}</p>
             </div>
-            <button type="button" onClick={() => download(c)} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
+            <button type="button" onClick={() => download(c, token)} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
               <Download size={14} /> PDF
             </button>
             <button type="button" disabled={busy} onClick={() => confirm(`Delete certificate ${c.code}? Its code will stop verifying.`) && send({ action: 'delete', id: c.id })}

@@ -1,7 +1,7 @@
 // Builds an A4 landscape academy certificate PDF in the browser. The code can be checked on /verify.
 import { jsPDF } from 'jspdf'
 
-export type CertData = { name: string; course: string; code: string; issuedOn: string }
+export type CertData = { name: string; course: string; code: string; issuedOn: string; signature?: string } // signature: PNG data URL
 
 const W = 297
 const H = 210
@@ -195,9 +195,15 @@ export async function buildCertificate(d: CertData) {
   // Signature (left), seal (centre), date (right)
   const date = new Date(d.issuedOn + 'T00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
   doc.setTextColor(...INK)
-  doc.setFont('times', 'italic')
-  doc.setFontSize(20)
-  doc.text('N. Henjewele', 85, 163, { align: 'center' })
+  if (d.signature) {
+    const sig = await flatLogo(d.signature)
+    const sh = 21
+    doc.addImage(sig.data, 'JPEG', 85 - (sh * sig.ratio) / 2, 146.5, sh * sig.ratio, sh, 'signature')
+  } else {
+    doc.setFont('times', 'italic')
+    doc.setFontSize(20)
+    doc.text('N. Henjewele', 85, 163, { align: 'center' })
+  }
   doc.setFont('times', 'bold')
   doc.setFontSize(16)
   doc.text(date, W - 85, 163, { align: 'center' })
