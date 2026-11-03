@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import Header from './components/Header'
@@ -7,26 +8,27 @@ import ChatWidget from './components/ChatWidget'
 import { ShortlistBar } from './components/Shortlist'
 import { useLang } from './i18n'
 import Home from './pages/Home'
-import Clients from './pages/Clients'
-import Apply from './pages/Apply'
-import TalentPage from './pages/TalentPage'
-import AcademyPage from './pages/AcademyPage'
-import CastingsPage from './pages/CastingsPage'
-import TrustPage from './pages/TrustPage'
-import AboutPage from './pages/AboutPage'
-import StoriesPage from './pages/StoriesPage'
-import FaqPage from './pages/FaqPage'
-import VerifyPage from './pages/VerifyPage'
-import ParentsPage from './pages/ParentsPage'
-import CompCardPage from './pages/CompCardPage'
-import AccountPage from './pages/AccountPage'
-import AdminPage from './pages/AdminPage'
-import ModelPage from './pages/ModelPage'
+// Other pages load on demand, so the first visit downloads less on mobile data.
+const Clients = lazy(() => import('./pages/Clients'))
+const Apply = lazy(() => import('./pages/Apply'))
+const TalentPage = lazy(() => import('./pages/TalentPage'))
+const AcademyPage = lazy(() => import('./pages/AcademyPage'))
+const CastingsPage = lazy(() => import('./pages/CastingsPage'))
+const TrustPage = lazy(() => import('./pages/TrustPage'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const StoriesPage = lazy(() => import('./pages/StoriesPage'))
+const FaqPage = lazy(() => import('./pages/FaqPage'))
+const VerifyPage = lazy(() => import('./pages/VerifyPage'))
+const ParentsPage = lazy(() => import('./pages/ParentsPage'))
+const CompCardPage = lazy(() => import('./pages/CompCardPage'))
+const AccountPage = lazy(() => import('./pages/AccountPage'))
+const AdminPage = lazy(() => import('./pages/AdminPage'))
+const ModelPage = lazy(() => import('./pages/ModelPage'))
 import GalleryPage from './pages/GalleryPage'
-import PackagePage from './pages/PackagePage'
-import NewsPage from './pages/NewsPage'
-import ReviewPage from './pages/ReviewPage'
-import NotFound from './pages/NotFound'
+const PackagePage = lazy(() => import('./pages/PackagePage'))
+const NewsPage = lazy(() => import('./pages/NewsPage'))
+const ReviewPage = lazy(() => import('./pages/ReviewPage'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 export default function App() {
   const { lang } = useLang()
@@ -36,6 +38,7 @@ export default function App() {
       <ScrollManager />
       <Header />
       <main>
+        <Suspense fallback={<div className="min-h-screen" />}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/clients" element={<Clients />} />
@@ -59,6 +62,7 @@ export default function App() {
           <Route path="/p/:token" element={<PackagePage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </Suspense>
       </main>
       <Footer />
       <ShortlistBar />

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, CalendarDays, Check, MapPin } from 'lucide-react'
 import { whatsappLink } from '../../config/site'
-import { supabase } from '../../config/supabase'
 import { useLang } from '../../i18n'
 
 type Casting = {
@@ -22,6 +21,7 @@ function useCastings() {
   const [token, setToken] = useState<string | null>(null)
 
   const load = useCallback(async () => {
+    const { supabase } = await import('../../config/supabase')
     const { data } = await supabase.auth.getSession()
     const tk = data.session?.access_token ?? null
     setToken(tk)
