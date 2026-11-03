@@ -43,6 +43,7 @@ function doPost(e) {
       if (data.type === 'verify-email') return json(handleVerifyEmail(data))
       if (data.type === 'login-code') return json(sendLoginCode(data))
       if (data.type === 'profile-live') return json(sendProfileLiveEmail(data))
+      if (data.type === 'casting-alert') return json(sendCastingAlert(data))
       if (data.type === 'list-bookings') return json(listBookings())
       if (data.type === 'booking-status') return json(setBookingStatus(data))
       return json(handleApplication(data))
@@ -241,6 +242,44 @@ function notifyBooking(data, ref, sheet) {
   } catch (err) {
     console.warn('Booking alert failed: ' + err)
   }
+}
+
+// New casting posted on /admin: one email to all approved models (BCC, so they don't see each other).
+function sendCastingAlert(data) {
+  const emails = (data.emails || []).map(validEmail).filter(Boolean)
+  if (!emails.length) return { ok: true, sent: 0 }
+  const c = data.casting || {}
+  const facts = [clean(c.type), clean(c.date_text), clean(c.place)].filter(Boolean).join(' · ')
+  const page = SITE_URL + '/castings'
+  const en = [
+    'New casting: ' + clean(c.title),
+    facts,
+    clean(c.details),
+    "If you're interested, log in and tap \"I'm interested\" on the Castings page: " + page,
+    'The Blackhood Africa team',
+  ].filter(Boolean)
+  const sw = [
+    'Usaili mpya: ' + clean(c.title),
+    facts,
+    'Kama una nia, ingia kisha gusa "Nina nia" kwenye ukurasa wa Usaili: ' + page,
+    'Timu ya Blackhood Africa',
+  ].filter(Boolean)
+  const html =
+    '<p><img src="' + SITE_URL + '/brand/logo-black.png" alt="Blackhood Africa" height="40" style="height:40px;width:auto"></p>' +
+    '<p style="font-size:20px"><strong>' + escapeHtml(en[0]) + '</strong></p>' +
+    en.slice(1).map(function (l) { return '<p>' + escapeHtml(l).replace(/\n/g, '<br>') + '</p>' }).join('') +
+    '<hr>' + sw.map(function (l) { return '<p>' + escapeHtml(l) + '</p>' }).join('')
+  for (let i = 0; i < emails.length; i += 40) {
+    MailApp.sendEmail({
+      to: notifyTo(),
+      bcc: emails.slice(i, i + 40).join(','),
+      subject: 'New casting: ' + clean(c.title) + ' / Usaili mpya',
+      body: en.join('\n\n') + '\n\n— — —\n\n' + sw.join('\n\n'),
+      htmlBody: html,
+      name: 'Blackhood Africa',
+    })
+  }
+  return { ok: true, sent: emails.length }
 }
 
 // For the Bookings tab on /admin (server-to-server only, behind the shared secret).

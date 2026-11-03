@@ -76,6 +76,7 @@ export default function AdminCastings({ token }: { token: string }) {
       date_text: get('date_text'),
       place: get('place'),
       details: get('details'),
+      notify: d.get('notify') === 'on',
     })
     if (ok) form.reset()
   }
@@ -102,7 +103,10 @@ export default function AdminCastings({ token }: { token: string }) {
           >
             <Plus size={14} /> Post casting
           </button>
-          <p className="text-xs text-ivory/50">It appears on the public Castings page straight away.</p>
+          <label className="flex items-center gap-2 text-sm text-ivory/75">
+            <input type="checkbox" name="notify" defaultChecked className="h-4 w-4 accent-[#c9a45c]" />
+            Email all approved models about it
+          </label>
         </div>
       </form>
 

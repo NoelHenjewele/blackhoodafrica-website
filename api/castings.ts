@@ -1,6 +1,6 @@
 // Castings board. Public: anyone reads open castings; approved models tap "I'm interested".
 // Team (?admin=1): post, close, reopen, delete, and see who's interested. One file because Vercel's free plan allows 12 functions.
-import { adminClient } from './_lib/supabaseAdmin.js'
+import { adminClient, callSheet } from './_lib/supabaseAdmin.js'
 import { photosByProfile, requireAdmin, userFromRequest } from './_lib/profiles.js'
 
 const isAdmin = (request: Request) => new URL(request.url).searchParams.has('admin')
@@ -94,6 +94,7 @@ type Body = {
   date_text?: string
   place?: string
   details?: string
+  notify?: boolean
 }
 
 const text = (v: unknown, max: number) => String(v ?? '').trim().slice(0, max)
@@ -113,14 +114,25 @@ async function adminPOST(request: Request) {
   if (body.action === 'create') {
     const title = text(body.title, 120)
     if (!title) return Response.json({ ok: false, error: 'title' }, { status: 400 })
-    const { error } = await db.from('castings').insert({
+    const casting = {
       title,
       type: text(body.type, 60),
       date_text: text(body.date_text, 80),
       place: text(body.place, 120),
       details: text(body.details, 2000),
-    })
-    return Response.json({ ok: !error }, { status: error ? 500 : 200 })
+    }
+    const { error } = await db.from('castings').insert(casting)
+    if (error) return Response.json({ ok: false }, { status: 500 })
+
+    // Optional: email every approved model about the new casting.
+    let sent = 0
+    if (body.notify) {
+      const { data: models } = await db.from('profiles').select('email').eq('status', 'approved')
+      const emails = (models ?? []).map((m) => m.email).filter(Boolean)
+      const r = await callSheet<{ ok: boolean; sent?: number }>({ type: 'casting-alert', emails, casting })
+      sent = r?.sent ?? 0
+    }
+    return Response.json({ ok: true, sent })
   }
 
   if (!body.id) return Response.json({ ok: false }, { status: 400 })
