@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Loader2, Share2 } from 'lucide-react'
 import { boardLabels, formatHeight, useTalent } from '../data/talent'
 import { useLang } from '../i18n'
 import NotFound from './NotFound'
@@ -109,6 +109,19 @@ export default function ModelPage() {
                 {t({ en: `Book ${person.name.split(' ')[0]}`, sw: `Mwajiri ${person.name.split(' ')[0]}` })} <ArrowRight size={18} />
               </Link>
               <ShortlistButton large item={{ slug: person.slug, name: person.name }} />
+              <button
+                type="button"
+                onClick={() => {
+                  const url = window.location.href
+                  const text = `${person.name} · Blackhood Africa`
+                  // Phones open their own share sheet; computers fall back to WhatsApp.
+                  if (navigator.share) navigator.share({ title: text, url }).catch(() => {})
+                  else window.open(`https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`, '_blank', 'noopener')
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ivory hover:border-gold hover:text-gold"
+              >
+                <Share2 size={18} /> {t({ en: 'Share', sw: 'Shiriki' })}
+              </button>
               </div>
               <p className="mt-3 text-xs text-ivory/50">
                 {t({ en: 'All bookings go through Blackhood Africa.', sw: 'Kazi zote zinapitia Blackhood Africa.' })}
