@@ -1,5 +1,5 @@
 // Team review API for /admin. Only emails in the `admins` table can use it.
-import { adminClient } from '../_lib/supabaseAdmin.js'
+import { adminClient, callSheet } from '../_lib/supabaseAdmin.js'
 import { photosByProfile, requireAdmin, slugify } from '../_lib/profiles.js'
 
 const ORDER: Record<string, number> = { pending: 0, draft: 1, approved: 2, hidden: 3 }
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   }
   if (!body.id) return Response.json({ ok: false }, { status: 400 })
 
-  const { data: current } = await db.from('profiles').select('full_name, talent_code, slug').eq('id', body.id).maybeSingle()
+  const { data: current } = await db.from('profiles').select('full_name, talent_code, slug, email').eq('id', body.id).maybeSingle()
   if (!current) return Response.json({ ok: false, error: 'not found' }, { status: 404 })
 
   const patch: Record<string, unknown> = {}
@@ -46,5 +46,10 @@ export async function POST(request: Request) {
 
   const { error } = await db.from('profiles').update(patch).eq('id', body.id)
   if (error) return Response.json({ ok: false }, { status: 500 })
+
+  // First approval only: tell the model their page is live. Later re-approvals (after edits) stay quiet.
+  if (patch.slug) {
+    await callSheet({ type: 'profile-live', email: current.email, name: current.full_name, slug: patch.slug })
+  }
   return Response.json({ ok: true })
 }

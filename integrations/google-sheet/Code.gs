@@ -41,6 +41,7 @@ function doPost(e) {
       if (data.type === 'verify') return json(handleVerify(data))
       if (data.type === 'verify-email') return json(handleVerifyEmail(data))
       if (data.type === 'login-code') return json(sendLoginCode(data))
+      if (data.type === 'profile-live') return json(sendProfileLiveEmail(data))
       return json(handleApplication(data))
     } finally {
       lock.releaseLock()
@@ -478,6 +479,46 @@ function sendLoginCode(data) {
     : ['Your Blackhood Africa login code is:', code, "It works for 10 minutes. If you didn't ask for it, you can ignore this email."]
   const html = '<p>' + lines[0] + '</p><p style="font-size:28px;letter-spacing:6px"><strong>' + code + '</strong></p><p>' + lines[2] + '</p>'
   MailApp.sendEmail({ to: email, subject: subject, body: lines.join('\n\n'), htmlBody: html, name: 'Blackhood Africa' })
+  return { ok: true }
+}
+
+// Sent the first time the team approves a model's online profile. Both languages, since we don't store a preference.
+function sendProfileLiveEmail(data) {
+  const email = validEmail(data.email)
+  const slug = String(data.slug || '').replace(/[^a-z0-9-]/g, '')
+  if (!email || !slug) return { ok: false }
+  const first = clean(data.name).split(' ')[0] || ''
+  const page = SITE_URL + '/talent/' + slug
+  const en = [
+    'Hi ' + first + ',',
+    'Great news: your Blackhood Africa profile is now live on our website. Brands can see your photos and details and book you from there.',
+    page,
+    'Share this link on your Instagram and TikTok bio. To update your photos or details, log in at ' + SITE_URL + '/account (changes are checked by our team before they go live).',
+    'Your comp card is ready to download at ' + SITE_URL + '/compcard',
+    'The Blackhood Africa team',
+  ]
+  const sw = [
+    'Habari ' + first + ',',
+    'Habari njema: wasifu wako wa Blackhood Africa sasa uko hewani kwenye tovuti yetu. Makampuni yanaweza kuona picha na taarifa zako na kukuajiri kupitia hapo.',
+    page,
+    'Weka kiungo hiki kwenye bio yako ya Instagram na TikTok. Kubadilisha picha au taarifa, ingia ' + SITE_URL + '/account (timu yetu itakagua mabadiliko kabla hayajaonekana).',
+    'Comp card yako iko tayari kupakua: ' + SITE_URL + '/compcard',
+    'Timu ya Blackhood Africa',
+  ]
+  const toHtml = function (lines) {
+    return lines
+      .map(function (l, i) {
+        return i === 2 ? '<p><a href="' + l + '" style="font-size:18px;font-weight:bold;color:#b8935a">' + l + '</a></p>' : '<p>' + escapeHtml(l) + '</p>'
+      })
+      .join('')
+  }
+  MailApp.sendEmail({
+    to: email,
+    subject: 'Your Blackhood profile is live / Wasifu wako uko hewani',
+    body: en.join('\n\n') + '\n\n— — —\n\n' + sw.join('\n\n'),
+    htmlBody: toHtml(en) + '<hr>' + toHtml(sw),
+    name: 'Blackhood Africa',
+  })
   return { ok: true }
 }
 
