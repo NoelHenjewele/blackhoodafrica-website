@@ -13,9 +13,12 @@ export async function GET(request: Request) {
   if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
   if (new URL(request.url).searchParams.has('signature')) {
     // The CEO's signature lives in a PRIVATE Supabase bucket (not in the code, which is public on GitHub).
-    const { data: file } = await db.storage.from('private-files').download('signature.png')
+    const { data: file, error } = await db.storage.from('private-files').download('signature.png')
     const png = file ? Buffer.from(await file.arrayBuffer()).toString('base64') : null
-    return Response.json({ ok: !!png, png }, { headers: { 'Cache-Control': 'private, no-store' } })
+    // When it fails, say why (and list what's in the bucket) so the team can fix the upload.
+    let found: string[] = []
+    if (!png) found = ((await db.storage.from('private-files').list()).data ?? []).map((f) => f.name)
+    return Response.json({ ok: !!png, png, error: error?.message, found }, { headers: { 'Cache-Control': 'private, no-store' } })
   }
   if (new URL(request.url).searchParams.has('certificates')) {
     const { data: certificates, error } = await db.from('certificates').select('*').order('created_at', { ascending: false })

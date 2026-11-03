@@ -12,11 +12,13 @@ async function download(c: Cert, token: string) {
   const [{ buildCertificate, certificateFileName }, sig] = await Promise.all([
     import('../utils/certificate'),
     fetch('/api/admin/profiles?signature=1', { headers: { Authorization: `Bearer ${token}` } })
-      .then((r) => r.json() as Promise<{ png?: string }>)
-      .catch(() => ({ png: undefined })),
+      .then((r) => r.json() as Promise<{ png?: string; error?: string; found?: string[] }>)
+      .catch((e) => ({ png: undefined, error: String(e), found: [] as string[] })),
   ])
   const signature = sig.png ? `data:image/png;base64,${sig.png}` : undefined
-  if (!signature) alert('Signature not found. Check Supabase Storage has a private bucket named private-files containing signature.png. This PDF uses the typed name instead.')
+  if (!signature) {
+    alert(`Signature not found (${sig.error ?? 'unknown'}). Files in private-files: ${sig.found?.join(', ') || 'none'}. This PDF uses the typed name instead.`)
+  }
   const doc = await buildCertificate({ name: c.name, course: c.course, code: c.code, issuedOn: c.issued_on, signature })
   doc.save(certificateFileName(c.name))
 }
