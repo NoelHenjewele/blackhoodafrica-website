@@ -11,6 +11,10 @@ export async function GET(request: Request) {
   if (new URL(request.url).searchParams.has('check')) return Response.json({ admin: !!db && !!(await requireAdmin(db, request)) })
   if (!db) return Response.json({ ok: false }, { status: 503 })
   if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
+  if (new URL(request.url).searchParams.has('certificates')) {
+    const { data: certificates, error } = await db.from('certificates').select('*').order('created_at', { ascending: false })
+    return Response.json({ ok: !error, certificates: certificates ?? [] })
+  }
   if (new URL(request.url).searchParams.has('reviews')) {
     const { data: reviews, error } = await db.from('reviews').select('*').order('created_at', { ascending: false })
     return Response.json({ ok: !error, reviews: reviews ?? [] })
@@ -25,10 +29,12 @@ export async function GET(request: Request) {
   const photos = await photosByProfile(db, rows.map((r) => r.id))
   const today = new Date().toISOString().slice(0, 10)
   const { data: busyRows } = await db.from('busy_days').select('profile_id, day').gte('day', today).order('day')
+  const { data: consentRows } = await db.from('parent_consents').select('profile_id, parent_name, relationship, phone, signed_at')
+  const consent = new Map((consentRows ?? []).map((c) => [c.profile_id, c]))
   const busy = new Map<string, string[]>()
   for (const b of busyRows ?? []) busy.set(b.profile_id, [...(busy.get(b.profile_id) ?? []), b.day])
   const profiles = rows
-    .map((r) => ({ ...r, photos: photos.get(r.id) ?? [], busy: busy.get(r.id) ?? [] }))
+    .map((r) => ({ ...r, photos: photos.get(r.id) ?? [], busy: busy.get(r.id) ?? [], consent: consent.get(r.id) ?? null }))
     .sort((a, b) => (ORDER[a.status] ?? 9) - (ORDER[b.status] ?? 9))
   return Response.json({ ok: true, profiles })
 }
@@ -42,6 +48,7 @@ export async function POST(request: Request) {
   if (new URL(request.url).searchParams.has('packages')) return packagesPOST(db, request)
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
   if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
+  if (new URL(request.url).searchParams.has('certificates')) return certificatesPOST(db, request)
 
   let body: Action
   try {
@@ -153,4 +160,28 @@ async function reviewsPOST(db: NonNullable<ReturnType<typeof adminClient>>, requ
   if (typeof body.role === 'string') patch.role = body.role.trim().slice(0, 100)
   const { error } = await db.from('reviews').update(patch).eq('id', body.id)
   return Response.json({ ok: !error })
+}
+// Academy certificates (?certificates=1): issue (next BHA-C-#### number) or delete.
+type CertBody = { action?: 'create' | 'delete'; id?: string; name?: string; course?: string; issued_on?: string }
+
+async function certificatesPOST(db: NonNullable<ReturnType<typeof adminClient>>, request: Request) {
+  let body: CertBody
+  try {
+    body = (await request.json()) as CertBody
+  } catch {
+    return Response.json({ ok: false }, { status: 400 })
+  }
+  if (body.action === 'delete' && body.id) {
+    const { error } = await db.from('certificates').delete().eq('id', body.id)
+    return Response.json({ ok: !error })
+  }
+  const name = String(body.name ?? '').trim().slice(0, 100)
+  const course = String(body.course ?? '').trim().slice(0, 140)
+  const issued_on = /^\d{4}-\d{2}-\d{2}$/.test(String(body.issued_on)) ? String(body.issued_on) : new Date().toISOString().slice(0, 10)
+  if (!name || !course) return Response.json({ ok: false, error: 'name and course' }, { status: 400 })
+  const { data: last } = await db.from('certificates').select('code').order('code', { ascending: false }).limit(1).maybeSingle()
+  const next = (last ? Number(last.code.slice(-4)) : 0) + 1
+  const code = `BHA-C-${String(next).padStart(4, '0')}`
+  const { data, error } = await db.from('certificates').insert({ code, name, course, issued_on }).select().single()
+  return Response.json({ ok: !error, certificate: data }, { status: error ? 500 : 200 })
 }

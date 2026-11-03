@@ -7,6 +7,7 @@ import AdminBookings from '../components/AdminBookings'
 import AdminPackages from '../components/AdminPackages'
 import AdminNews from '../components/AdminNews'
 import AdminReviews from '../components/AdminReviews'
+import AdminCertificates from '../components/AdminCertificates'
 
 // Team-only review page. English only: it's an internal tool.
 type AdminProfile = {
@@ -32,6 +33,7 @@ type AdminProfile = {
   updated_at: string
   photos: string[]
   busy: string[]
+  consent: { parent_name: string; relationship: string; phone: string; signed_at: string } | null
 }
 
 const filters = ['pending', 'approved', 'hidden', 'draft', 'all'] as const
@@ -49,7 +51,7 @@ export default function AdminPage() {
   const [filter, setFilter] = useState<(typeof filters)[number]>('pending')
   const [busy, setBusy] = useState<string | null>(null)
   const [freeOn, setFreeOn] = useState('')
-  const [tab, setTab] = useState<'profiles' | 'bookings' | 'packages' | 'castings' | 'news' | 'reviews'>('profiles')
+  const [tab, setTab] = useState<'profiles' | 'bookings' | 'packages' | 'castings' | 'news' | 'reviews' | 'certificates'>('profiles')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setToken(data.session?.access_token ?? null))
@@ -92,7 +94,7 @@ export default function AdminPage() {
     <section className="min-h-[80vh] pt-20">
       <div className="mx-auto max-w-6xl px-5 py-12 lg:px-10">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">Team only</p>
-        <h1 className="mt-3 font-display text-5xl font-medium">{tab === 'castings' ? 'Castings' : tab === 'bookings' ? 'Bookings' : tab === 'packages' ? 'Client packages' : tab === 'news' ? 'News' : tab === 'reviews' ? 'Reviews' : 'Profile review'}</h1>
+        <h1 className="mt-3 font-display text-5xl font-medium">{tab === 'castings' ? 'Castings' : tab === 'bookings' ? 'Bookings' : tab === 'packages' ? 'Client packages' : tab === 'news' ? 'News' : tab === 'reviews' ? 'Reviews' : tab === 'certificates' ? 'Certificates' : 'Profile review'}</h1>
 
         {token === undefined || (token && state === 'loading') ? (
           <Loader2 className="mt-10 animate-spin text-gold" />
@@ -107,7 +109,7 @@ export default function AdminPage() {
         ) : (
           <>
             <div className="mt-6 flex gap-6 overflow-x-auto whitespace-nowrap border-b border-white/10">
-              {(['profiles', 'bookings', 'packages', 'castings', 'news', 'reviews'] as const).map((k) => (
+              {(['profiles', 'bookings', 'packages', 'castings', 'news', 'reviews', 'certificates'] as const).map((k) => (
                 <button
                   key={k}
                   type="button"
@@ -130,6 +132,8 @@ export default function AdminPage() {
               <AdminNews token={token} />
             ) : tab === 'reviews' ? (
               <AdminReviews token={token} />
+            ) : tab === 'certificates' ? (
+              <AdminCertificates token={token} />
             ) : (
             <>
             <div className="mt-8 flex flex-wrap gap-2">
@@ -194,6 +198,13 @@ export default function AdminPage() {
                     ))}
                   </dl>
                   {p.bio && <p className="mt-3 text-sm text-ivory/75">{p.bio}</p>}
+                  {p.is_minor && (
+                    <p className={`mt-3 text-sm ${p.consent ? 'text-green-300' : 'text-gold'}`}>
+                      {p.consent
+                        ? `Parent consent: signed by ${p.consent.parent_name} (${p.consent.relationship}, ${p.consent.phone}) on ${new Date(p.consent.signed_at).toLocaleDateString('en-GB')}`
+                        : 'Parent consent: NOT signed yet. Ask the parent to sign on the model’s account page before approving.'}
+                    </p>
+                  )}
                   <p className="mt-3 text-sm">
                     <span className="text-ivory/50">Busy: </span>
                     {p.busy.length

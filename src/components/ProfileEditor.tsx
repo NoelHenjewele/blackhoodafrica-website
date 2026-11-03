@@ -14,6 +14,7 @@ export type ProfileRow = {
   talent_code: string
   email: string
   status: 'draft' | 'pending' | 'approved' | 'hidden'
+  is_minor?: boolean
   board: string | null
   city: string | null
   height_cm: number | null

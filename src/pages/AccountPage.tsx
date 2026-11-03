@@ -6,6 +6,7 @@ import { supabase } from '../config/supabase'
 import { useLang, type L } from '../i18n'
 import ProfileEditor, { type ProfileRow } from '../components/ProfileEditor'
 import Availability from '../components/Availability'
+import ParentConsent from '../components/ParentConsent'
 
 type Profile = ProfileRow
 
@@ -149,6 +150,7 @@ export default function AccountPage() {
               </div>
             )}
             {profile && <ProfileEditor profile={profile} onSaved={setProfile} />}
+            {profile?.is_minor && <ParentConsent profileId={profile.id} modelName={profile.full_name.split(' ')[0]} />}
             {profile && <Availability profileId={profile.id} />}
             <p className="mt-8 text-sm text-ivory/60">
               {t({ en: 'Blackhood team member?', sw: 'Mwanatimu wa Blackhood?' })}{' '}

@@ -2,9 +2,9 @@ import { useState, type FormEvent } from 'react'
 import { BadgeCheck, Loader2, XCircle } from 'lucide-react'
 import { useLang } from '../i18n'
 
-type Result = { valid: boolean; name?: string } | null
+type Result = { valid: boolean; name?: string; kind?: string; course?: string; issued?: string } | null
 
-// Lets brands and parents check a Blackhood talent code (BHA-T-0001).
+// Lets brands and parents check a Blackhood talent code (BHA-T-0001) or academy certificate (BHA-C-0001).
 export default function CodeCheck() {
   const { t } = useLang()
   const [code, setCode] = useState('')
@@ -19,9 +19,9 @@ export default function CodeCheck() {
     setError(false)
     try {
       const res = await fetch(`/api/verify-code?code=${encodeURIComponent(code.trim())}`)
-      const r = (await res.json()) as { ok: boolean; valid?: boolean; name?: string }
+      const r = (await res.json()) as { ok: boolean; valid?: boolean; name?: string; kind?: string; course?: string; issued?: string }
       if (!r.ok) throw new Error()
-      setResult({ valid: !!r.valid, name: r.name })
+      setResult({ valid: !!r.valid, name: r.name, kind: r.kind, course: r.course, issued: r.issued })
     } catch {
       setError(true)
     } finally {
@@ -31,11 +31,11 @@ export default function CodeCheck() {
 
   return (
     <div className="border border-gold/40 bg-ink p-6 sm:p-8">
-      <p className="font-display text-2xl">{t({ en: 'Check a talent code', sw: 'Hakiki namba ya kipaji' })}</p>
+      <p className="font-display text-2xl">{t({ en: 'Check a talent code or certificate', sw: 'Hakiki namba ya kipaji au cheti' })}</p>
       <p className="mt-2 text-sm text-ivory/65">
         {t({
-          en: 'Every approved Blackhood model has a code like BHA-T-0001. Enter it to confirm they are really with us.',
-          sw: 'Kila mwanamitindo aliyekubaliwa na Blackhood ana namba kama BHA-T-0001. Iingize kuthibitisha yuko nasi kweli.',
+          en: 'Every approved Blackhood model has a code like BHA-T-0001, and every academy certificate has a number like BHA-C-0001. Enter it to confirm it is genuine.',
+          sw: 'Kila mwanamitindo aliyekubaliwa na Blackhood ana namba kama BHA-T-0001, na kila cheti cha chuo kina namba kama BHA-C-0001. Iingize kuthibitisha ni halali.',
         })}
       </p>
       <form onSubmit={onSubmit} className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -57,7 +57,16 @@ export default function CodeCheck() {
         </button>
       </form>
 
-      {result?.valid && (
+      {result?.valid && result.kind === 'certificate' && (
+        <p className="mt-5 flex items-start gap-2 text-green-300">
+          <BadgeCheck size={20} className="mt-0.5 shrink-0" />
+          <span>
+            {t({ en: 'Genuine certificate: awarded to', sw: 'Cheti halali: kimetolewa kwa' })} <strong>{result.name}</strong> {t({ en: 'for', sw: 'kwa' })} <strong>{result.course}</strong>
+            {result.issued && ` (${new Date(result.issued + 'T00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })})`}.
+          </span>
+        </p>
+      )}
+      {result?.valid && result.kind !== 'certificate' && (
         <p className="mt-5 flex items-start gap-2 text-green-300">
           <BadgeCheck size={20} className="mt-0.5 shrink-0" />
           <span>
@@ -70,8 +79,8 @@ export default function CodeCheck() {
         <p className="mt-5 flex items-start gap-2 text-red-300">
           <XCircle size={20} className="mt-0.5 shrink-0" />
           {t({
-            en: 'Not found. This is not a valid Blackhood talent code. Please contact us before going ahead.',
-            sw: 'Haipatikani. Hii si namba halali ya kipaji wa Blackhood. Tafadhali wasiliana nasi kabla ya kuendelea.',
+            en: 'Not found. This is not a valid Blackhood code. Please contact us before going ahead.',
+            sw: 'Haipatikani. Hii si namba halali ya Blackhood. Tafadhali wasiliana nasi kabla ya kuendelea.',
           })}
         </p>
       )}
