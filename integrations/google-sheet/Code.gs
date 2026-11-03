@@ -26,6 +26,7 @@ const BOOKING_HEADERS = [
   'Received', 'Reference', 'Status', 'Contact name', 'Company / brand', 'Phone', 'Email', 'Job type', 'Date(s)',
   'Location', 'Talent needed', 'Budget (TZS)', 'Usage rights', 'Details', 'Language', 'Notes',
 ]
+const BOOKING_STATUSES = ['New', 'Replied', 'Quote sent', 'Confirmed', 'Completed', 'Lost']
 
 function doPost(e) {
   try {
@@ -42,6 +43,8 @@ function doPost(e) {
       if (data.type === 'verify-email') return json(handleVerifyEmail(data))
       if (data.type === 'login-code') return json(sendLoginCode(data))
       if (data.type === 'profile-live') return json(sendProfileLiveEmail(data))
+      if (data.type === 'list-bookings') return json(listBookings())
+      if (data.type === 'booking-status') return json(setBookingStatus(data))
       return json(handleApplication(data))
     } finally {
       lock.releaseLock()
@@ -240,6 +243,39 @@ function notifyBooking(data, ref, sheet) {
   }
 }
 
+// For the Bookings tab on /admin (server-to-server only, behind the shared secret).
+function listBookings() {
+  const sheet = getBookingsSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return { ok: true, bookings: [] }
+  const start = Math.max(2, last - 299)
+  const rows = sheet.getRange(start, 1, last - start + 1, BOOKING_HEADERS.length).getValues()
+  const keys = ['received', 'ref', 'status', 'name', 'company', 'phone', 'email', 'jobType', 'dates', 'location', 'talent', 'budget', 'usage', 'details', 'lang', 'notes']
+  const bookings = rows
+    .filter(function (r) { return r[1] })
+    .map(function (r) {
+      const b = {}
+      keys.forEach(function (k, i) { b[k] = r[i] instanceof Date ? r[i].toISOString() : String(r[i]) })
+      return b
+    })
+    .reverse()
+  return { ok: true, bookings: bookings, statuses: BOOKING_STATUSES }
+}
+
+function setBookingStatus(data) {
+  const sheet = getBookingsSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return { ok: false }
+  const refs = sheet.getRange(2, 2, last - 1, 1).getValues()
+  for (let i = 0; i < refs.length; i++) {
+    if (String(refs[i][0]) !== String(data.ref)) continue
+    if (data.status && BOOKING_STATUSES.indexOf(data.status) !== -1) sheet.getRange(i + 2, 3).setValue(data.status)
+    if (typeof data.notes === 'string') sheet.getRange(i + 2, 16).setValue(clean(data.notes))
+    return { ok: true }
+  }
+  return { ok: false, error: 'not found' }
+}
+
 function getBookingsSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet()
   let sheet = ss.getSheetByName(BOOKINGS_SHEET_NAME)
@@ -249,7 +285,7 @@ function getBookingsSheet() {
     sheet.setFrozenRows(1)
     sheet.getRange(1, 1, 1, BOOKING_HEADERS.length).setFontWeight('bold')
     const rule = SpreadsheetApp.newDataValidation()
-      .requireValueInList(['New', 'Replied', 'Quote sent', 'Confirmed', 'Completed', 'Lost'], true)
+      .requireValueInList(BOOKING_STATUSES, true)
       .build()
     sheet.getRange('C2:C').setDataValidation(rule)
   }
