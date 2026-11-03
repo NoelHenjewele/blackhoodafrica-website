@@ -8,9 +8,7 @@ const nav = [
   { to: '/talent', label: { en: 'Talent', sw: 'Vipaji' } },
   { to: '/clients', label: { en: 'For brands', sw: 'Kwa makampuni' } },
   { to: '/academy', label: { en: 'Academy', sw: 'Chuo' } },
-  { to: '/castings', label: { en: 'Castings', sw: 'Usaili' } },
-  { to: '/news', label: { en: 'News', sw: 'Habari' } },
-  { to: '/trust', label: { en: 'Our promise', sw: 'Ahadi yetu' } },
+  { to: '/castings', label: { en: 'Castings', sw: 'Usaili' } },  { to: '/trust', label: { en: 'Our promise', sw: 'Ahadi yetu' } },
   { to: '/about', label: { en: 'About', sw: 'Kuhusu' } },
 ]
 
