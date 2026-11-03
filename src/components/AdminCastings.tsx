@@ -36,7 +36,7 @@ export default function AdminCastings({ token }: { token: string }) {
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch('/api/admin/castings', { headers: { Authorization: `Bearer ${token}` } })
+      const res = await fetch('/api/castings?admin=1', { headers: { Authorization: `Bearer ${token}` } })
       const r = (await res.json()) as { ok: boolean; castings?: AdminCasting[] }
       if (!r.ok) throw new Error()
       setCastings(r.castings ?? [])
@@ -53,7 +53,7 @@ export default function AdminCastings({ token }: { token: string }) {
   async function send(body: Record<string, unknown>) {
     setBusy(true)
     setError('')
-    const res = await fetch('/api/admin/castings', {
+    const res = await fetch('/api/castings?admin=1', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify(body),

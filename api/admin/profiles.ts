@@ -6,6 +6,8 @@ const ORDER: Record<string, number> = { pending: 0, draft: 1, approved: 2, hidde
 
 export async function GET(request: Request) {
   const db = adminClient()
+  // ?check=1 just tells the header whether to show the Admin button (kept here: Vercel's free plan allows 12 functions).
+  if (new URL(request.url).searchParams.has('check')) return Response.json({ admin: !!db && !!(await requireAdmin(db, request)) })
   if (!db) return Response.json({ ok: false }, { status: 503 })
   if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
 

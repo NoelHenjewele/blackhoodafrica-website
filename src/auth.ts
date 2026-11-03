@@ -15,7 +15,7 @@ export function useAuthStatus() {
 
   useEffect(() => {
     if (!session) return setIsAdmin(false)
-    fetch('/api/admin/check', { headers: { Authorization: `Bearer ${session.access_token}` } })
+    fetch('/api/admin/profiles?check=1', { headers: { Authorization: `Bearer ${session.access_token}` } })
       .then((r) => r.json())
       .then((r: { admin?: boolean }) => setIsAdmin(!!r.admin))
       .catch(() => setIsAdmin(false))
