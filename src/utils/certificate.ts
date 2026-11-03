@@ -33,6 +33,42 @@ async function flatLogo(url: string) {
   return { data: c.toDataURL('image/jpeg', 0.92), ratio: img.naturalWidth / img.naturalHeight }
 }
 
+// Signature: trims the empty paper around the ink, then flattens it onto the cream background.
+async function trimmedSignature(url: string) {
+  const img = await loadImage(url)
+  const c = document.createElement('canvas')
+  c.width = img.naturalWidth
+  c.height = img.naturalHeight
+  const g = c.getContext('2d')!
+  g.drawImage(img, 0, 0)
+  const d = g.getImageData(0, 0, c.width, c.height).data
+  let minX = c.width, minY = c.height, maxX = 0, maxY = 0
+  for (let y = 0; y < c.height; y++) {
+    for (let x = 0; x < c.width; x++) {
+      const i = (y * c.width + x) * 4
+      // ink = visible and clearly darker than paper; ignores faint specks
+      if (d[i + 3] > 128 && d[i] + d[i + 1] + d[i + 2] < 450) {
+        if (x < minX) minX = x
+        if (x > maxX) maxX = x
+        if (y < minY) minY = y
+        if (y > maxY) maxY = y
+      }
+    }
+  }
+  if (maxX <= minX || maxY <= minY) return flatLogo(url)
+  const pad = 8
+  const w = maxX - minX + pad * 2
+  const h = maxY - minY + pad * 2
+  const o = document.createElement('canvas')
+  o.width = w
+  o.height = h
+  const og = o.getContext('2d')!
+  og.fillStyle = IVORY_HEX
+  og.fillRect(0, 0, w, h)
+  og.drawImage(c, minX - pad, minY - pad, w, h, 0, 0, w, h)
+  return { data: o.toDataURL('image/jpeg', 0.92), ratio: w / h }
+}
+
 // Faint gold "BA" watermark: the light strokes of the monogram become a whisper of gold on cream.
 async function watermark(url: string, strength = 0.09) {
   const img = await loadImage(url)
@@ -196,9 +232,11 @@ export async function buildCertificate(d: CertData) {
   const date = new Date(d.issuedOn + 'T00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
   doc.setTextColor(...INK)
   if (d.signature) {
-    const sig = await flatLogo(d.signature)
-    const sh = 21
-    doc.addImage(sig.data, 'JPEG', 85 - (sh * sig.ratio) / 2, 146.5, sh * sig.ratio, sh, 'signature')
+    const sig = await trimmedSignature(d.signature)
+    // As large as fits above the line: up to 58 mm wide and 20 mm tall.
+    const sw = Math.min(58, 20 * sig.ratio)
+    const sh = sw / sig.ratio
+    doc.addImage(sig.data, 'JPEG', 85 - sw / 2, 166 - sh, sw, sh, 'signature')
   } else {
     doc.setFont('times', 'italic')
     doc.setFontSize(20)
