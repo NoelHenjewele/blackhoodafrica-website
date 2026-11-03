@@ -11,6 +11,10 @@ export async function GET(request: Request) {
   if (new URL(request.url).searchParams.has('check')) return Response.json({ admin: !!db && !!(await requireAdmin(db, request)) })
   if (!db) return Response.json({ ok: false }, { status: 503 })
   if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
+  if (new URL(request.url).searchParams.has('reviews')) {
+    const { data: reviews, error } = await db.from('reviews').select('*').order('created_at', { ascending: false })
+    return Response.json({ ok: !error, reviews: reviews ?? [] })
+  }
   if (new URL(request.url).searchParams.has('packages')) {
     const { data: packages, error } = await db.from('packages').select('*').order('created_at', { ascending: false })
     return Response.json({ ok: !error, packages: packages ?? [] })
@@ -37,6 +41,7 @@ export async function POST(request: Request) {
   if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
   if (new URL(request.url).searchParams.has('packages')) return packagesPOST(db, request)
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
+  if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
 
   let body: Action
   try {
@@ -126,4 +131,26 @@ async function newsPOST(db: NonNullable<ReturnType<typeof adminClient>>, request
   if (video && !video_url) return Response.json({ ok: false, error: 'video link' }, { status: 400 })
   const { error } = await db.from('news').insert({ title, body: String(body.body ?? '').trim().slice(0, 4000), photo_path, video_url })
   return Response.json({ ok: !error }, { status: error ? 500 : 200 })
+}
+// Reviews (?reviews=1): approve, hide, edit the wording, or delete.
+type ReviewBody = { id?: string; status?: 'approved' | 'hidden' | 'pending'; quote?: string; role?: string; delete?: boolean }
+
+async function reviewsPOST(db: NonNullable<ReturnType<typeof adminClient>>, request: Request) {
+  let body: ReviewBody
+  try {
+    body = (await request.json()) as ReviewBody
+  } catch {
+    return Response.json({ ok: false }, { status: 400 })
+  }
+  if (!body.id) return Response.json({ ok: false }, { status: 400 })
+  if (body.delete) {
+    const { error } = await db.from('reviews').delete().eq('id', body.id)
+    return Response.json({ ok: !error })
+  }
+  const patch: Record<string, string> = {}
+  if (body.status && ['approved', 'hidden', 'pending'].includes(body.status)) patch.status = body.status
+  if (typeof body.quote === 'string' && body.quote.trim()) patch.quote = body.quote.trim().slice(0, 600)
+  if (typeof body.role === 'string') patch.role = body.role.trim().slice(0, 100)
+  const { error } = await db.from('reviews').update(patch).eq('id', body.id)
+  return Response.json({ ok: !error })
 }

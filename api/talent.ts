@@ -7,6 +7,7 @@ export async function GET(request: Request) {
   if (page) return modelPage(request, page)
   if (new URL(request.url).searchParams.has('sitemap')) return sitemap(request)
   if (new URL(request.url).searchParams.has('news')) return newsList()
+  if (new URL(request.url).searchParams.has('reviews')) return reviewList()
   const pkg = new URL(request.url).searchParams.get('package')
   if (pkg) return packageLookup(pkg)
   const db = adminClient()
@@ -127,4 +128,31 @@ async function newsList() {
   const { data } = await db.from('news').select('id, title, body, photo_path, video_url, created_at').order('created_at', { ascending: false }).limit(50)
   const posts = (data ?? []).map(({ photo_path, ...p }) => ({ ...p, photo: photo_path ? photoUrl(photo_path) : null }))
   return Response.json({ ok: true, posts }, { headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=600' } })
+}
+// Approved reviews for the home page.
+async function reviewList() {
+  const db = adminClient()
+  if (!db) return Response.json({ ok: true, reviews: [] })
+  const { data } = await db.from('reviews').select('id, quote, name, role').eq('status', 'approved').order('created_at', { ascending: false }).limit(12)
+  return Response.json({ ok: true, reviews: data ?? [] }, { headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=600' } })
+}
+
+// /review form: anyone can send a review. It stays hidden until the team approves it on /admin.
+export async function POST(request: Request) {
+  const db = adminClient()
+  if (!db || !new URL(request.url).searchParams.has('review')) return Response.json({ ok: false }, { status: 400 })
+  let body: Record<string, unknown>
+  try {
+    body = await request.json()
+  } catch {
+    return Response.json({ ok: false }, { status: 400 })
+  }
+  if (body.website) return Response.json({ ok: true }) // honeypot
+  const s = (k: string, max: number) => String(body[k] ?? '').trim().slice(0, max)
+  const quote = s('quote', 600)
+  const name = s('name', 80)
+  if (quote.length < 10 || !name || body.consent !== true) return Response.json({ ok: false, error: 'missing' }, { status: 400 })
+  const kind = ['client', 'model', 'parent', 'other'].includes(s('kind', 10)) ? s('kind', 10) : 'other'
+  const { error } = await db.from('reviews').insert({ quote, name, role: s('role', 100), kind, contact: s('contact', 100) })
+  return Response.json({ ok: !error }, { status: error ? 500 : 200 })
 }

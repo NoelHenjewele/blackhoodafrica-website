@@ -1,9 +1,23 @@
+import { useEffect, useState } from 'react'
 import { Quote } from 'lucide-react'
-import { reviews } from '../../data/reviews'
+import { reviews as fixed, type Review } from '../../data/reviews'
 import { useLang } from '../../i18n'
 
+// Hand-added quotes plus reviews approved on /admin. The section stays hidden while there are none.
 export default function Reviews() {
   const { t } = useLang()
+  const [sent, setSent] = useState<Review[]>([])
+
+  useEffect(() => {
+    fetch('/api/talent?reviews=1')
+      .then((r) => r.json())
+      .then((r: { reviews?: { quote: string; name: string; role: string | null }[] }) =>
+        setSent((r.reviews ?? []).map((x) => ({ quote: x.quote, name: x.name, role: x.role ?? '' }))),
+      )
+      .catch(() => {})
+  }, [])
+
+  const reviews = [...fixed, ...sent]
   if (reviews.length === 0) return null
 
   return (
