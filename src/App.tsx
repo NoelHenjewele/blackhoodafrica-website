@@ -21,6 +21,7 @@ import CompCardPage from './pages/CompCardPage'
 import AccountPage from './pages/AccountPage'
 import AdminPage from './pages/AdminPage'
 import ModelPage from './pages/ModelPage'
+import GalleryPage from './pages/GalleryPage'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/trust" element={<TrustPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/stories" element={<StoriesPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/verify" element={<VerifyPage />} />
           <Route path="/parents" element={<ParentsPage />} />

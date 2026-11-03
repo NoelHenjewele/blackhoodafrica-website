@@ -28,6 +28,7 @@ const columns = [
     links: [
       { to: '/about', label: { en: 'About us', sw: 'Kuhusu sisi' } },
       { to: '/stories', label: { en: 'Success stories', sw: 'Hadithi za mafanikio' } },
+      { to: '/gallery', label: { en: 'Gallery', sw: 'Picha na video' } },
       { to: '/trust', label: { en: 'Our promise', sw: 'Ahadi yetu' } },
       { to: '/faq', label: { en: 'FAQ', sw: 'Maswali' } },
       { to: '/verify', label: { en: 'Is it really us?', sw: 'Ni sisi kweli?' } },
