@@ -4,21 +4,21 @@ import { useLocation } from 'react-router-dom'
 const BRAND = 'Blackhood Africa'
 // Browser tab / Google title for each page. Model pages get theirs from the server (api/talent.ts).
 const TITLES: Record<string, string> = {
-  '/': ${BRAND} · Talent House, Dar es Salaam,
-  '/talent': Models & talent · ,
-  '/clients': Book models for your brand · ,
-  '/apply': Become a model · Apply to ,
-  '/academy': Modelling academy in Dar es Salaam · ,
-  '/castings': Castings & open calls · ,
-  '/gallery': Training gallery · ,
-  '/stories': Success stories · ,
-  '/trust': Our promise · ,
-  '/about': About us · ,
-  '/faq': FAQ · ,
-  '/parents': For parents · ,
-  '/verify': Is it really us? · ,
-  '/compcard': Comp card maker · ,
-  '/account': Model login · ,
+  '/': `${BRAND} · Talent House, Dar es Salaam`,
+  '/talent': `Models & talent · ${BRAND}`,
+  '/clients': `Book models for your brand · ${BRAND}`,
+  '/apply': `Become a model · Apply to ${BRAND}`,
+  '/academy': `Modelling academy in Dar es Salaam · ${BRAND}`,
+  '/castings': `Castings & open calls · ${BRAND}`,
+  '/gallery': `Training gallery · ${BRAND}`,
+  '/stories': `Success stories · ${BRAND}`,
+  '/trust': `Our promise · ${BRAND}`,
+  '/about': `About us · ${BRAND}`,
+  '/faq': `FAQ · ${BRAND}`,
+  '/parents': `For parents · ${BRAND}`,
+  '/verify': `Is it really us? · ${BRAND}`,
+  '/compcard': `Comp card maker · ${BRAND}`,
+  '/account': `Model login · ${BRAND}`,
 }
 
 // Scrolls to the top on page change, or to #anchor when the link has one. Also sets the page title.
