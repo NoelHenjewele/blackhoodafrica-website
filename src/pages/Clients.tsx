@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { clearShortlist, readShortlist } from '../shortlist'
 import { CheckCircle2, Loader2, Send } from 'lucide-react'
 import ForBrands from '../components/home/ForBrands'
 import { site, whatsappLink } from '../config/site'
@@ -31,7 +32,13 @@ export default function Clients() {
   const { t, lang } = useLang()
   // "Book <model>" buttons on model pages arrive with ?model=<name>
   const [params] = useSearchParams()
-  const requestedModel = params.get('model') ?? ''
+  // The floating shortlist bar arrives with ?shortlist=1
+  const [requestedModel] = useState(() => {
+    const model = params.get('model')
+    if (model) return model
+    const list = readShortlist()
+    return list.length ? `Shortlist: ${list.map((p) => p.name).join(', ')}` : ''
+  })
   const [consent, setConsent] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
@@ -68,6 +75,7 @@ export default function Clients() {
       const result = (await res.json()) as { ok: boolean; ref?: string }
       if (!result.ok) throw new Error('failed')
       setDone({ ref: result.ref ?? '', name: payload.name })
+      clearShortlist()
       document.getElementById('brief')?.scrollIntoView()
     } catch {
       setError(

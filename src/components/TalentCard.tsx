@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Plus, User } from 'lucide-react'
 import { formatHeight, type Talent } from '../data/talent'
 import { useLang } from '../i18n'
+import { ShortlistButton } from './Shortlist'
 
 export function TalentCard({ person }: { person: Talent }) {
   const { t } = useLang()
@@ -26,6 +27,7 @@ export function TalentCard({ person }: { person: Talent }) {
             </div>
           </div>
         )}
+        <ShortlistButton item={{ slug: person.slug, name: person.name }} />
         {person.featured && (
           <span className="absolute left-3 top-3 bg-gold px-2 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-ink">
             {t({ en: 'Featured', sw: 'Maalum' })}

@@ -4,6 +4,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import ScrollManager from './components/ScrollManager'
 import ChatWidget from './components/ChatWidget'
+import { ShortlistBar } from './components/Shortlist'
 import { useLang } from './i18n'
 import Home from './pages/Home'
 import Clients from './pages/Clients'
@@ -54,6 +55,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <ShortlistBar />
       <ChatWidget lang={lang} />
       <Analytics />
     </>

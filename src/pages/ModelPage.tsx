@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react'
 import { boardLabels, formatHeight, useTalent } from '../data/talent'
 import { useLang } from '../i18n'
 import NotFound from './NotFound'
+import { ShortlistButton } from '../components/Shortlist'
 
 const statLabels = {
   bust: { en: 'Bust', sw: 'Kifua' },
@@ -100,12 +101,15 @@ export default function ModelPage() {
             )}
 
             <div className="mt-10 border-t border-white/10 pt-8">
+              <div className="flex flex-wrap gap-3">
               <Link
                 to={`/clients?model=${encodeURIComponent(person.name)}#brief`}
                 className="inline-flex items-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ink hover:bg-ivory"
               >
                 {t({ en: `Book ${person.name.split(' ')[0]}`, sw: `Mwajiri ${person.name.split(' ')[0]}` })} <ArrowRight size={18} />
               </Link>
+              <ShortlistButton large item={{ slug: person.slug, name: person.name }} />
+              </div>
               <p className="mt-3 text-xs text-ivory/50">
                 {t({ en: 'All bookings go through Blackhood Africa.', sw: 'Kazi zote zinapitia Blackhood Africa.' })}
               </p>
