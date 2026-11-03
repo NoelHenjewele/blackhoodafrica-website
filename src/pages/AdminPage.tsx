@@ -28,6 +28,7 @@ type AdminProfile = {
   bio: string | null
   updated_at: string
   photos: string[]
+  busy: string[]
 }
 
 const filters = ['pending', 'approved', 'hidden', 'draft', 'all'] as const
@@ -44,6 +45,7 @@ export default function AdminPage() {
   const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading')
   const [filter, setFilter] = useState<(typeof filters)[number]>('pending')
   const [busy, setBusy] = useState<string | null>(null)
+  const [freeOn, setFreeOn] = useState('')
   const [tab, setTab] = useState<'profiles' | 'bookings' | 'castings'>('profiles')
 
   useEffect(() => {
@@ -80,7 +82,7 @@ export default function AdminPage() {
     if (res.ok) await load()
   }
 
-  const shown = profiles.filter((p) => filter === 'all' || p.status === filter)
+  const shown = profiles.filter((p) => (filter === 'all' || p.status === filter) && (!freeOn || !p.busy.includes(freeOn)))
   const count = (f: (typeof filters)[number]) => (f === 'all' ? profiles.length : profiles.filter((p) => p.status === f).length)
 
   return (
@@ -134,6 +136,11 @@ export default function AdminPage() {
                   {f} ({count(f)})
                 </button>
               ))}
+              <label className="ml-auto flex items-center gap-2 text-sm text-ivory/70">
+                Free on
+                <input type="date" value={freeOn} onChange={(e) => setFreeOn(e.target.value)} className="border border-white/15 bg-ink px-3 py-1.5 text-ivory [color-scheme:dark]" />
+                {freeOn && <button type="button" onClick={() => setFreeOn('')} className="text-gold underline">clear</button>}
+              </label>
             </div>
 
             {shown.length === 0 && <p className="mt-10 text-ivory/60">Nothing here.</p>}
@@ -178,6 +185,12 @@ export default function AdminPage() {
                     ))}
                   </dl>
                   {p.bio && <p className="mt-3 text-sm text-ivory/75">{p.bio}</p>}
+                  <p className="mt-3 text-sm">
+                    <span className="text-ivory/50">Busy: </span>
+                    {p.busy.length
+                      ? p.busy.slice(0, 12).map((d) => new Date(d + 'T00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })).join(', ') + (p.busy.length > 12 ? ` +${p.busy.length - 12} more` : '')
+                      : 'no busy days marked'}
+                  </p>
 
                   <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
                     {p.status !== 'approved' && (

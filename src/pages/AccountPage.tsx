@@ -5,6 +5,7 @@ import { BadgeCheck, Loader2, LogOut } from 'lucide-react'
 import { supabase } from '../config/supabase'
 import { useLang, type L } from '../i18n'
 import ProfileEditor, { type ProfileRow } from '../components/ProfileEditor'
+import Availability from '../components/Availability'
 
 type Profile = ProfileRow
 
@@ -148,6 +149,7 @@ export default function AccountPage() {
               </div>
             )}
             {profile && <ProfileEditor profile={profile} onSaved={setProfile} />}
+            {profile && <Availability profileId={profile.id} />}
             <p className="mt-8 text-sm text-ivory/60">
               {t({ en: 'Blackhood team member?', sw: 'Mwanatimu wa Blackhood?' })}{' '}
               <Link to="/admin" className="text-gold underline">{t({ en: 'Open profile review', sw: 'Fungua ukaguzi wa wasifu' })}</Link>

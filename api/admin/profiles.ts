@@ -14,8 +14,12 @@ export async function GET(request: Request) {
   const { data } = await db.from('profiles').select('*').order('updated_at', { ascending: false })
   const rows = data ?? []
   const photos = await photosByProfile(db, rows.map((r) => r.id))
+  const today = new Date().toISOString().slice(0, 10)
+  const { data: busyRows } = await db.from('busy_days').select('profile_id, day').gte('day', today).order('day')
+  const busy = new Map<string, string[]>()
+  for (const b of busyRows ?? []) busy.set(b.profile_id, [...(busy.get(b.profile_id) ?? []), b.day])
   const profiles = rows
-    .map((r) => ({ ...r, photos: photos.get(r.id) ?? [] }))
+    .map((r) => ({ ...r, photos: photos.get(r.id) ?? [], busy: busy.get(r.id) ?? [] }))
     .sort((a, b) => (ORDER[a.status] ?? 9) - (ORDER[b.status] ?? 9))
   return Response.json({ ok: true, profiles })
 }
