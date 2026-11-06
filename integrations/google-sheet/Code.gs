@@ -75,7 +75,7 @@ function handleApplication(data) {
   ])
 
   sendConfirmation(data, ref)
-  notifyTeam(data, ref, sheet, folder.getUrl())
+  // Team alerts go out as one hourly summary (sendApplicationDigest) to save the daily email quota.
   return { ok: true, ref: ref }
 }
 
@@ -603,8 +603,56 @@ function sendProfileLiveEmail(data) {
 }
 
 function installTrigger() {
-  const exists = ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'onStatusEdit' })
-  if (!exists) ScriptApp.newTrigger('onStatusEdit').forSpreadsheet(SpreadsheetApp.getActive()).onEdit().create()
+  const handlers = ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction() })
+  if (handlers.indexOf('onStatusEdit') === -1) ScriptApp.newTrigger('onStatusEdit').forSpreadsheet(SpreadsheetApp.getActive()).onEdit().create()
+  if (handlers.indexOf('sendApplicationDigest') === -1) ScriptApp.newTrigger('sendApplicationDigest').timeBased().everyHours(1).create()
+  const props = PropertiesService.getScriptProperties()
+  if (!props.getProperty('LAST_DIGEST')) props.setProperty('LAST_DIGEST', String(Date.now()))
+}
+
+// Hourly: one email to the team listing every application received since the last summary.
+// Sends nothing when there are no new applications.
+function sendApplicationDigest() {
+  const to = notifyTo()
+  if (!to) return
+  const props = PropertiesService.getScriptProperties()
+  const since = Number(props.getProperty('LAST_DIGEST') || 0)
+  const now = Date.now()
+  const sheet = getSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return props.setProperty('LAST_DIGEST', String(now))
+  const rows = sheet.getRange(2, 1, last - 1, 20).getValues().filter(function (r) {
+    return r[0] instanceof Date && r[0].getTime() > since && r[0].getTime() <= now
+  })
+  if (!rows.length) return props.setProperty('LAST_DIGEST', String(now))
+
+  const line = function (r) {
+    const minor = Number(r[4]) < 18
+    return {
+      text: r[1] + ' · ' + r[3] + ' · ' + r[4] + (minor ? ' (under 18)' : '') + ' · ' + r[6] + ' cm · ' + r[7] + ' · ' + r[11] + ' · WhatsApp ' + r[8],
+      folder: String(r[19] || ''),
+      minor: minor,
+    }
+  }
+  const items = rows.map(line)
+  const html =
+    '<p><b>' + items.length + ' new application' + (items.length === 1 ? '' : 's') + '</b> on the website.</p><ol>' +
+    items.map(function (i) {
+      return '<li style="margin-bottom:6px">' + escapeHtml(i.text) + (i.folder ? ' · <a href="' + i.folder + '">photos</a>' : '') + '</li>'
+    }).join('') +
+    '</ol><p><a href="' + SpreadsheetApp.getActive().getUrl() + '">Open the applications sheet</a></p>'
+  try {
+    MailApp.sendEmail({
+      to: to,
+      subject: items.length + ' new application' + (items.length === 1 ? '' : 's') + ' (Blackhood website)',
+      body: items.map(function (i, n) { return (n + 1) + '. ' + i.text + (i.folder ? '\n   Photos: ' + i.folder : '') }).join('\n'),
+      htmlBody: html,
+      name: 'Blackhood Website',
+    })
+    props.setProperty('LAST_DIGEST', String(now))
+  } catch (err) {
+    console.warn('Digest failed, will retry next hour: ' + err)
+  }
 }
 
 function getFolder() {
