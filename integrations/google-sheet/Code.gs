@@ -35,8 +35,10 @@ function doPost(e) {
     if (!secret || data.secret !== secret) return json({ ok: false, error: 'unauthorized' })
 
     const lock = LockService.getScriptLock()
-    lock.waitLock(20000)
+    lock.waitLock(30000)
     try {
+      // First request after an update switches on the hourly summary, so nobody has to press Run.
+      if (!PropertiesService.getScriptProperties().getProperty('TRIGGERS_V2')) installTrigger()
       if (data.type === 'booking') return json(handleBooking(data))
       if (data.type === 'subscribe') return json(handleSubscribe(data))
       if (data.type === 'verify') return json(handleVerify(data))
@@ -606,6 +608,7 @@ function installTrigger() {
   const handlers = ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction() })
   if (handlers.indexOf('onStatusEdit') === -1) ScriptApp.newTrigger('onStatusEdit').forSpreadsheet(SpreadsheetApp.getActive()).onEdit().create()
   if (handlers.indexOf('sendApplicationDigest') === -1) ScriptApp.newTrigger('sendApplicationDigest').timeBased().everyHours(1).create()
+  PropertiesService.getScriptProperties().setProperty('TRIGGERS_V2', 'yes')
   const props = PropertiesService.getScriptProperties()
   if (!props.getProperty('LAST_DIGEST')) props.setProperty('LAST_DIGEST', String(Date.now()))
 }
