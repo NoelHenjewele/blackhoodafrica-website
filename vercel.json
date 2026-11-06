@@ -4,5 +4,9 @@
     { "source": "/talent/:slug", "destination": "/api/talent?page=:slug" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
+  "functions": {
+    "api/apply.ts": { "maxDuration": 60 },
+    "api/book.ts": { "maxDuration": 60 }
+  },
   "crons": [{ "path": "/api/instagram-refresh", "schedule": "0 6 * * 1" }]
 }
