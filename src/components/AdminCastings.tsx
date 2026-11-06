@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { Loader2, Plus, Trash2, User } from 'lucide-react'
+import { ImagePlus, Loader2, Plus, Trash2, User } from 'lucide-react'
+import { shrinkPhoto } from '../utils/photo'
 
 // Team-only castings manager on /admin. English only, like the rest of the admin page.
 type Interested = {
@@ -22,6 +23,7 @@ type AdminCasting = {
   date_text: string | null
   place: string | null
   details: string | null
+  photo: string | null
   status: 'open' | 'closed'
   created_at: string
   interested: Interested[]
@@ -32,6 +34,7 @@ const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeho
 export default function AdminCastings({ token }: { token: string }) {
   const [castings, setCastings] = useState<AdminCasting[] | null>(null)
   const [busy, setBusy] = useState(false)
+  const [poster, setPoster] = useState<{ base64: string; preview: string } | null>(null)
   const [error, setError] = useState('')
 
   const load = useCallback(async () => {
@@ -77,8 +80,12 @@ export default function AdminCastings({ token }: { token: string }) {
       place: get('place'),
       details: get('details'),
       notify: d.get('notify') === 'on',
+      photo: poster?.base64,
     })
-    if (ok) form.reset()
+    if (ok) {
+      form.reset()
+      setPoster(null)
+    }
   }
 
   return (
@@ -95,6 +102,21 @@ export default function AdminCastings({ token }: { token: string }) {
           placeholder="Who you're looking for (e.g. 3 women, 20–28, 170 cm+), pay, what to bring"
           className={`${field} sm:col-span-2`}
         />
+        <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
+            <ImagePlus size={14} /> {poster ? 'Change poster' : 'Add poster (optional)'}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0]
+                if (file) setPoster(await shrinkPhoto(file, 1600, 0.85))
+              }}
+            />
+          </label>
+          {poster && <img src={poster.preview} alt="" className="h-20 w-auto" />}
+        </div>
         <div className="flex items-center gap-4 sm:col-span-2">
           <button
             type="submit"
@@ -132,6 +154,7 @@ export default function AdminCastings({ token }: { token: string }) {
               </span>
             </div>
             {c.details && <p className="mt-3 whitespace-pre-line text-sm text-ivory/75">{c.details}</p>}
+            {c.photo && <img src={c.photo} alt="" className="mt-3 h-40 w-auto border border-white/10" />}
 
             <h4 className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-ivory/60">
               Interested models ({c.interested.length})

@@ -1,7 +1,7 @@
 // Castings board. Public: anyone reads open castings; approved models tap "I'm interested".
 // Team (?admin=1): post, close, reopen, delete, and see who's interested. One file because Vercel's free plan allows 12 functions.
 import { adminClient, callSheet } from './_lib/supabaseAdmin.js'
-import { photosByProfile, requireAdmin, userFromRequest } from './_lib/profiles.js'
+import { photosByProfile, photoUrl, requireAdmin, userFromRequest } from './_lib/profiles.js'
 
 const isAdmin = (request: Request) => new URL(request.url).searchParams.has('admin')
 
@@ -12,10 +12,13 @@ export async function GET(request: Request) {
 
   const { data } = await db
     .from('castings')
-    .select('id, title, type, date_text, place, details')
+    .select('*')
     .eq('status', 'open')
     .order('created_at', { ascending: false })
-  const castings = data ?? []
+  const castings = (data ?? []).map((c) => ({
+    id: c.id, title: c.title, type: c.type, date_text: c.date_text, place: c.place, details: c.details,
+    photo: c.photo_path ? photoUrl(c.photo_path) : null,
+  }))
 
   const user = await userFromRequest(db, request)
   if (!user) {
@@ -81,6 +84,7 @@ async function adminGET(request: Request) {
 
   const list = (castings ?? []).map((c) => ({
     ...c,
+    photo: c.photo_path ? photoUrl(c.photo_path) : null,
     interested: (interest ?? []).filter((r) => r.casting_id === c.id).map((r) => byId.get(r.profile_id)).filter(Boolean),
   }))
   return Response.json({ ok: true, castings: list })
@@ -95,6 +99,7 @@ type Body = {
   place?: string
   details?: string
   notify?: boolean
+  photo?: string // optional poster, JPEG base64
 }
 
 const text = (v: unknown, max: number) => String(v ?? '').trim().slice(0, max)
@@ -121,7 +126,15 @@ async function adminPOST(request: Request) {
       place: text(body.place, 120),
       details: text(body.details, 2000),
     }
-    const { error } = await db.from('castings').insert(casting)
+    let photo_path: string | null = null
+    if (body.photo) {
+      const bytes = Buffer.from(body.photo, 'base64')
+      if (bytes.length > 2_000_000) return Response.json({ ok: false, error: 'photo too big' }, { status: 400 })
+      photo_path = `castings/${crypto.randomUUID()}.jpg`
+      const up = await db.storage.from('talent-photos').upload(photo_path, bytes, { contentType: 'image/jpeg' })
+      if (up.error) return Response.json({ ok: false, error: 'upload' }, { status: 500 })
+    }
+    const { error } = await db.from('castings').insert(photo_path ? { ...casting, photo_path } : casting)
     if (error) return Response.json({ ok: false }, { status: 500 })
 
     // Optional: email every approved model about the new casting.
@@ -136,6 +149,10 @@ async function adminPOST(request: Request) {
   }
 
   if (!body.id) return Response.json({ ok: false }, { status: 400 })
+  if (body.action === 'delete') {
+    const { data: old } = await db.from('castings').select('photo_path').eq('id', body.id).maybeSingle()
+    if (old?.photo_path) await db.storage.from('talent-photos').remove([old.photo_path])
+  }
   const { error } =
     body.action === 'delete'
       ? await db.from('castings').delete().eq('id', body.id)

@@ -11,6 +11,7 @@ type Casting = {
   date_text: string | null
   place: string | null
   details: string | null
+  photo?: string | null
 }
 
 // Live casting calls, posted by the team on /admin. Shows a "coming soon" note while there are none.
@@ -86,6 +87,12 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
               const on = interested.includes(c.id)
               return (
                 <li key={c.id} className="grid gap-4 py-6 sm:grid-cols-[1fr_auto] sm:items-center">
+                  <div className="flex flex-col gap-5 sm:flex-row">
+                    {c.photo && (
+                      <a href={c.photo} target="_blank" rel="noreferrer" className="shrink-0">
+                        <img src={c.photo} alt={c.title} loading="lazy" className="w-full max-w-[260px] border border-white/10 sm:w-48" />
+                      </a>
+                    )}
                   <div>
                     {c.type && <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">{c.type}</p>}
                     <h3 className="mt-1 font-display text-2xl">{c.title}</h3>
@@ -102,6 +109,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
                       )}
                     </p>
                     {c.details && <p className="mt-3 max-w-2xl whitespace-pre-line text-sm text-ivory/75">{c.details}</p>}
+                  </div>
                   </div>
                   <div className="flex flex-col items-stretch gap-2 sm:items-end">
                     {canApply ? (
