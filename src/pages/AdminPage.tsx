@@ -8,6 +8,7 @@ import AdminPackages from '../components/AdminPackages'
 import AdminNews from '../components/AdminNews'
 import AdminReviews from '../components/AdminReviews'
 import AdminCertificates from '../components/AdminCertificates'
+import ResendCode from '../components/ResendCode'
 
 // Team-only review page. English only: it's an internal tool.
 type AdminProfile = {
@@ -136,6 +137,7 @@ export default function AdminPage() {
               <AdminCertificates token={token} />
             ) : (
             <>
+            <ResendCode token={token} />
             <div className="mt-8 flex flex-wrap gap-2">
               {filters.map((f) => (
                 <button

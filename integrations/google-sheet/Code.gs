@@ -46,6 +46,7 @@ function doPost(e) {
       if (data.type === 'login-code') return json(sendLoginCode(data))
       if (data.type === 'profile-live') return json(sendProfileLiveEmail(data))
       if (data.type === 'casting-alert') return json(sendCastingAlert(data))
+      if (data.type === 'resend-approval') return json(resendApproval(data))
       if (data.type === 'list-bookings') return json(listBookings())
       if (data.type === 'booking-status') return json(setBookingStatus(data))
       return json(handleApplication(data))
@@ -506,9 +507,32 @@ function sendApprovalEmail(person, code) {
     .join('')
   try {
     MailApp.sendEmail({ to: email, subject: subject, body: lines.join('\n\n'), htmlBody: html, name: 'Blackhood Africa' })
+    return true
   } catch (err) {
     console.warn('Approval email failed: ' + err)
+    return false
   }
+}
+
+// /admin "Resend talent code email": finds the approved row by talent code and sends the approval email again.
+function resendApproval(data) {
+  const code = String(data.code || '').trim().toUpperCase()
+  if (!/^BHA-T-\d{4}$/.test(code)) return { ok: false, error: 'bad code' }
+  const sheet = getSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return { ok: false, error: 'not found' }
+  const rows = sheet.getRange(2, 1, last - 1, COL.code).getValues()
+  for (let i = 0; i < rows.length; i++) {
+    if (String(rows[i][COL.code - 1]).toUpperCase() !== code) continue
+    const status = String(rows[i][COL.status - 1])
+    if (status !== 'Approved' && status !== 'Signed') return { ok: false, error: 'not approved' }
+    const email = validEmail(rows[i][COL.email - 1])
+    if (!email) return { ok: false, error: 'no email' }
+    if (MailApp.getRemainingDailyQuota() < 1) return { ok: false, error: 'quota', email: email }
+    const sent = sendApprovalEmail({ name: String(rows[i][COL.name - 1]), email: email, lang: String(rows[i][COL.lang - 1]) }, code)
+    return { ok: sent, error: sent ? '' : 'send failed', email: email, name: String(rows[i][COL.name - 1]), left: MailApp.getRemainingDailyQuota() }
+  }
+  return { ok: false, error: 'not found' }
 }
 
 // Public code check for the website: returns the name only for a valid, approved code.

@@ -58,6 +58,12 @@ export async function POST(request: Request) {
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
   if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
   if (new URL(request.url).searchParams.has('certificates')) return certificatesPOST(db, request)
+  if (new URL(request.url).searchParams.has('resend')) {
+    // Resend the approval email (with the talent code) from the Sheet script.
+    const { code } = (await request.json().catch(() => ({}))) as { code?: string }
+    const r = await callSheet<{ ok: boolean; error?: string; email?: string; name?: string; left?: number }>({ type: 'resend-approval', code })
+    return Response.json(r ?? { ok: false, error: 'server' })
+  }
 
   let body: Action
   try {
