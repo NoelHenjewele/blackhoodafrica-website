@@ -592,7 +592,12 @@ function sendLoginCode(data) {
     ? ['Namba yako ya kuingia Blackhood Africa ni:', code, 'Inatumika kwa dakika 10. Kama hukuomba, puuza barua hii.']
     : ['Your Blackhood Africa login code is:', code, "It works for 10 minutes. If you didn't ask for it, you can ignore this email."]
   const html = '<p>' + lines[0] + '</p><p style="font-size:28px;letter-spacing:6px"><strong>' + code + '</strong></p><p>' + lines[2] + '</p>'
-  MailApp.sendEmail({ to: email, subject: subject, body: lines.join('\n\n'), htmlBody: html, name: 'Blackhood Africa' })
+  if (MailApp.getRemainingDailyQuota() < 1) return { ok: false, error: 'quota' }
+  try {
+    MailApp.sendEmail({ to: email, subject: subject, body: lines.join('\n\n'), htmlBody: html, name: 'Blackhood Africa' })
+  } catch (err) {
+    return { ok: false, error: String(err).indexOf('many times') !== -1 ? 'quota' : 'send failed' }
+  }
   return { ok: true }
 }
 

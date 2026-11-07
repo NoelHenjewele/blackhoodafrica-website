@@ -2,8 +2,9 @@
 // New accounts are invite-only: the talent code must be approved in the sheet AND belong to this email.
 import { randomInt } from 'node:crypto'
 import { adminClient, callSheet, hashCode, normaliseEmail } from '../_lib/supabaseAdmin.js'
+import { requireAdmin } from '../_lib/profiles.js'
 
-type Body = { email?: string; talentCode?: string; lang?: string }
+type Body = { email?: string; talentCode?: string; lang?: string; show?: boolean }
 
 export async function POST(request: Request) {
   const db = adminClient()
@@ -60,7 +61,11 @@ export async function POST(request: Request) {
     attempts: 0,
   })
 
-  const sent = await callSheet<{ ok: boolean }>({ type: 'login-code', email, code, lang: body.lang === 'sw' ? 'sw' : 'en' })
+  // Team backup: a signed-in admin can get the code on screen to pass on by WhatsApp (no email needed).
+  if (body.show && (await requireAdmin(db, request))) return Response.json({ ok: true, code })
+
+  const sent = await callSheet<{ ok: boolean; error?: string }>({ type: 'login-code', email, code, lang: body.lang === 'sw' ? 'sw' : 'en' })
+  if (sent?.error === 'quota') return Response.json({ ok: false, error: 'email limit' }, { status: 503 })
   if (!sent?.ok) return Response.json({ ok: false, error: 'email failed' }, { status: 502 })
   return Response.json({ ok: true })
 }
