@@ -21,7 +21,7 @@ export const stories: Story[] = [
       en: 'Eladia trained with Blackhood before stepping onto the Miss Kinondoni stage, where she took the 2027–2028 title.',
       sw: 'Eladia alifunzwa na Blackhood kabla ya kupanda jukwaa la Miss Kinondoni, ambako alishinda taji la 2027–2028.',
     },
-    photo: '/talent/eladia-edwin/crowned-portrait.jpg',
-    gallery: ['/talent/eladia-edwin/runway-stage.jpg', '/talent/eladia-edwin/crowned-with-host.jpg'],
+    photo: '/talent/eladia-edwin/crowned-portrait.webp',
+    gallery: ['/talent/eladia-edwin/runway-stage.webp', '/talent/eladia-edwin/crowned-with-host.webp'],
   },
 ]

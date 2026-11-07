@@ -52,7 +52,7 @@ export default function Footer() {
         <Newsletter />
         <div className="mt-12 grid gap-12 lg:grid-cols-[1.2fr_2fr]">
           <div>
-            <img src="/brand/logo-white.png" alt="Blackhood Africa" className="h-12 w-auto" />
+            <img src="/brand/logo-white.webp" width={420} height={102} alt="Blackhood Africa" className="h-12 w-auto" />
             <p className="mt-6 max-w-xs font-display text-2xl italic text-gold">{t(site.promise)}</p>
             <p className="mt-4 flex items-center gap-2 text-sm text-ivory/60">
               <MapPin size={16} /> {site.city}, Tanzania

@@ -16,15 +16,15 @@ export const videos: GalleryVideo[] = [
 
 export const photos: GalleryPhoto[] = [
   {
-    src: '/talent/eladia-edwin/runway-stage.jpg',
+    src: '/talent/eladia-edwin/runway-stage.webp',
     caption: { en: 'On the runway', sw: 'Jukwaani' },
   },
   {
-    src: '/talent/eladia-edwin/crowned-portrait.jpg',
+    src: '/talent/eladia-edwin/crowned-portrait.webp',
     caption: { en: 'Crowned', sw: 'Ametwaa taji' },
   },
   {
-    src: '/talent/eladia-edwin/crowned-with-host.jpg',
+    src: '/talent/eladia-edwin/crowned-with-host.webp',
     caption: { en: 'Final night', sw: 'Usiku wa fainali' },
   },
 ]

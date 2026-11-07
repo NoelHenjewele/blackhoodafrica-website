@@ -57,7 +57,7 @@ export default function Header() {
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-10">
         <Link to="/" aria-label="Blackhood Africa home" onClick={() => setOpen(false)}>
-          <img src="/brand/logo-white.png" alt="Blackhood Africa" className="h-9 w-auto lg:h-10" />
+          <img src="/brand/logo-white.webp" width={420} height={102} alt="Blackhood Africa" className="h-9 w-auto lg:h-10" />
         </Link>
 
         <nav className="hidden items-center gap-7 xl:flex">

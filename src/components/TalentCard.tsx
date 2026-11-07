@@ -47,7 +47,7 @@ export function TalentPlaceholder({ label }: { label: string }) {
       <div className="grid aspect-[3/4] place-items-center border border-dashed border-white/15 text-center">
         <div>
           <Plus className="mx-auto text-stone/40" size={28} strokeWidth={1.2} />
-          <p className="mt-3 text-[11px] uppercase tracking-[0.2em] text-stone/70">{label}</p>
+          <p className="mt-3 text-[11px] uppercase tracking-[0.2em] text-stone">{label}</p>
         </div>
       </div>
       <div className="mt-4 h-4 w-2/3 bg-white/5" />

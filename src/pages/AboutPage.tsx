@@ -54,7 +54,7 @@ export default function AboutPage() {
           <figure>
             <div className="aspect-[3/2] overflow-hidden border border-white/10">
               <img
-                src="/talent/eladia-edwin/crowned-with-host.jpg"
+                src="/talent/eladia-edwin/crowned-with-host.webp"
                 alt="Eladia Edwin being crowned Miss Kinondoni"
                 loading="lazy"
                 className="h-full w-full object-cover"

@@ -54,7 +54,7 @@ export default function NewFaces() {
               >
                 <div>
                   <p className="font-display text-3xl italic text-gold/70">{t({ en: 'New face', sw: 'Sura mpya' })}</p>
-                  <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-stone/70">
+                  <p className="mt-2 text-[11px] uppercase tracking-[0.2em] text-stone">
                     {t({ en: 'Photo coming', sw: 'Picha inakuja' })}
                   </p>
                 </div>

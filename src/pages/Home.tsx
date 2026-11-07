@@ -58,7 +58,7 @@ export default function Home() {
           <figure className="relative">
             <div className="relative aspect-[4/5] overflow-hidden rounded-sm border border-white/10 bg-ink-soft">
               <img
-                src="/talent/eladia-edwin/crowned-portrait.jpg"
+                src="/talent/eladia-edwin/crowned-portrait.webp"
                 alt="Eladia Edwin wearing the Miss Kinondoni crown"
                 className="absolute inset-0 h-full w-full object-cover object-[40%_center]"
               />

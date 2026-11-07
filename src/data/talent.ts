@@ -36,8 +36,8 @@ export const talent: Talent[] = [
     boards: ['Women'],
     city: 'Dar es Salaam',
     note: 'Miss Kinondoni 2027–2028',
-    photo: '/talent/eladia-edwin/runway-stage.jpg',
-    gallery: ['/talent/eladia-edwin/runway-stage.jpg', '/talent/eladia-edwin/crowned-portrait.jpg', '/talent/eladia-edwin/crowned-with-host.jpg'],
+    photo: '/talent/eladia-edwin/runway-stage.webp',
+    gallery: ['/talent/eladia-edwin/runway-stage.webp', '/talent/eladia-edwin/crowned-portrait.webp', '/talent/eladia-edwin/crowned-with-host.webp'],
     featured: true,
   },
 ]
