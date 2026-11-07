@@ -1,20 +1,15 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Sparkles } from 'lucide-react'
+import { useTalent } from '../../data/talent'
 import { useLang } from '../../i18n'
-
-type NewFace = {
-  name: string
-  intake: string
-  photo?: string
-}
-
-// Fresh signings and recent academy graduates. Add real entries here as they're confirmed.
-const newFaces: NewFace[] = []
 
 const SLOTS = 5
 
 export default function NewFaces() {
   const { t } = useLang()
+  // Approved models on the New Faces board (set on their account, approved on /admin).
+  const [talent] = useTalent()
+  const newFaces = talent.filter((p) => p.boards.includes('New Faces')).slice(0, SLOTS)
   const placeholders = Math.max(0, SLOTS - newFaces.length)
 
   return (
@@ -41,13 +36,13 @@ export default function NewFaces() {
 
         <div className="-mx-5 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 pb-4 lg:mx-0 lg:grid lg:grid-cols-5 lg:overflow-visible lg:px-0">
           {newFaces.map((f) => (
-            <article key={f.name} className="w-[62vw] shrink-0 snap-start sm:w-[38vw] lg:w-auto">
+            <Link key={f.slug} to={`/talent/${f.slug}`} className="group w-[62vw] shrink-0 snap-start sm:w-[38vw] lg:w-auto">
               <div className="aspect-[3/4] overflow-hidden bg-ink">
-                {f.photo && <img src={f.photo} alt={f.name} loading="lazy" className="h-full w-full object-cover" />}
+                {f.photo && <img src={f.photo} alt={f.name} loading="lazy" className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />}
               </div>
               <h3 className="mt-4 font-display text-2xl">{f.name}</h3>
-              <p className="text-xs uppercase tracking-[0.2em] text-gold">{f.intake}</p>
-            </article>
+              <p className="text-xs uppercase tracking-[0.2em] text-gold">{f.city || t({ en: 'New face', sw: 'Sura mpya' })}</p>
+            </Link>
           ))}
 
           {Array.from({ length: placeholders }).map((_, i) => (
