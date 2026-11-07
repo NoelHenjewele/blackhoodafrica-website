@@ -26,12 +26,16 @@ export async function POST(request: Request) {
     // Team members log in without a talent profile; "already registered" just means the login exists.
     await db.auth.admin.createUser({ email, email_confirm: true })
   } else if (!existing) {
-    const talentCode = String(body.talentCode ?? '').trim().toUpperCase()
-    if (!/^BHA-T-\d{4}$/.test(talentCode)) return Response.json({ ok: false, error: 'needs code' })
+    let talentCode = String(body.talentCode ?? '').trim().toUpperCase()
+    if (!talentCode) return Response.json({ ok: false, error: 'needs code' })
+    // Talent code (BHA-T-0001) or, if a model types it by mistake, her application number (BHA-261107-0006).
+    if (!/^BHA-T-\d{4}$/.test(talentCode) && !/^BHA-\d{6}-\d{4}$/.test(talentCode)) return Response.json({ ok: false, error: 'bad code' })
 
-    const check = await callSheet<{ ok: boolean; valid?: boolean; name?: string }>({ type: 'verify-email', code: talentCode, email })
+    const check = await callSheet<{ ok: boolean; valid?: boolean; name?: string; talentCode?: string; reason?: string }>({ type: 'verify-email', code: talentCode, email })
     if (!check?.ok) return Response.json({ ok: false, error: 'server' }, { status: 502 })
-    if (!check.valid || !check.name) return Response.json({ ok: false, error: 'no match' })
+    if (check.reason === 'not approved') return Response.json({ ok: false, error: 'not approved' })
+    if (!check.valid || !check.name || !check.talentCode) return Response.json({ ok: false, error: 'no match' })
+    talentCode = check.talentCode
 
     const { data: taken } = await db.from('profiles').select('id').eq('talent_code', talentCode).maybeSingle()
     if (taken) return Response.json({ ok: false, error: 'code used' })

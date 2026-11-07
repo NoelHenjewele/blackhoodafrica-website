@@ -526,20 +526,27 @@ function handleVerify(data) {
 }
 
 // Account sign-up check (server-to-server only): the code must be active AND belong to this email.
+// Accepts the talent code (BHA-T-0001) or, since models mix them up, the application reference (BHA-261107-0006).
+// Returns the talent code so the account is always linked to it.
 function handleVerifyEmail(data) {
   const code = String(data.code || '').trim().toUpperCase()
   const email = validEmail(data.email).toLowerCase()
-  if (!/^BHA-T-\d{4}$/.test(code) || !email) return { ok: true, valid: false }
+  const isTalent = /^BHA-T-\d{4}$/.test(code)
+  const isRef = /^BHA-\d{6}-\d{4}$/.test(code)
+  if ((!isTalent && !isRef) || !email) return { ok: true, valid: false }
   const sheet = getSheet()
   const last = sheet.getLastRow()
   if (last < 2) return { ok: true, valid: false }
   const rows = sheet.getRange(2, 1, last - 1, COL.code).getValues()
   for (let i = 0; i < rows.length; i++) {
-    if (String(rows[i][COL.code - 1]).toUpperCase() !== code) continue
+    const match = isTalent ? String(rows[i][COL.code - 1]).toUpperCase() === code : String(rows[i][1]).toUpperCase() === code
+    if (!match) continue
     const status = String(rows[i][COL.status - 1])
     const active = status === 'Approved' || status === 'Signed'
     const sameEmail = String(rows[i][COL.email - 1]).trim().toLowerCase() === email
-    return { ok: true, valid: active && sameEmail, name: active && sameEmail ? String(rows[i][COL.name - 1]) : '' }
+    const talentCode = String(rows[i][COL.code - 1]).toUpperCase()
+    const ok = active && sameEmail && /^BHA-T-\d{4}$/.test(talentCode)
+    return { ok: true, valid: ok, name: ok ? String(rows[i][COL.name - 1]) : '', talentCode: ok ? talentCode : '', reason: !active ? 'not approved' : !sameEmail ? 'email' : '' }
   }
   return { ok: true, valid: false }
 }

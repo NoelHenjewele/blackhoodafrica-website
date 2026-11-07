@@ -15,6 +15,14 @@ const errors: Record<string, L> = {
     en: "We don't have an account for this email yet. Add your talent code to create one.",
     sw: 'Hatuna akaunti ya barua pepe hii bado. Weka namba yako ya kipaji kuifungua.',
   },
+  'bad code': {
+    en: 'That code doesn’t look right. Use the talent code from your approval email (like BHA-T-0012) or your application number (like BHA-261107-0006).',
+    sw: 'Namba hiyo si sahihi. Tumia namba ya kipaji kutoka barua pepe ya kukubaliwa (mf. BHA-T-0012) au namba ya ombi lako (mf. BHA-261107-0006).',
+  },
+  'not approved': {
+    en: 'Your application hasn’t been approved yet. You’ll get an email with your talent code when it is.',
+    sw: 'Ombi lako bado halijakubaliwa. Utapata barua pepe yenye namba ya kipaji likikubaliwa.',
+  },
   'no match': {
     en: 'That talent code and email do not match an approved model. Use the email you applied with.',
     sw: 'Namba hiyo ya kipaji na barua pepe havilingani na mwanamitindo aliyekubaliwa. Tumia barua pepe uliyoombea.',
