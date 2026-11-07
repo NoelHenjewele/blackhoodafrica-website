@@ -152,9 +152,13 @@ function getSubscribersSheet() {
   return sheet
 }
 
+// Running number per prefix, kept in script properties so deleting rows never repeats a reference.
 function makeRef(prefix, sheet) {
-  return prefix + '-' + Utilities.formatDate(new Date(), 'Africa/Dar_es_Salaam', 'yyMMdd') + '-' +
-    String(sheet.getLastRow()).padStart(4, '0')
+  const props = PropertiesService.getScriptProperties()
+  const key = 'REF_COUNTER_' + prefix
+  const n = Math.max(Number(props.getProperty(key) || 0) + 1, sheet.getLastRow())
+  props.setProperty(key, String(n))
+  return prefix + '-' + Utilities.formatDate(new Date(), 'Africa/Dar_es_Salaam', 'yyMMdd') + '-' + String(n).padStart(4, '0')
 }
 
 // Phone numbers stored as text so "+255…" isn't treated as a formula or number.
@@ -544,6 +548,8 @@ function handleVerifyEmail(data) {
     const status = String(rows[i][COL.status - 1])
     const active = status === 'Approved' || status === 'Signed'
     const sameEmail = String(rows[i][COL.email - 1]).trim().toLowerCase() === email
+    // Application numbers aren't always unique, so for those the email must match too.
+    if (isRef && !sameEmail) continue
     const talentCode = String(rows[i][COL.code - 1]).toUpperCase()
     const ok = active && sameEmail && /^BHA-T-\d{4}$/.test(talentCode)
     return { ok: true, valid: ok, name: ok ? String(rows[i][COL.name - 1]) : '', talentCode: ok ? talentCode : '', reason: !active ? 'not approved' : !sameEmail ? 'email' : '' }
