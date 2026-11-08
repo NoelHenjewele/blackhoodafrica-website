@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { boardLabels, boards, useTalent, type Board } from '../data/talent'
-import { TalentCard, TalentPlaceholder } from '../components/TalentCard'
+import { JoinCard, TalentCard } from '../components/TalentCard'
 import { useLang } from '../i18n'
 
 const ALL = 'All'
@@ -111,9 +111,7 @@ export default function TalentPage() {
             {results.map((p) => (
               <TalentCard key={p.slug} person={p} />
             ))}
-            {Array.from({ length: placeholders }).map((_, i) => (
-              <TalentPlaceholder key={i} label={active === ALL ? t({ en: 'Talent', sw: 'Kipaji' }) : boardName(active)} />
-            ))}
+            {placeholders > 0 && <JoinCard />}
           </div>
 
           <div className="mt-16 flex flex-col items-start justify-between gap-6 border border-ivory/10 bg-ink-soft p-8 sm:flex-row sm:items-center lg:p-10">

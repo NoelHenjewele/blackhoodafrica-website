@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { boardLabels, boards, useTalent, type Board } from '../../data/talent'
-import { TalentCard, TalentPlaceholder } from '../TalentCard'
+import { JoinCard, TalentCard } from '../TalentCard'
 import { useLang } from '../../i18n'
 
 const SLOTS = 8
@@ -59,9 +59,7 @@ export default function TalentPreview() {
           {named.map((p) => (
             <TalentCard key={p.slug} person={p} />
           ))}
-          {Array.from({ length: placeholders }).map((_, i) => (
-            <TalentPlaceholder key={i} label={active === ALL ? t({ en: 'Talent', sw: 'Kipaji' }) : labelOf(active)} />
-          ))}
+          {placeholders > 0 && <JoinCard />}
         </div>
       </div>
     </section>

@@ -55,3 +55,18 @@ export function TalentPlaceholder({ label }: { label: string }) {
     </div>
   )
 }
+
+// One invitation card instead of rows of empty boxes while the boards are still filling up.
+export function JoinCard() {
+  const { t } = useLang()
+  return (
+    <Link to="/apply" className="group grid aspect-[3/4] place-items-center border border-dashed border-gold/50 bg-ink-soft p-5 text-center hover:border-gold">
+      <div>
+        <p className="font-display text-2xl italic text-gold">{t({ en: 'New faces joining weekly', sw: 'Sura mpya zinajiunga kila wiki' })}</p>
+        <p className="mt-3 text-xs font-semibold uppercase tracking-[0.2em] text-ivory/85 group-hover:text-gold">
+          {t({ en: 'Apply to join →', sw: 'Omba kujiunga →' })}
+        </p>
+      </div>
+    </Link>
+  )
+}
