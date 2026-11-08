@@ -2,6 +2,7 @@
 import { randomBytes } from 'node:crypto'
 import { adminClient, callSheet } from '../_lib/supabaseAdmin.js'
 import { photosByProfile, photoUrl, requireAdmin, slugify } from '../_lib/profiles.js'
+import { createPendingProfile, type Application } from '../_lib/applicants.js'
 
 const ORDER: Record<string, number> = { pending: 0, draft: 1, approved: 2, hidden: 3 }
 
@@ -71,6 +72,28 @@ export async function POST(request: Request) {
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
   if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
   if (new URL(request.url).searchParams.has('certificates')) return certificatesPOST(db, request)
+  if (new URL(request.url).searchParams.has('import')) {
+    // Older applications that only exist in the Sheet: list them, then bring them in one at a time (photos are big).
+    const body = (await request.json().catch(() => ({}))) as { step?: 'list' | 'one'; ref?: string; email?: string }
+    if (body.step === 'one') {
+      const r = await callSheet<{ ok: boolean; application?: Application }>({ type: 'import-one', ref: body.ref, email: body.email })
+      if (!r?.ok || !r.application) return Response.json({ ok: false, error: 'sheet' }, { status: 502 })
+      const result = await createPendingProfile(db, r.application)
+      return Response.json({ ok: true, ...result })
+    }
+    const r = await callSheet<{ ok: boolean; rows?: { ref: string; name: string; email: string; status: string; code: string }[] }>({ type: 'import-list' })
+    if (!r?.ok) return Response.json({ ok: false, error: 'sheet' }, { status: 502 })
+    // Skip anyone who already has a profile with photos.
+    const { data: profs } = await db.from('profiles').select('id, email')
+    const { data: withPhotos } = await db.from('photos').select('profile_id')
+    const hasPhotos = new Set((withPhotos ?? []).map((p) => p.profile_id))
+    const done = new Set((profs ?? []).filter((p) => hasPhotos.has(p.id)).map((p) => p.email.toLowerCase()))
+    const seen = new Set<string>()
+    // Duplicate rows for one email: prefer the one that already has a talent code.
+    const rows = (r.rows ?? []).sort((a, b) => Number(/^BHA-T-/.test(b.code)) - Number(/^BHA-T-/.test(a.code)))
+    const todo = rows.filter((x) => !done.has(x.email) && !seen.has(x.email) && seen.add(x.email))
+    return Response.json({ ok: true, todo })
+  }
   if (new URL(request.url).searchParams.has('photo')) {
     // Team reorders or deletes a model's photo. Position 0 is her main picture.
     const { profileId, photoId, action } = (await request.json().catch(() => ({}))) as { profileId?: string; photoId?: string; action?: 'main' | 'left' | 'right' | 'delete' }

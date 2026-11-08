@@ -11,6 +11,7 @@ import AdminCertificates from '../components/AdminCertificates'
 import ResendCode from '../components/ResendCode'
 import TeamMessage from '../components/TeamMessage'
 import AddPhotos from '../components/AddPhotos'
+import ImportFromSheet from '../components/ImportFromSheet'
 
 // Team-only review page. English only: it's an internal tool.
 type AdminProfile = {
@@ -216,6 +217,7 @@ export default function AdminPage() {
             ) : (
             <>
             <ResendCode token={token} />
+            <ImportFromSheet token={token} onDone={load} />
             <div className="mt-8 flex flex-wrap gap-2">
               {filters.map((f) => (
                 <button

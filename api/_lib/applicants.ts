@@ -15,6 +15,7 @@ export type Application = {
   interest?: string
   experience?: string
   photos: { headshot?: string; full?: string; side?: string }
+  talentCode?: string // already approved in the Sheet (imports of older applications)
 }
 
 function boardFor(a: Application) {
@@ -25,7 +26,13 @@ function boardFor(a: Application) {
 export async function createPendingProfile(db: SupabaseClient, a: Application) {
   const email = a.email.trim().toLowerCase()
   const { data: existing } = await db.from('profiles').select('id').eq('email', email).maybeSingle()
-  if (existing) return { created: false, reason: 'exists' }
+  if (existing) {
+    // Older sign-ups (e.g. logged in but never added photos): give them their application photos.
+    const { count } = await db.from('photos').select('id', { count: 'exact', head: true }).eq('profile_id', existing.id)
+    if (count) return { created: false, reason: 'exists' }
+    await addPhotos(db, existing.id, a.photos)
+    return { created: false, reason: 'photos added' }
+  }
 
   const user = await db.auth.admin.createUser({ email, email_confirm: true })
   const id = user.data.user?.id
@@ -36,7 +43,7 @@ export async function createPendingProfile(db: SupabaseClient, a: Application) {
     id,
     email,
     full_name: a.name.trim().slice(0, 100),
-    talent_code: a.ref, // replaced by the real BHA-T code when the team approves
+    talent_code: a.talentCode && /^BHA-T-\d{4}$/.test(a.talentCode) ? a.talentCode : a.ref, // ref is swapped for a BHA-T code on approval
     status: 'pending',
     board: boardFor(a),
     city: a.city?.trim().slice(0, 80) || null,
@@ -50,14 +57,18 @@ export async function createPendingProfile(db: SupabaseClient, a: Application) {
     return { created: false, reason: 'profile' }
   }
 
-  // Application photos become her first profile photos (headshot first = main picture).
+  await addPhotos(db, id, a.photos)
+  return { created: true }
+}
+
+// Application photos become her profile photos (headshot first = main picture).
+async function addPhotos(db: SupabaseClient, id: string, photos: Application['photos']) {
   let position = 0
   for (const key of ['headshot', 'full', 'side'] as const) {
-    const b64 = a.photos[key]
+    const b64 = photos[key]
     if (!b64) continue
     const path = `${id}/${randomUUID()}.jpg`
     const up = await db.storage.from('talent-photos').upload(path, Buffer.from(b64, 'base64'), { contentType: 'image/jpeg' })
     if (!up.error) await db.from('photos').insert({ profile_id: id, path, position: position++ })
   }
-  return { created: true }
 }

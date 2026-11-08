@@ -50,6 +50,8 @@ function doPost(e) {
       if (data.type === 'approve-ref') return json(approveByRef(data))
       if (data.type === 'profile-reminder') return json(sendProfileReminder(data))
       if (data.type === 'team-message') return json(sendTeamMessage(data))
+      if (data.type === 'import-list') return json(importList())
+      if (data.type === 'import-one') return json(importOne(data))
       if (data.type === 'list-bookings') return json(listBookings())
       if (data.type === 'booking-status') return json(setBookingStatus(data))
       return json(handleApplication(data))
@@ -545,6 +547,47 @@ function sendDailyReminders() {
       console.warn('Reminder summary failed: ' + err)
     }
   }
+}
+
+// /admin "Import from Sheet": older applications (before the website created profiles itself).
+// importList gives the rows; importOne gives one row's details plus its Drive photos as base64.
+function importList() {
+  const sheet = getSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return { ok: true, rows: [] }
+  const rows = sheet.getRange(2, 1, last - 1, COL.approvedOn).getValues()
+  return {
+    ok: true,
+    rows: rows
+      .filter(function (r) { return r[1] && validEmail(r[9]) && String(r[2]) !== 'Not now' })
+      .map(function (r) { return { ref: String(r[1]), name: String(r[3]), email: String(r[9]).trim().toLowerCase(), status: String(r[2]), code: String(r[COL.code - 1] || '') } }),
+  }
+}
+
+function importOne(data) {
+  const sheet = getSheet()
+  const last = sheet.getLastRow()
+  const rows = sheet.getRange(2, 1, last - 1, COL.approvedOn).getValues()
+  const email = String(data.email || '').trim().toLowerCase()
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i]
+    if (String(r[1]) !== String(data.ref) || String(r[9]).trim().toLowerCase() !== email) continue
+    const photo = function (url) {
+      const m = String(url || '').match(/[-\w]{25,}/)
+      if (!m) return ''
+      try { return Utilities.base64Encode(DriveApp.getFileById(m[0]).getBlob().getBytes()) } catch (err) { return '' }
+    }
+    return {
+      ok: true,
+      application: {
+        ref: String(r[1]), name: String(r[3]), email: email, age: Number(r[4]) || 0, gender: String(r[5]), height: r[6],
+        city: String(r[7]), social: String(r[10]), interest: String(r[11]), experience: String(r[12]),
+        talentCode: String(r[COL.code - 1] || ''),
+        photos: { headshot: photo(r[16]), full: photo(r[17]), side: photo(r[18]) },
+      },
+    }
+  }
+  return { ok: false, error: 'not found' }
 }
 
 // /admin "Message / request changes": the team's note to a model, also shown on her account page.
