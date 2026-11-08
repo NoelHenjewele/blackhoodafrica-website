@@ -75,8 +75,8 @@ export default function Home() {
         </div>
       </section>
 
-      <ForBrands />
       <TalentPreview />
+      <ForBrands />
       <NewFaces />
       <AcademyPreview />
       <OurPromise />
