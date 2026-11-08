@@ -43,8 +43,8 @@ const errors: Record<string, L> = {
 const fallback: L = { en: 'Something went wrong. Please try again.', sw: 'Kuna tatizo. Tafadhali jaribu tena.' }
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/30 focus:border-gold focus:outline-none'
-const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/70'
+  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
+const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 const button =
   'inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-ink hover:bg-ivory disabled:opacity-50'
 
@@ -152,11 +152,11 @@ export default function AccountPage() {
                   <BadgeCheck size={18} /> {t({ en: 'Approved Blackhood Africa talent', sw: 'Kipaji kilichokubaliwa na Blackhood Africa' })}
                 </p>
                 <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-sm">
-                  <dt className="text-ivory/55">{t({ en: 'Name', sw: 'Jina' })}</dt>
+                  <dt className="text-ivory/80">{t({ en: 'Name', sw: 'Jina' })}</dt>
                   <dd>{profile.full_name}</dd>
-                  <dt className="text-ivory/55">{t({ en: 'Talent code', sw: 'Namba ya kipaji' })}</dt>
+                  <dt className="text-ivory/80">{t({ en: 'Talent code', sw: 'Namba ya kipaji' })}</dt>
                   <dd className="font-mono">{profile.talent_code}</dd>
-                  <dt className="text-ivory/55">{t({ en: 'Email', sw: 'Barua pepe' })}</dt>
+                  <dt className="text-ivory/80">{t({ en: 'Email', sw: 'Barua pepe' })}</dt>
                   <dd>{profile.email}</dd>
                 </dl>
               </div>
@@ -164,7 +164,7 @@ export default function AccountPage() {
             {profile && <ProfileEditor profile={profile} onSaved={setProfile} />}
             {profile?.is_minor && <ParentConsent profileId={profile.id} modelName={profile.full_name.split(' ')[0]} />}
             {profile && <Availability profileId={profile.id} />}
-            <p className="mt-8 text-sm text-ivory/60">
+            <p className="mt-8 text-sm text-ivory/80">
               {t({ en: 'Blackhood team member?', sw: 'Mwanatimu wa Blackhood?' })}{' '}
               <Link to="/admin" className="text-gold underline">{t({ en: 'Open profile review', sw: 'Fungua ukaguzi wa wasifu' })}</Link>
             </p>
@@ -178,7 +178,7 @@ export default function AccountPage() {
         ) : (
           <div className="mt-5">
             <h1 className="font-display text-5xl font-medium">{t({ en: 'Log in', sw: 'Ingia' })}</h1>
-            <p className="mt-4 text-ivory/70">
+            <p className="mt-4 text-ivory/85">
               {t({
                 en: 'For approved Blackhood talent. First time? Use the email you applied with and your talent code from your welcome email.',
                 sw: 'Kwa vipaji vilivyokubaliwa na Blackhood. Mara ya kwanza? Tumia barua pepe uliyoombea na namba yako ya kipaji kutoka barua pepe ya ukaribisho.',
@@ -205,7 +205,7 @@ export default function AccountPage() {
               </form>
             ) : (
               <form onSubmit={verify} className="mt-8 space-y-5">
-                <p className="text-sm text-ivory/70">
+                <p className="text-sm text-ivory/85">
                   {t({ en: 'We sent a 6-digit code to', sw: 'Tumetuma namba ya tarakimu 6 kwa' })} <strong>{email}</strong>.
                 </p>
                 <input
@@ -224,7 +224,7 @@ export default function AccountPage() {
                     {busy && <Loader2 size={16} className="animate-spin" />}
                     {t({ en: 'Log in', sw: 'Ingia' })}
                   </button>
-                  <button type="button" onClick={() => { setStep('email'); setError('') }} className="text-sm text-ivory/60 underline hover:text-gold">
+                  <button type="button" onClick={() => { setStep('email'); setError('') }} className="text-sm text-ivory/80 underline hover:text-gold">
                     {t({ en: 'Use a different email', sw: 'Tumia barua pepe nyingine' })}
                   </button>
                 </div>

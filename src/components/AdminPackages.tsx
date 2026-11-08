@@ -5,7 +5,7 @@ import { useTalent } from '../data/talent'
 // Team-only: build a private link with a hand-picked set of models to send to a brand.
 type Pkg = { id: string; token: string; title: string; client: string | null; note: string | null; slugs: string[]; views: number; created_at: string }
 
-const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none'
+const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 const linkFor = (token: string) => `${window.location.origin}/p/${token}`
 
 export default function AdminPackages({ token }: { token: string }) {
@@ -75,7 +75,7 @@ export default function AdminPackages({ token }: { token: string }) {
         <input name="client" placeholder="Client (team only), e.g. CRDB marketing" className={field} />
         <input name="note" placeholder="Short note for the brand (optional)" className={field} />
 
-        <p className="mt-2 text-sm text-ivory/70 sm:col-span-2">Pick models ({picked.length} selected), in the order you tap them:</p>
+        <p className="mt-2 text-sm text-ivory/85 sm:col-span-2">Pick models ({picked.length} selected), in the order you tap them:</p>
         <div className="grid grid-cols-3 gap-3 sm:col-span-2 sm:grid-cols-5 lg:grid-cols-7">
           {talent.map((p) => {
             const n = picked.indexOf(p.slug)
@@ -100,7 +100,7 @@ export default function AdminPackages({ token }: { token: string }) {
 
       {error && <p className="mt-4 text-red-300">{error}</p>}
       {packages === null && <Loader2 className="mt-8 animate-spin text-gold" />}
-      {packages?.length === 0 && !error && <p className="mt-8 text-ivory/60">No packages yet.</p>}
+      {packages?.length === 0 && !error && <p className="mt-8 text-ivory/80">No packages yet.</p>}
 
       <div className="mt-8 space-y-4">
         {packages?.map((p) => (
@@ -108,10 +108,10 @@ export default function AdminPackages({ token }: { token: string }) {
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h3 className="font-display text-2xl">{p.title}</h3>
-                <p className="text-sm text-ivory/60">
+                <p className="text-sm text-ivory/80">
                   {[p.client, new Date(p.created_at).toLocaleDateString('en-GB'), `opened ${p.views}×`].filter(Boolean).join(' · ')}
                 </p>
-                <p className="mt-1 text-sm text-ivory/75">{p.slugs.map(nameOf).join(', ')}</p>
+                <p className="mt-1 text-sm text-ivory/90">{p.slugs.map(nameOf).join(', ')}</p>
               </div>
             </div>
             <p className="mt-3 break-all font-mono text-sm text-gold">{linkFor(p.token)}</p>

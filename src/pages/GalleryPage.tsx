@@ -17,7 +17,7 @@ export default function GalleryPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Inside the training.', sw: 'Ndani ya mafunzo.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'Runway, posing and camera sessions from our past intakes. See how Blackhood talent is trained before they ever step in front of a client.',
               sw: 'Mazoezi ya jukwaa, pozi na kamera kutoka awamu zetu zilizopita. Ona jinsi vipaji vya Blackhood vinavyofunzwa kabla ya kukutana na mteja.',
@@ -43,7 +43,7 @@ export default function GalleryPage() {
                       className="absolute inset-0 h-full w-full"
                     />
                   </div>
-                  <figcaption className="mx-auto mt-3 max-w-[340px] text-sm text-ivory/80">
+                  <figcaption className="mx-auto mt-3 max-w-[340px] text-sm text-ivory/90">
                     {t(v.title)}
                     {v.intake && <span className="ml-2 text-stone">· {v.intake}</span>}
                   </figcaption>
@@ -68,7 +68,7 @@ export default function GalleryPage() {
                       </button>
                     )}
                   </div>
-                  <figcaption className="mt-3 text-sm text-ivory/80">
+                  <figcaption className="mt-3 text-sm text-ivory/90">
                     {t(v.title)}
                     {v.intake && <span className="ml-2 text-stone">· {v.intake}</span>}
                   </figcaption>
@@ -108,7 +108,7 @@ export default function GalleryPage() {
           </button>
           <figure className="max-h-full" onClick={(e) => e.stopPropagation()}>
             <img src={photos[photo].src} alt="" className="max-h-[80vh] w-auto" />
-            {photos[photo].caption && <figcaption className="mt-3 text-center text-ivory/80">{t(photos[photo].caption!)}</figcaption>}
+            {photos[photo].caption && <figcaption className="mt-3 text-center text-ivory/90">{t(photos[photo].caption!)}</figcaption>}
           </figure>
         </div>
       )}

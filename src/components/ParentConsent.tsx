@@ -7,7 +7,7 @@ import { useLang } from '../i18n'
 // Parent / guardian consent for under-18 models, signed on the model's own account page.
 type Consent = { parent_name: string; relationship: string; phone: string; signed_name: string; signed_at: string }
 
-const field = 'w-full border border-white/15 bg-ink-soft px-4 py-3 text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none'
+const field = 'w-full border border-white/15 bg-ink-soft px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 
 export default function ParentConsent({ profileId, modelName }: { profileId: string; modelName: string }) {
   const { t } = useLang()
@@ -62,13 +62,13 @@ export default function ParentConsent({ profileId, modelName }: { profileId: str
         </p>
       ) : (
         <>
-          <p className="mt-2 text-sm text-ivory/65">
+          <p className="mt-2 text-sm text-ivory/85">
             {t({
               en: 'Because this model is under 18, a parent or guardian must read and sign this before the profile can go live. Please hand the phone to your parent or guardian.',
               sw: 'Kwa kuwa mwanamitindo huyu yuko chini ya miaka 18, mzazi au mlezi lazima asome na kusaini hii kabla wasifu haujaonekana. Tafadhali mpe mzazi au mlezi wako simu.',
             })}
           </p>
-          <ul className="mt-5 list-disc space-y-2 pl-5 text-sm text-ivory/85">
+          <ul className="mt-5 list-disc space-y-2 pl-5 text-sm text-ivory/90">
             {points.map((p) => (
               <li key={p}>{p}</li>
             ))}
@@ -77,7 +77,7 @@ export default function ParentConsent({ profileId, modelName }: { profileId: str
             <input name="parent_name" required maxLength={80} placeholder={t({ en: 'Parent / guardian full name', sw: 'Jina kamili la mzazi / mlezi' })} className={`${field} sm:col-span-2`} />
             <input name="relationship" required maxLength={40} placeholder={t({ en: 'Relationship (e.g. Mother)', sw: 'Uhusiano (mf. Mama)' })} className={field} />
             <input name="phone" required type="tel" maxLength={30} placeholder={t({ en: 'Phone (WhatsApp)', sw: 'Simu (WhatsApp)' })} className={field} />
-            <label className="flex items-start gap-3 text-sm text-ivory/80 sm:col-span-2">
+            <label className="flex items-start gap-3 text-sm text-ivory/90 sm:col-span-2">
               <input type="checkbox" required className="mt-1 h-4 w-4 accent-[#c9a45c]" />
               {t({ en: 'I am the parent or legal guardian and I agree to all of the above.', sw: 'Mimi ni mzazi au mlezi halali na ninakubali yote hapo juu.' })}
             </label>

@@ -4,7 +4,7 @@ import { Download, Loader2, Plus, Trash2 } from 'lucide-react'
 // Team-only: issue academy certificates. Each gets a BHA-C-#### code that anyone can check on /verify.
 type Cert = { id: string; code: string; name: string; course: string; issued_on: string }
 
-const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none [color-scheme:dark]'
+const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none [color-scheme:dark]'
 const DEFAULT_COURSE = 'Professional Modelling Course'
 
 // The CEO's signature is only given to signed-in team members, so it's fetched with the login token.
@@ -81,13 +81,13 @@ export default function AdminCertificates({ token }: { token: string }) {
           <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-ink hover:bg-ivory disabled:opacity-50">
             {busy ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />} Issue & download PDF
           </button>
-          <p className="text-xs text-ivory/50">Check the spelling of the name first: the number can't be reused.</p>
+          <p className="text-xs text-ivory/75">Check the spelling of the name first: the number can't be reused.</p>
         </div>
       </form>
 
       {error && <p className="mt-4 text-red-300">{error}</p>}
       {certs === null && <Loader2 className="mt-8 animate-spin text-gold" />}
-      {certs?.length === 0 && !error && <p className="mt-8 text-ivory/60">No certificates yet.</p>}
+      {certs?.length === 0 && !error && <p className="mt-8 text-ivory/80">No certificates yet.</p>}
 
       <div className="mt-8 divide-y divide-white/10 border-y border-white/10">
         {certs?.map((c) => (
@@ -95,7 +95,7 @@ export default function AdminCertificates({ token }: { token: string }) {
             <span className="font-mono text-sm text-gold">{c.code}</span>
             <div className="min-w-0 flex-1">
               <p className="font-medium">{c.name}</p>
-              <p className="text-sm text-ivory/55">{c.course} · {new Date(c.issued_on + 'T00:00').toLocaleDateString('en-GB')}</p>
+              <p className="text-sm text-ivory/80">{c.course} · {new Date(c.issued_on + 'T00:00').toLocaleDateString('en-GB')}</p>
             </div>
             <button type="button" onClick={() => download(c, token)} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
               <Download size={14} /> PDF

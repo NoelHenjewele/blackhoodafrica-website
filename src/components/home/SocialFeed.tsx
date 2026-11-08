@@ -20,7 +20,7 @@ export default function SocialFeed() {
           <h2 className="mt-4 font-display text-4xl font-medium leading-tight sm:text-5xl">
             {t({ en: 'Follow the journey.', sw: 'Fuatilia safari yetu.' })}
           </h2>
-          <p className="mt-6 max-w-md text-ivory/70">
+          <p className="mt-6 max-w-md text-ivory/85">
             {t({
               en: 'Castings, behind-the-scenes and walk tips, posted every week.',
               sw: 'Usaili, nyuma ya pazia na mafunzo ya mwendo, kila wiki.',
@@ -39,7 +39,7 @@ export default function SocialFeed() {
             >
               <img src="/brand/monogram.png" alt="" loading="lazy" className="h-16 w-16 rounded-full" />
               <p className="mt-5 font-display text-2xl">{c.name}</p>
-              <p className="mt-1 text-sm text-ivory/60">{t(c.what)}</p>
+              <p className="mt-1 text-sm text-ivory/80">{t(c.what)}</p>
               <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em] text-gold group-hover:text-ivory">
                 {t({ en: 'Follow →', sw: 'Fuata →' })}
               </p>

@@ -25,8 +25,8 @@ const usageOptions = [
 ]
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none'
-const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/70'
+  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 
 export default function Clients() {
   const { t, lang } = useLang()
@@ -102,7 +102,7 @@ export default function Clients() {
               sw: 'Ajiri vipaji vilivyofunzwa na vya kuaminika kwa mradi wako ujao.',
             })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: "Tell us what you're making and we'll come back within 24 hours with suitable faces, availability and a clear quote.",
               sw: 'Tueleze unachotengeneza na tutakujibu ndani ya saa 24 na sura zinazofaa, upatikanaji na bei iliyo wazi.',
@@ -120,14 +120,14 @@ export default function Clients() {
             <h2 className="mt-4 font-display text-4xl font-medium leading-tight sm:text-5xl">
               {t({ en: 'Tell us about the job.', sw: 'Tueleze kuhusu kazi.' })}
             </h2>
-            <p className="mt-6 text-ivory/70">
+            <p className="mt-6 text-ivory/85">
               {t({
                 en: "Fill in what you know and we'll take it from there. You'll get a reference number and a confirmation email. Prefer to talk? Call or WhatsApp",
                 sw: 'Jaza unachojua nasi tutaendelea kutoka hapo. Utapata namba ya ombi na barua pepe ya uthibitisho. Ungependa kuongea? Piga simu au WhatsApp',
               })}{' '}
               {site.phoneDisplay}.
             </p>
-            <ul className="mt-8 space-y-3 text-sm text-ivory/70">
+            <ul className="mt-8 space-y-3 text-sm text-ivory/85">
               <li>• {t({ en: 'Reply within 24 hours', sw: 'Jibu ndani ya saa 24' })}</li>
               <li>• {t({ en: 'Written quote and contract for every booking', sw: 'Bei na mkataba wa maandishi kwa kila kazi' })}</li>
               <li>
@@ -145,7 +145,7 @@ export default function Clients() {
               <div>
                 <CheckCircle2 className="mx-auto text-gold" size={48} strokeWidth={1.4} />
                 <h3 className="mt-5 font-display text-4xl">{t({ en: 'Brief received.', sw: 'Maelezo yamepokelewa.' })}</h3>
-                <p className="mt-4 text-ivory/70">
+                <p className="mt-4 text-ivory/85">
                   {t({
                     en: `Thank you, ${done.name.split(' ')[0]}. We've emailed you a confirmation and will reply within 24 hours with suitable talent and a quote.`,
                     sw: `Asante, ${done.name.split(' ')[0]}. Tumekutumia barua pepe ya uthibitisho na tutakujibu ndani ya saa 24 na vipaji vinavyofaa na bei.`,
@@ -231,7 +231,7 @@ export default function Clients() {
                 className={field}
               />
             </div>
-            <label className="flex items-start gap-3 text-sm text-ivory/70 sm:col-span-2">
+            <label className="flex items-start gap-3 text-sm text-ivory/85 sm:col-span-2">
               <input
                 type="checkbox"
                 checked={consent}

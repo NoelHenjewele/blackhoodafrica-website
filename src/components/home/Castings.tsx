@@ -96,7 +96,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
                   <div>
                     {c.type && <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">{c.type}</p>}
                     <h3 className="mt-1 font-display text-2xl">{c.title}</h3>
-                    <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-ivory/60">
+                    <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-ivory/80">
                       {c.date_text && (
                         <span className="inline-flex items-center gap-1.5">
                           <CalendarDays size={15} /> {c.date_text}
@@ -108,7 +108,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
                         </span>
                       )}
                     </p>
-                    {c.details && <p className="mt-3 max-w-2xl whitespace-pre-line text-sm text-ivory/75">{c.details}</p>}
+                    {c.details && <p className="mt-3 max-w-2xl whitespace-pre-line text-sm text-ivory/90">{c.details}</p>}
                   </div>
                   </div>
                   <div className="flex flex-col items-stretch gap-2 sm:items-end">
@@ -135,7 +135,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
                           {t({ en: 'Register', sw: 'Jisajili' })}
                         </a>
                         {!loggedIn && (
-                          <Link to="/account" className="text-center text-xs text-ivory/60 underline hover:text-gold">
+                          <Link to="/account" className="text-center text-xs text-ivory/80 underline hover:text-gold">
                             {t({ en: 'Blackhood model? Log in to apply', sw: 'Mwanamitindo wa Blackhood? Ingia kuomba' })}
                           </Link>
                         )}
@@ -152,7 +152,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
               <p className="font-display text-2xl">
                 {t({ en: 'New castings are announced soon.', sw: 'Usaili mpya utatangazwa hivi karibuni.' })}
               </p>
-              <p className="mt-2 text-sm text-ivory/60">
+              <p className="mt-2 text-sm text-ivory/80">
                 {t({
                   en: 'Follow us or message us on WhatsApp to hear first when the next open call is posted.',
                   sw: 'Tufuate au tuandikie WhatsApp ili uwe wa kwanza kujua nafasi inayofuata ikitangazwa.',

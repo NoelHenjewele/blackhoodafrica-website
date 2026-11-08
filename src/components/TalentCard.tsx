@@ -20,7 +20,7 @@ export function TalentCard({ person }: { person: Talent }) {
         ) : (
           <div className="grid h-full place-items-center border border-white/10 text-center">
             <div>
-              <User className="mx-auto text-stone/50" size={36} strokeWidth={1.2} />
+              <User className="mx-auto text-stone/70" size={36} strokeWidth={1.2} />
               <p className="mt-3 text-[11px] uppercase tracking-[0.2em] text-stone">
                 {t({ en: 'Photo coming', sw: 'Picha inakuja' })}
               </p>
@@ -36,7 +36,7 @@ export function TalentCard({ person }: { person: Talent }) {
       </div>
       <h3 className="mt-4 font-display text-2xl">{person.name}</h3>
       {person.note && <p className="text-sm text-gold">{person.note}</p>}
-      <p className="text-sm text-ivory/60">{[person.city, formatHeight(person.heightCm)].filter(Boolean).join(' · ')}</p>
+      <p className="text-sm text-ivory/80">{[person.city, formatHeight(person.heightCm)].filter(Boolean).join(' · ')}</p>
     </Link>
   )
 }
@@ -46,7 +46,7 @@ export function TalentPlaceholder({ label }: { label: string }) {
     <div>
       <div className="grid aspect-[3/4] place-items-center border border-dashed border-white/15 text-center">
         <div>
-          <Plus className="mx-auto text-stone/40" size={28} strokeWidth={1.2} />
+          <Plus className="mx-auto text-stone/60" size={28} strokeWidth={1.2} />
           <p className="mt-3 text-[11px] uppercase tracking-[0.2em] text-stone">{label}</p>
         </div>
       </div>

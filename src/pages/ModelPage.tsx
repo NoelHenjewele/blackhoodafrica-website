@@ -34,7 +34,7 @@ export default function ModelPage() {
   return (
     <section className="pt-20">
       <div className="mx-auto max-w-7xl px-5 py-12 lg:px-10 lg:py-16">
-        <Link to="/talent" className="inline-flex items-center gap-2 text-sm text-ivory/60 hover:text-gold">
+        <Link to="/talent" className="inline-flex items-center gap-2 text-sm text-ivory/80 hover:text-gold">
           <ArrowLeft size={16} /> {t({ en: 'All talent', sw: 'Vipaji vyote' })}
         </Link>
 
@@ -69,7 +69,7 @@ export default function ModelPage() {
             <h1 className="mt-3 font-display text-5xl font-medium sm:text-6xl">{person.name}</h1>
             {person.note && <p className="mt-2 font-display text-2xl italic text-gold">{person.note}</p>}
             {!person.minor && (
-              <p className="mt-3 text-ivory/65">{[person.city, formatHeight(person.heightCm)].filter(Boolean).join(' · ')}</p>
+              <p className="mt-3 text-ivory/85">{[person.city, formatHeight(person.heightCm)].filter(Boolean).join(' · ')}</p>
             )}
 
             {stats.length > 0 && !person.minor && (
@@ -83,7 +83,7 @@ export default function ModelPage() {
               </dl>
             )}
 
-            {person.bio && !person.minor && <p className="mt-8 text-ivory/75">{person.bio}</p>}
+            {person.bio && !person.minor && <p className="mt-8 text-ivory/90">{person.bio}</p>}
 
             {!person.minor && (person.instagram || person.tiktok) && (
               <p className="mt-6 flex gap-4 text-sm">
@@ -123,7 +123,7 @@ export default function ModelPage() {
                 <Share2 size={18} /> {t({ en: 'Share', sw: 'Shiriki' })}
               </button>
               </div>
-              <p className="mt-3 text-xs text-ivory/50">
+              <p className="mt-3 text-xs text-ivory/75">
                 {t({ en: 'All bookings go through Blackhood Africa.', sw: 'Kazi zote zinapitia Blackhood Africa.' })}
               </p>
             </div>

@@ -14,7 +14,7 @@ export default function CastingsPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Your next opportunity starts here.', sw: 'Fursa yako ijayo inaanzia hapa.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'Open castings, scouting days and model searches across Tanzania. Every casting we post is real, free to attend, and run by the Blackhood team.',
               sw: 'Usaili wa wazi, siku za kutafuta vipaji na mashindano ya wanamitindo kote Tanzania. Kila usaili tunaoutangaza ni halisi, ni bure kuhudhuria, na unaendeshwa na timu ya Blackhood.',

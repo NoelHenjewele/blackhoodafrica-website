@@ -101,7 +101,7 @@ export default function ForBrands({ standalone = false }: { standalone?: boolean
             <article key={title.en} className="bg-ink-soft p-8 transition-colors hover:bg-ink">
               <Icon className="text-gold" size={28} strokeWidth={1.4} />
               <h3 className="mt-6 font-display text-2xl">{t(title)}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-ivory/65">{t(text)}</p>
+              <p className="mt-3 text-sm leading-relaxed text-ivory/85">{t(text)}</p>
             </article>
           ))}
         </div>
@@ -109,7 +109,7 @@ export default function ForBrands({ standalone = false }: { standalone?: boolean
         <div className="mt-20 grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <h3 className="font-display text-3xl sm:text-4xl">{t({ en: 'How booking works', sw: 'Jinsi ya kuajiri' })}</h3>
-            <p className="mt-4 max-w-sm text-ivory/65">
+            <p className="mt-4 max-w-sm text-ivory/85">
               {t({
                 en: 'No chasing, no guesswork. Clear rates, signed contracts and talent that turns up ready.',
                 sw: 'Hakuna usumbufu wala kubahatisha. Bei zilizo wazi, mikataba iliyosainiwa na vipaji vinavyofika tayari.',
@@ -138,7 +138,7 @@ export default function ForBrands({ standalone = false }: { standalone?: boolean
               <li key={s.n} className="border-t border-gold/50 pt-6">
                 <span className="font-display text-4xl text-gold lining-nums">{s.n}</span>
                 <h4 className="mt-3 text-lg font-semibold">{t(s.title)}</h4>
-                <p className="mt-2 text-sm leading-relaxed text-ivory/65">{t(s.text)}</p>
+                <p className="mt-2 text-sm leading-relaxed text-ivory/85">{t(s.text)}</p>
               </li>
             ))}
           </ol>

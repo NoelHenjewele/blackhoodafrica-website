@@ -23,7 +23,7 @@ function LangToggle() {
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
           className={`rounded-full px-2.5 py-1 uppercase tracking-[0.1em] transition-colors ${
-            lang === l ? 'bg-ivory text-ink' : 'text-ivory/70 hover:text-gold'
+            lang === l ? 'bg-ivory text-ink' : 'text-ivory/85 hover:text-gold'
           }`}
         >
           {l}
@@ -67,7 +67,7 @@ export default function Header() {
               to={item.to}
               className={({ isActive }) =>
                 `text-[13px] font-medium uppercase tracking-[0.14em] transition-colors hover:text-gold ${
-                  isActive ? 'text-gold' : 'text-ivory/80'
+                  isActive ? 'text-gold' : 'text-ivory/90'
                 }`
               }
             >
@@ -92,7 +92,7 @@ export default function Header() {
             to="/account"
             title={accountLabel}
             aria-label={accountLabel}
-            className="relative grid h-9 w-9 place-items-center rounded-full border border-white/20 text-ivory/85 transition-colors hover:border-gold hover:text-gold"
+            className="relative grid h-9 w-9 place-items-center rounded-full border border-white/20 text-ivory/90 transition-colors hover:border-gold hover:text-gold"
           >
             <UserRound size={17} />
             {loggedIn && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-ink bg-gold" />}

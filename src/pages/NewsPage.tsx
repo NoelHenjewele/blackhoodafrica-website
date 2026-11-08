@@ -52,7 +52,7 @@ export default function NewsPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'What’s happening at Blackhood.', sw: 'Kinachoendelea Blackhood.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'Shows, campaigns, graduations and news from our talent and academy.',
               sw: 'Maonyesho, kampeni, mahafali na habari za vipaji na chuo chetu.',
@@ -65,7 +65,7 @@ export default function NewsPage() {
         <div className="mx-auto max-w-4xl px-5 py-14 lg:px-10">
           {posts === null && <Loader2 className="animate-spin text-gold" />}
           {posts?.length === 0 && (
-            <p className="text-ivory/60">{t({ en: 'News is coming soon.', sw: 'Habari zinakuja hivi karibuni.' })}</p>
+            <p className="text-ivory/80">{t({ en: 'News is coming soon.', sw: 'Habari zinakuja hivi karibuni.' })}</p>
           )}
           <div className="space-y-16">
             {posts?.map((p) => (
@@ -78,7 +78,7 @@ export default function NewsPage() {
                 )}
                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">{date(p.created_at)}</p>
                 <h2 className="mt-2 font-display text-4xl">{p.title}</h2>
-                {p.body && <p className="mt-4 whitespace-pre-line text-ivory/80">{p.body}</p>}
+                {p.body && <p className="mt-4 whitespace-pre-line text-ivory/90">{p.body}</p>}
               </article>
             ))}
           </div>

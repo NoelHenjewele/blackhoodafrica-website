@@ -17,7 +17,7 @@ export default function AcademyPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Where raw potential becomes booked talent.', sw: 'Mahali kipaji ghafi kinakuwa kipaji kinachoajiriwa.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'Practical training from working professionals, with a clear path onto our boards for those ready to work. Fees are published upfront, with no hidden extras.',
               sw: 'Mafunzo ya vitendo kutoka kwa wataalamu walio kazini, na njia iliyo wazi ya kuingia kwenye orodha zetu kwa walio tayari kufanya kazi. Ada zimewekwa wazi, bila gharama zilizofichwa.',
@@ -73,7 +73,7 @@ export default function AcademyPage() {
               <div key={c.title.en} className="bg-ink p-8">
                 <Check className="text-gold" size={22} />
                 <h3 className="mt-4 font-display text-2xl">{t(c.title)}</h3>
-                <p className="mt-2 text-sm text-ivory/65">{t(c.text)}</p>
+                <p className="mt-2 text-sm text-ivory/85">{t(c.text)}</p>
               </div>
             ))}
           </div>
@@ -88,7 +88,7 @@ export default function AcademyPage() {
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i}>
                 <div className="grid aspect-square place-items-center border border-dashed border-white/15">
-                  <Plus className="text-stone/40" size={26} strokeWidth={1.2} />
+                  <Plus className="text-stone/60" size={26} strokeWidth={1.2} />
                 </div>
                 <p className="mt-3 text-sm text-stone">{t({ en: 'Coach profile coming', sw: 'Wasifu wa mwalimu unakuja' })}</p>
               </div>
@@ -120,7 +120,7 @@ export default function AcademyPage() {
                   {t(f.q)}
                   <Plus size={20} className="shrink-0 text-gold transition-transform group-open:rotate-45" />
                 </summary>
-                <p className="mt-3 text-sm leading-relaxed text-ivory/70">{t(f.a)}</p>
+                <p className="mt-3 text-sm leading-relaxed text-ivory/85">{t(f.a)}</p>
               </details>
             ))}
           </div>

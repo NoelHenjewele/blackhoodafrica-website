@@ -100,7 +100,7 @@ export default function ParentsPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Your child is safe with us. Here is how.', sw: 'Mtoto wako yuko salama nasi. Hivi ndivyo.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'If your son or daughter wants to model, you will have questions. This page answers the most important ones: safety, contracts, money and school.',
               sw: 'Kama mwanao anataka kuwa mwanamitindo, utakuwa na maswali. Ukurasa huu unajibu muhimu zaidi: usalama, mikataba, pesa na shule.',
@@ -119,7 +119,7 @@ export default function ParentsPage() {
               </div>
               <ul className="space-y-4">
                 {points.map((p) => (
-                  <li key={p.en} className="border-l-2 border-gold/50 pl-4 text-ivory/80">
+                  <li key={p.en} className="border-l-2 border-gold/50 pl-4 text-ivory/90">
                     {t(p)}
                   </li>
                 ))}

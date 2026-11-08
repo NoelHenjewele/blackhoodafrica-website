@@ -40,7 +40,7 @@ export default function AboutPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t(site.tagline)}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: `We are a ${site.city} talent house: a modeling agency and academy under one roof. We find people with presence, train them properly, and put them in front of the brands, stages and cameras that matter.`,
               sw: `Sisi ni nyumba ya vipaji ya ${site.city}: wakala wa wanamitindo na chuo chini ya paa moja. Tunapata watu wenye mvuto, tunawafunza ipasavyo, na kuwaweka mbele ya makampuni, majukwaa na kamera zenye umuhimu.`,
@@ -60,7 +60,7 @@ export default function AboutPage() {
                 className="h-full w-full object-cover"
               />
             </div>
-            <figcaption className="mt-3 text-sm text-ivory/55">
+            <figcaption className="mt-3 text-sm text-ivory/80">
               {t({ en: 'Eladia Edwin, crowned Miss Kinondoni 2027–2028.', sw: 'Eladia Edwin, akivishwa taji la Miss Kinondoni 2027–2028.' })}
             </figcaption>
           </figure>
@@ -71,13 +71,13 @@ export default function AboutPage() {
             <h2 className="mt-4 font-display text-4xl font-medium leading-tight sm:text-5xl">
               {t({ en: 'Trained here. Crowned on stage.', sw: 'Amefunzwa hapa. Amevishwa taji jukwaani.' })}
             </h2>
-            <p className="mt-6 text-ivory/70">
+            <p className="mt-6 text-ivory/85">
               {t({
                 en: "Eladia Edwin trained with Blackhood before taking the Miss Kinondoni 2027–2028 title. Stories like hers are why we exist: talent that's ready when the moment comes.",
                 sw: 'Eladia Edwin alifunzwa na Blackhood kabla ya kushinda taji la Miss Kinondoni 2027–2028. Hadithi kama yake ndiyo sababu tupo: vipaji vilivyo tayari wakati fursa inapofika.',
               })}
             </p>
-            <p className="mt-4 text-ivory/70">{t(site.promise)}</p>
+            <p className="mt-4 text-ivory/85">{t(site.promise)}</p>
             <Link
               to="/stories"
               className="group mt-8 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.12em] text-gold hover:text-ivory"
@@ -96,7 +96,7 @@ export default function AboutPage() {
             {pillars.map((p) => (
               <div key={p.title.en} className="bg-ink-soft p-8 lg:p-10">
                 <h3 className="font-display text-3xl text-gold">{t(p.title)}</h3>
-                <p className="mt-3 text-ivory/70">{t(p.text)}</p>
+                <p className="mt-3 text-ivory/85">{t(p.text)}</p>
               </div>
             ))}
           </div>
@@ -112,8 +112,8 @@ export default function AboutPage() {
             {Array.from({ length: 4 }).map((_, i) => (
               <li key={i} className="grid min-h-40 place-items-center border border-dashed border-white/15 p-6 text-center">
                 <div>
-                  <Plus className="mx-auto text-stone/40" size={24} strokeWidth={1.2} />
-                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone/70">{t({ en: 'Year · milestone', sw: 'Mwaka · tukio' })}</p>
+                  <Plus className="mx-auto text-stone/60" size={24} strokeWidth={1.2} />
+                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone">{t({ en: 'Year · milestone', sw: 'Mwaka · tukio' })}</p>
                 </div>
               </li>
             ))}

@@ -66,7 +66,7 @@ export default function TrustPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'The Blackhood Model Charter.', sw: 'Mkataba wa Wanamitindo wa Blackhood.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'Modeling should be safe, fair and transparent. These are the rules we hold ourselves to, published so models, parents and brands can hold us to them.',
               sw: 'Uanamitindo unapaswa kuwa salama, wa haki na wa uwazi. Hizi ni kanuni tunazojiwekea, zimechapishwa ili wanamitindo, wazazi na makampuni watuwajibishe.',
@@ -100,7 +100,7 @@ export default function TrustPage() {
             <h2 className="mt-4 font-display text-4xl font-medium sm:text-5xl">
               {t({ en: 'How to spot a fake.', sw: 'Jinsi ya kutambua tapeli.' })}
             </h2>
-            <p className="mt-6 text-ivory/70">
+            <p className="mt-6 text-ivory/85">
               {t({ en: 'Our only official WhatsApp is', sw: 'WhatsApp yetu rasmi pekee ni' })}{' '}
               <strong className="text-ivory">{site.phoneDisplay}</strong>
               {t({
@@ -122,7 +122,7 @@ export default function TrustPage() {
           </div>
           <ul className="space-y-4">
             {redFlags.map((r) => (
-              <li key={r.en} className="border border-white/10 bg-ink-soft p-6 text-ivory/80">
+              <li key={r.en} className="border border-white/10 bg-ink-soft p-6 text-ivory/90">
                 {t(r)}
               </li>
             ))}

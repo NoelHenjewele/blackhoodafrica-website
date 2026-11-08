@@ -54,10 +54,10 @@ export default function Footer() {
           <div>
             <img src="/brand/logo-white.webp" width={420} height={102} alt="Blackhood Africa" className="h-12 w-auto" />
             <p className="mt-6 max-w-xs font-display text-2xl italic text-gold">{t(site.promise)}</p>
-            <p className="mt-4 flex items-center gap-2 text-sm text-ivory/60">
+            <p className="mt-4 flex items-center gap-2 text-sm text-ivory/80">
               <MapPin size={16} /> {site.city}, Tanzania
             </p>
-            <a href={`tel:+${site.whatsappNumber}`} className="mt-2 flex items-center gap-2 text-sm text-ivory/60 hover:text-gold">
+            <a href={`tel:+${site.whatsappNumber}`} className="mt-2 flex items-center gap-2 text-sm text-ivory/80 hover:text-gold">
               <Phone size={16} /> {site.phoneDisplay}
             </a>
             <a
@@ -77,7 +77,7 @@ export default function Footer() {
                 <ul className="mt-5 space-y-3">
                   {col.links.map((l) => (
                     <li key={l.to}>
-                      <Link to={l.to} className="text-sm text-ivory/80 hover:text-gold">
+                      <Link to={l.to} className="text-sm text-ivory/90 hover:text-gold">
                         {t(l.label)}
                       </Link>
                     </li>
@@ -90,18 +90,18 @@ export default function Footer() {
               <ul className="mt-5 space-y-3">
                 {socials.map((s) => (
                   <li key={s.label}>
-                    <a href={s.href} target="_blank" rel="noreferrer" className="text-sm text-ivory/80 hover:text-gold">
+                    <a href={s.href} target="_blank" rel="noreferrer" className="text-sm text-ivory/90 hover:text-gold">
                       {s.label}
                     </a>
                   </li>
                 ))}
               </ul>
-              <p className="mt-3 text-sm text-ivory/50">@blackhoodafrica</p>
+              <p className="mt-3 text-sm text-ivory/75">@blackhoodafrica</p>
             </div>
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col justify-between gap-4 border-t border-white/10 pt-8 text-xs text-ivory/45 sm:flex-row">
+        <div className="mt-16 flex flex-col justify-between gap-4 border-t border-white/10 pt-8 text-xs text-ivory/75 sm:flex-row">
           <p>
             © {new Date().getFullYear()} Blackhood Africa. {t({ en: 'All rights reserved.', sw: 'Haki zote zimehifadhiwa.' })}
           </p>

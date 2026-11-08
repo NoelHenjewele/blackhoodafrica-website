@@ -40,7 +40,7 @@ export default function PackagePage() {
             {t({ en: 'Selected for you by Blackhood Africa', sw: 'Wamechaguliwa kwa ajili yako na Blackhood Africa' })}
           </p>
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl">{pkg.title}</h1>
-          {pkg.note && <p className="mt-6 max-w-2xl whitespace-pre-line text-lg text-ivory/70">{pkg.note}</p>}
+          {pkg.note && <p className="mt-6 max-w-2xl whitespace-pre-line text-lg text-ivory/85">{pkg.note}</p>}
         </div>
       </section>
 
@@ -52,7 +52,7 @@ export default function PackagePage() {
             ))}
           </div>
           {models.length === 0 && (
-            <p className="text-ivory/60">{t({ en: 'These models are no longer listed.', sw: 'Wanamitindo hawa hawapo tena.' })}</p>
+            <p className="text-ivory/80">{t({ en: 'These models are no longer listed.', sw: 'Wanamitindo hawa hawapo tena.' })}</p>
           )}
 
           <div className="mt-14 flex flex-col items-start gap-4 border-t border-white/10 pt-10 sm:flex-row sm:items-center sm:justify-between">

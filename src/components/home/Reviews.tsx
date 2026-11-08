@@ -39,7 +39,7 @@ export default function Reviews() {
                 {r.photo && <img src={r.photo} alt="" className="h-10 w-10 rounded-full object-cover" />}
                 <div>
                   <p className="text-sm font-semibold">{r.name}</p>
-                  <p className="text-xs text-ivory/55">{r.role}</p>
+                  <p className="text-xs text-ivory/80">{r.role}</p>
                 </div>
               </figcaption>
             </figure>

@@ -26,7 +26,7 @@ export default function NewFaces() {
               {t({ en: 'Fresh from the academy.', sw: 'Wapya kutoka chuoni.' })}
             </h2>
           </div>
-          <p className="max-w-lg text-ivory/70 lg:justify-self-end">
+          <p className="max-w-lg text-ivory/85 lg:justify-self-end">
             {t({
               en: 'Our newest signings and recent graduates: trained, tested and ready for their first bookings. Brands get first look at the faces everyone will know next.',
               sw: 'Waliojiunga karibuni na wahitimu wetu wapya: wamefunzwa, wamejaribiwa na wako tayari kwa kazi zao za kwanza. Makampuni yanapata nafasi ya kwanza kuona sura zitakazojulikana kesho.',

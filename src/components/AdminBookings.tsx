@@ -26,7 +26,7 @@ const statusStyle: Record<string, string> = {
   Replied: 'bg-sky-400/20 text-sky-300',
   'Quote sent': 'bg-purple-400/20 text-purple-300',
   Confirmed: 'bg-green-400/20 text-green-300',
-  Completed: 'bg-white/10 text-ivory/70',
+  Completed: 'bg-white/10 text-ivory/85',
   Lost: 'bg-red-400/20 text-red-300',
 }
 const OPEN = ['New', 'Replied', 'Quote sent', 'Confirmed']
@@ -82,7 +82,7 @@ export default function AdminBookings({ token }: { token: string }) {
             type="button"
             onClick={() => setFilter(f)}
             className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] ${
-              filter === f ? 'border-gold bg-gold text-ink' : 'border-white/20 text-ivory/70 hover:border-gold'
+              filter === f ? 'border-gold bg-gold text-ink' : 'border-white/20 text-ivory/85 hover:border-gold'
             }`}
           >
             {f} ({(bookings ?? []).filter((b) => matches(b, f)).length})
@@ -92,7 +92,7 @@ export default function AdminBookings({ token }: { token: string }) {
 
       {error && <p className="mt-4 text-red-300">{error}</p>}
       {bookings === null && <Loader2 className="mt-8 animate-spin text-gold" />}
-      {bookings && shown.length === 0 && !error && <p className="mt-8 text-ivory/60">Nothing here.</p>}
+      {bookings && shown.length === 0 && !error && <p className="mt-8 text-ivory/80">Nothing here.</p>}
 
       <div className="mt-8 space-y-6">
         {shown.map((b) => (
@@ -100,7 +100,7 @@ export default function AdminBookings({ token }: { token: string }) {
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <h3 className="font-display text-3xl">{b.company || b.name}</h3>
-                <p className="text-sm text-ivory/60">
+                <p className="text-sm text-ivory/80">
                   <span className="font-mono">{b.ref}</span> · {b.name} · received {new Date(b.received).toLocaleString()}
                 </p>
               </div>
@@ -117,12 +117,12 @@ export default function AdminBookings({ token }: { token: string }) {
                 ] as [string, string][]
               ).map(([k, v]) => (
                 <div key={k}>
-                  <dt className="inline text-ivory/50">{k}: </dt>
+                  <dt className="inline text-ivory/75">{k}: </dt>
                   <dd className="inline">{v || '—'}</dd>
                 </div>
               ))}
             </dl>
-            {b.details && <p className="mt-3 whitespace-pre-line text-sm text-ivory/75">{b.details}</p>}
+            {b.details && <p className="mt-3 whitespace-pre-line text-sm text-ivory/90">{b.details}</p>}
 
             <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
               {b.phone && (
@@ -143,7 +143,7 @@ export default function AdminBookings({ token }: { token: string }) {
                   <Mail size={14} /> Email
                 </a>
               )}
-              <label className="ml-auto flex items-center gap-2 text-sm text-ivory/75">
+              <label className="ml-auto flex items-center gap-2 text-sm text-ivory/90">
                 Status
                 <select
                   value={b.status}
@@ -162,7 +162,7 @@ export default function AdminBookings({ token }: { token: string }) {
               placeholder="Team notes (saved when you click away)"
               disabled={busy === b.ref}
               onBlur={(e) => e.target.value !== b.notes && update(b.ref, { notes: e.target.value })}
-              className="mt-3 w-full border border-white/15 bg-ink px-4 py-2.5 text-sm text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none"
+              className="mt-3 w-full border border-white/15 bg-ink px-4 py-2.5 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none"
             />
           </article>
         ))}

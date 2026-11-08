@@ -32,7 +32,7 @@ export default function CodeCheck() {
   return (
     <div className="border border-gold/40 bg-ink p-6 sm:p-8">
       <p className="font-display text-2xl">{t({ en: 'Check a talent code or certificate', sw: 'Hakiki namba ya kipaji au cheti' })}</p>
-      <p className="mt-2 text-sm text-ivory/65">
+      <p className="mt-2 text-sm text-ivory/85">
         {t({
           en: 'Every approved Blackhood model has a code like BHA-T-0001, and every academy certificate has a number like BHA-C-0001. Enter it to confirm it is genuine.',
           sw: 'Kila mwanamitindo aliyekubaliwa na Blackhood ana namba kama BHA-T-0001, na kila cheti cha chuo kina namba kama BHA-C-0001. Iingize kuthibitisha ni halali.',
@@ -45,7 +45,7 @@ export default function CodeCheck() {
           required
           placeholder="BHA-T-0001"
           aria-label={t({ en: 'Talent code', sw: 'Namba ya kipaji' })}
-          className="min-w-0 flex-1 border border-white/15 bg-ink-soft px-4 py-3 font-mono text-sm uppercase tracking-wider text-ivory placeholder:text-ivory/30 focus:border-gold focus:outline-none"
+          className="min-w-0 flex-1 border border-white/15 bg-ink-soft px-4 py-3 font-mono text-sm uppercase tracking-wider text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none"
         />
         <button
           type="submit"
@@ -85,7 +85,7 @@ export default function CodeCheck() {
         </p>
       )}
       {error && (
-        <p className="mt-5 text-sm text-ivory/60">
+        <p className="mt-5 text-sm text-ivory/80">
           {t({ en: "We couldn't check right now. Please try again, or ask us on WhatsApp.", sw: 'Hatukuweza kuhakiki sasa. Jaribu tena, au tuulize kwa WhatsApp.' })}
         </p>
       )}

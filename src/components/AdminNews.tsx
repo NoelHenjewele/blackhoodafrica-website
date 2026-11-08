@@ -5,7 +5,7 @@ import { shrinkPhoto } from '../utils/photo'
 // Team-only: write News & events posts for /news.
 type Post = { id: string; title: string; body: string | null; photo: string | null; video_url: string | null; created_at: string }
 
-const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none'
+const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 
 export default function AdminNews({ token }: { token: string }) {
   const [posts, setPosts] = useState<Post[] | null>(null)
@@ -76,12 +76,12 @@ export default function AdminNews({ token }: { token: string }) {
             {busy ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />} Publish
           </button>
         </div>
-        <p className="text-xs text-ivory/50">It appears on the News page within a minute.</p>
+        <p className="text-xs text-ivory/75">It appears on the News page within a minute.</p>
       </form>
 
       {error && <p className="mt-4 text-red-300">{error}</p>}
       {posts === null && <Loader2 className="mt-8 animate-spin text-gold" />}
-      {posts?.length === 0 && <p className="mt-8 text-ivory/60">No posts yet.</p>}
+      {posts?.length === 0 && <p className="mt-8 text-ivory/80">No posts yet.</p>}
 
       <div className="mt-8 space-y-4">
         {posts?.map((p) => (
@@ -89,7 +89,7 @@ export default function AdminNews({ token }: { token: string }) {
             {p.photo && <img src={p.photo} alt="" className="h-20 w-28 shrink-0 object-cover" />}
             <div className="min-w-0 flex-1">
               <h3 className="font-display text-2xl">{p.title}</h3>
-              <p className="text-sm text-ivory/55">{new Date(p.created_at).toLocaleDateString('en-GB')}{p.video_url && ' · with video'}</p>
+              <p className="text-sm text-ivory/80">{new Date(p.created_at).toLocaleDateString('en-GB')}{p.video_url && ' · with video'}</p>
             </div>
             <button
               type="button"

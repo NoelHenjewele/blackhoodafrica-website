@@ -48,7 +48,7 @@ export default function Availability({ profileId }: { profileId: string }) {
   return (
     <div className="mt-12 border-t border-white/10 pt-10">
       <h2 className="font-display text-3xl">{t({ en: 'Your availability', sw: 'Upatikanaji wako' })}</h2>
-      <p className="mt-2 text-sm text-ivory/60">
+      <p className="mt-2 text-sm text-ivory/80">
         {t({
           en: 'Tap the days you are busy (school, travel, other jobs). The Blackhood team sees this before offering you to a brand. Changes save straight away.',
           sw: 'Gusa siku ambazo uko na shughuli (shule, safari, kazi nyingine). Timu ya Blackhood huona hii kabla ya kukupendekeza kwa kampuni. Mabadiliko yanahifadhiwa papo hapo.',
@@ -57,15 +57,15 @@ export default function Availability({ profileId }: { profileId: string }) {
 
       <div className="mt-6 max-w-sm">
         <div className="flex items-center justify-between">
-          <button type="button" disabled={offset === 0} onClick={() => setOffset((o) => o - 1)} className="p-2 text-ivory/70 hover:text-gold disabled:opacity-30" aria-label="Previous month">
+          <button type="button" disabled={offset === 0} onClick={() => setOffset((o) => o - 1)} className="p-2 text-ivory/85 hover:text-gold disabled:opacity-30" aria-label="Previous month">
             <ChevronLeft size={20} />
           </button>
           <p className="font-display text-xl capitalize">{first.toLocaleDateString(locale, { month: 'long', year: 'numeric' })}</p>
-          <button type="button" disabled={offset === 5} onClick={() => setOffset((o) => o + 1)} className="p-2 text-ivory/70 hover:text-gold disabled:opacity-30" aria-label="Next month">
+          <button type="button" disabled={offset === 5} onClick={() => setOffset((o) => o + 1)} className="p-2 text-ivory/85 hover:text-gold disabled:opacity-30" aria-label="Next month">
             <ChevronRight size={20} />
           </button>
         </div>
-        <div className="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-ivory/50">
+        <div className="mt-3 grid grid-cols-7 gap-1 text-center text-xs text-ivory/75">
           {weekdays.map((w, i) => (
             <span key={i}>{w}</span>
           ))}
@@ -93,7 +93,7 @@ export default function Availability({ profileId }: { profileId: string }) {
             )
           })}
         </div>
-        <p className="mt-3 flex items-center gap-2 text-xs text-ivory/55">
+        <p className="mt-3 flex items-center gap-2 text-xs text-ivory/80">
           <span className="inline-block h-3 w-3 bg-red-400/25" /> {t({ en: 'Busy', sw: 'Nina shughuli' })}
           <span className="ml-3 inline-block h-3 w-3 border border-white/20" /> {t({ en: 'Available', sw: 'Nipo' })}
         </p>

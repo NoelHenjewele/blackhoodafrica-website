@@ -4,7 +4,7 @@ import { Check, Loader2 } from 'lucide-react'
 import { useLang } from '../i18n'
 
 // /review: a link the team sends to clients, models and parents. Reviews show only after approval.
-const field = 'w-full border border-white/15 bg-ink-soft px-4 py-3.5 text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none'
+const field = 'w-full border border-white/15 bg-ink-soft px-4 py-3.5 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 
 export default function ReviewPage() {
   const { t } = useLang()
@@ -56,7 +56,7 @@ export default function ReviewPage() {
           <>
             <Check className="mt-8 text-gold" size={40} />
             <h1 className="mt-4 font-display text-5xl font-medium">{t({ en: 'Thank you!', sw: 'Asante sana!' })}</h1>
-            <p className="mt-4 text-ivory/70">
+            <p className="mt-4 text-ivory/85">
               {t({
                 en: 'Your review has been sent to the Blackhood team. It will appear on our website once we have checked it.',
                 sw: 'Maoni yako yametumwa kwa timu ya Blackhood. Yataonekana kwenye tovuti yetu baada ya kuyakagua.',
@@ -69,7 +69,7 @@ export default function ReviewPage() {
             <h1 className="mt-4 font-display text-5xl font-medium leading-[1.05]">
               {t({ en: 'How was your experience with Blackhood?', sw: 'Uzoefu wako na Blackhood ulikuwaje?' })}
             </h1>
-            <p className="mt-4 text-ivory/70">
+            <p className="mt-4 text-ivory/85">
               {t({
                 en: 'One or two honest sentences is perfect. With your permission, we may show it on our website.',
                 sw: 'Sentensi moja au mbili za kweli zinatosha. Kwa ruhusa yako, tunaweza kuyaonyesha kwenye tovuti yetu.',
@@ -105,7 +105,7 @@ export default function ReviewPage() {
                 <input name="contact" maxLength={100} className={field} />
               </label>
               <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
-              <label className="flex items-start gap-3 text-sm text-ivory/80">
+              <label className="flex items-start gap-3 text-sm text-ivory/90">
                 <input type="checkbox" name="consent" required className="mt-1 h-4 w-4 accent-[#c9a45c]" />
                 {t({
                   en: 'Blackhood Africa may show my review, name and role on its website.',

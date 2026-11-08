@@ -29,7 +29,7 @@ type AdminCasting = {
   interested: Interested[]
 }
 
-const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none'
+const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 
 export default function AdminCastings({ token }: { token: string }) {
   const [castings, setCastings] = useState<AdminCasting[] | null>(null)
@@ -125,7 +125,7 @@ export default function AdminCastings({ token }: { token: string }) {
           >
             <Plus size={14} /> Post casting
           </button>
-          <label className="flex items-center gap-2 text-sm text-ivory/75">
+          <label className="flex items-center gap-2 text-sm text-ivory/90">
             <input type="checkbox" name="notify" defaultChecked className="h-4 w-4 accent-[#c9a45c]" />
             Email all approved models about it
           </label>
@@ -134,7 +134,7 @@ export default function AdminCastings({ token }: { token: string }) {
 
       {error && <p className="mt-4 text-red-300">{error}</p>}
       {castings === null && <Loader2 className="mt-8 animate-spin text-gold" />}
-      {castings?.length === 0 && !error && <p className="mt-8 text-ivory/60">No castings yet.</p>}
+      {castings?.length === 0 && !error && <p className="mt-8 text-ivory/80">No castings yet.</p>}
 
       <div className="mt-8 space-y-6">
         {castings?.map((c) => (
@@ -143,24 +143,24 @@ export default function AdminCastings({ token }: { token: string }) {
               <div>
                 {c.type && <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">{c.type}</p>}
                 <h3 className="font-display text-3xl">{c.title}</h3>
-                <p className="text-sm text-ivory/60">{[c.date_text, c.place].filter(Boolean).join(' · ')}</p>
+                <p className="text-sm text-ivory/80">{[c.date_text, c.place].filter(Boolean).join(' · ')}</p>
               </div>
               <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] ${
-                  c.status === 'open' ? 'bg-green-400/20 text-green-300' : 'bg-white/10 text-ivory/70'
+                  c.status === 'open' ? 'bg-green-400/20 text-green-300' : 'bg-white/10 text-ivory/85'
                 }`}
               >
                 {c.status}
               </span>
             </div>
-            {c.details && <p className="mt-3 whitespace-pre-line text-sm text-ivory/75">{c.details}</p>}
+            {c.details && <p className="mt-3 whitespace-pre-line text-sm text-ivory/90">{c.details}</p>}
             {c.photo && <img src={c.photo} alt="" className="mt-3 h-40 w-auto border border-white/10" />}
 
-            <h4 className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-ivory/60">
+            <h4 className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-ivory/80">
               Interested models ({c.interested.length})
             </h4>
             {c.interested.length === 0 ? (
-              <p className="mt-2 text-sm text-ivory/50">Nobody yet.</p>
+              <p className="mt-2 text-sm text-ivory/75">Nobody yet.</p>
             ) : (
               <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
                 {c.interested.map((m) => (
@@ -169,7 +169,7 @@ export default function AdminCastings({ token }: { token: string }) {
                       {m.photo ? (
                         <img src={m.photo} alt="" loading="lazy" className="h-full w-full object-cover object-top" />
                       ) : (
-                        <div className="grid h-full place-items-center text-stone/50">
+                        <div className="grid h-full place-items-center text-stone/70">
                           <User size={28} />
                         </div>
                       )}
@@ -181,7 +181,7 @@ export default function AdminCastings({ token }: { token: string }) {
                         m.full_name
                       )}
                     </p>
-                    <p className="text-xs text-ivory/55">
+                    <p className="text-xs text-ivory/80">
                       {[m.talent_code, m.height_cm ? `${m.height_cm} cm` : '', m.city].filter(Boolean).join(' · ')}
                     </p>
                     <a href={`mailto:${m.email}`} className="break-all text-xs text-gold/80 hover:text-gold">{m.email}</a>

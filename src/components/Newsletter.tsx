@@ -43,7 +43,7 @@ export default function Newsletter() {
       <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-center">
         <div>
           <p className="font-display text-3xl">{t({ en: 'Be first to hear.', sw: 'Kuwa wa kwanza kujua.' })}</p>
-          <p className="mt-2 text-sm text-ivory/60">
+          <p className="mt-2 text-sm text-ivory/80">
             {t({
               en: 'Castings, academy intakes and new faces, straight to your inbox. No spam, unsubscribe anytime.',
               sw: 'Usaili, nafasi za chuo na sura mpya, moja kwa moja kwenye barua pepe yako. Hakuna barua taka, jiondoe wakati wowote.',
@@ -64,7 +64,7 @@ export default function Newsletter() {
               autoComplete="email"
               placeholder={t({ en: 'Your email', sw: 'Barua pepe yako' })}
               aria-label={t({ en: 'Your email', sw: 'Barua pepe yako' })}
-              className="min-w-0 flex-1 border border-white/15 bg-ink-soft px-4 py-3 text-sm text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none"
+              className="min-w-0 flex-1 border border-white/15 bg-ink-soft px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none"
             />
             <select
               name="interest"

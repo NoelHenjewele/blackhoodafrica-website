@@ -42,7 +42,7 @@ const statusStyle: Record<AdminProfile['status'], string> = {
   pending: 'bg-gold text-ink',
   approved: 'bg-green-400/20 text-green-300',
   hidden: 'bg-red-400/20 text-red-300',
-  draft: 'bg-white/10 text-ivory/70',
+  draft: 'bg-white/10 text-ivory/85',
 }
 
 export default function AdminPage() {
@@ -100,11 +100,11 @@ export default function AdminPage() {
         {token === undefined || (token && state === 'loading') ? (
           <Loader2 className="mt-10 animate-spin text-gold" />
         ) : !token ? (
-          <p className="mt-8 text-ivory/70">
+          <p className="mt-8 text-ivory/85">
             Please <Link to="/account" className="text-gold underline">log in</Link> with your team email first, then come back to this page.
           </p>
         ) : state === 'denied' ? (
-          <p className="mt-8 text-ivory/70">This email doesn't have review access. Ask Noel to add it.</p>
+          <p className="mt-8 text-ivory/85">This email doesn't have review access. Ask Noel to add it.</p>
         ) : state === 'error' ? (
           <p className="mt-8 text-red-300">Couldn't load profiles. Refresh to try again.</p>
         ) : (
@@ -116,7 +116,7 @@ export default function AdminPage() {
                   type="button"
                   onClick={() => setTab(k)}
                   className={`-mb-px border-b-2 pb-3 text-sm font-semibold uppercase tracking-[0.15em] ${
-                    tab === k ? 'border-gold text-gold' : 'border-transparent text-ivory/60 hover:text-ivory'
+                    tab === k ? 'border-gold text-gold' : 'border-transparent text-ivory/80 hover:text-ivory'
                   }`}
                 >
                   {k}
@@ -145,20 +145,20 @@ export default function AdminPage() {
                   type="button"
                   onClick={() => setFilter(f)}
                   className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] ${
-                    filter === f ? 'border-gold bg-gold text-ink' : 'border-white/20 text-ivory/70 hover:border-gold'
+                    filter === f ? 'border-gold bg-gold text-ink' : 'border-white/20 text-ivory/85 hover:border-gold'
                   }`}
                 >
                   {f} ({count(f)})
                 </button>
               ))}
-              <label className="ml-auto flex items-center gap-2 text-sm text-ivory/70">
+              <label className="ml-auto flex items-center gap-2 text-sm text-ivory/85">
                 Free on
                 <input type="date" value={freeOn} onChange={(e) => setFreeOn(e.target.value)} className="border border-white/15 bg-ink px-3 py-1.5 text-ivory [color-scheme:dark]" />
                 {freeOn && <button type="button" onClick={() => setFreeOn('')} className="text-gold underline">clear</button>}
               </label>
             </div>
 
-            {shown.length === 0 && <p className="mt-10 text-ivory/60">Nothing here.</p>}
+            {shown.length === 0 && <p className="mt-10 text-ivory/80">Nothing here.</p>}
 
             <div className="mt-8 space-y-6">
               {shown.map((p) => (
@@ -166,7 +166,7 @@ export default function AdminPage() {
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <h2 className="font-display text-3xl">{p.full_name}</h2>
-                      <p className="text-sm text-ivory/60">
+                      <p className="text-sm text-ivory/80">
                         <span className="font-mono">{p.talent_code}</span> · {p.email} · updated {new Date(p.updated_at).toLocaleString()}
                       </p>
                     </div>
@@ -182,7 +182,7 @@ export default function AdminPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-5 text-sm text-ivory/50">No photos yet.</p>
+                    <p className="mt-5 text-sm text-ivory/75">No photos yet.</p>
                   )}
 
                   <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-4">
@@ -194,12 +194,12 @@ export default function AdminPage() {
                       ] as [string, string | null][]
                     ).map(([k, v]) => (
                       <div key={k}>
-                        <dt className="inline text-ivory/50">{k}: </dt>
+                        <dt className="inline text-ivory/75">{k}: </dt>
                         <dd className="inline">{v || '—'}</dd>
                       </div>
                     ))}
                   </dl>
-                  {p.bio && <p className="mt-3 text-sm text-ivory/75">{p.bio}</p>}
+                  {p.bio && <p className="mt-3 text-sm text-ivory/90">{p.bio}</p>}
                   {p.is_minor && (
                     <p className={`mt-3 text-sm ${p.consent ? 'text-green-300' : 'text-gold'}`}>
                       {p.consent
@@ -208,7 +208,7 @@ export default function AdminPage() {
                     </p>
                   )}
                   <p className="mt-3 text-sm">
-                    <span className="text-ivory/50">Busy: </span>
+                    <span className="text-ivory/75">Busy: </span>
                     {p.busy.length
                       ? p.busy.slice(0, 12).map((d) => new Date(d + 'T00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })).join(', ') + (p.busy.length > 12 ? ` +${p.busy.length - 12} more` : '')
                       : 'no busy days marked'}
@@ -233,7 +233,7 @@ export default function AdminPage() {
                         <RotateCcw size={14} /> Back to review
                       </button>
                     )}
-                    <label className="ml-auto flex items-center gap-2 text-sm text-ivory/75">
+                    <label className="ml-auto flex items-center gap-2 text-sm text-ivory/90">
                       <input type="checkbox" checked={p.is_minor} disabled={busy === p.id} onChange={(e) => act(p.id, { is_minor: e.target.checked })} className="h-4 w-4 accent-[#c9a45c]" />
                       Under 18 (first name + photos only)
                     </label>

@@ -31,7 +31,7 @@ export default function Home() {
 
             <p className="mt-6 font-display text-2xl italic text-gold sm:text-3xl">{t(site.promise)}</p>
 
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-ivory/70 sm:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-ivory/85 sm:text-lg">
               {t({
                 en: 'Models, hosts and creators for brands, ads and events, trained in our own academy and ready for the camera, the runway and the stage.',
                 sw: 'Wanamitindo, washereheshaji na watengeneza maudhui kwa ajili ya makampuni, matangazo na matukio, waliofunzwa katika chuo chetu na tayari kwa kamera, jukwaa la mitindo na jukwaa la matukio.',
@@ -69,7 +69,7 @@ export default function Home() {
                 {t({ en: 'Trained at Blackhood', sw: 'Amefunzwa Blackhood' })}
               </p>
               <p className="mt-1 font-display text-2xl">Eladia Edwin</p>
-              <p className="text-sm text-ivory/70">Miss Kinondoni 2027–2028</p>
+              <p className="text-sm text-ivory/85">Miss Kinondoni 2027–2028</p>
             </figcaption>
           </figure>
         </div>

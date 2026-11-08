@@ -69,7 +69,7 @@ export default function VerifyPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Is it really Blackhood?', sw: 'Je, ni Blackhood kweli?' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'Scammers sometimes pretend to be modeling agencies. If someone contacts you in our name, check it against this page first. If anything does not match, it is not us.',
               sw: 'Matapeli wakati mwingine hujifanya kuwa mawakala wa wanamitindo. Mtu akiwasiliana nawe kwa jina letu, linganisha na ukurasa huu kwanza. Kama kitu hakilingani, si sisi.',
@@ -84,7 +84,7 @@ export default function VerifyPage() {
           <h2 className="font-display text-4xl font-medium sm:text-5xl">
             {t({ en: 'Our only official contacts', sw: 'Mawasiliano yetu rasmi pekee' })}
           </h2>
-          <p className="mt-4 max-w-2xl text-ivory/70">
+          <p className="mt-4 max-w-2xl text-ivory/85">
             {t({
               en: 'Blackhood Africa only contacts applicants and clients through these channels.',
               sw: 'Blackhood Africa huwasiliana na waombaji na wateja kupitia njia hizi pekee.',
@@ -157,7 +157,7 @@ export default function VerifyPage() {
           </h2>
           <ul className="mt-10 grid gap-4 md:grid-cols-2">
             {redFlags.map((r) => (
-              <li key={r.en} className="flex gap-4 border border-white/10 bg-ink-soft p-6 text-ivory/85">
+              <li key={r.en} className="flex gap-4 border border-white/10 bg-ink-soft p-6 text-ivory/90">
                 <AlertTriangle className="mt-0.5 shrink-0 text-red-300" size={18} />
                 {t(r)}
               </li>

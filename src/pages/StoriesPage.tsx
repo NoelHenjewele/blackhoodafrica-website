@@ -14,7 +14,7 @@ export default function StoriesPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Trained here. Winning everywhere.', sw: 'Wamefunzwa hapa. Wanashinda kila mahali.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'Real results from real Blackhood talent: titles, campaigns and first bookings. Every story here is confirmed with the person in it.',
               sw: 'Matokeo halisi ya vipaji halisi vya Blackhood: mataji, kampeni na kazi za kwanza. Kila hadithi hapa imethibitishwa na mhusika.',
@@ -40,7 +40,7 @@ export default function StoriesPage() {
               {s.date && <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-gold">{s.date}</p>}
               <h2 className="font-display text-4xl font-medium sm:text-5xl">{s.name}</h2>
               <p className="mt-2 font-display text-2xl italic text-gold">{t(s.headline)}</p>
-              <p className="mt-6 text-ivory/75">{t(s.summary)}</p>
+              <p className="mt-6 text-ivory/90">{t(s.summary)}</p>
               {s.quote && (
                 <blockquote className="mt-8 border-l-2 border-gold pl-5 font-display text-xl">
                   <Quote className="mb-2 text-gold" size={20} />“{t(s.quote)}”
@@ -57,8 +57,8 @@ export default function StoriesPage() {
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="grid min-h-48 place-items-center border border-dashed border-white/15 p-6 text-center">
                 <div>
-                  <Plus className="mx-auto text-stone/40" size={26} strokeWidth={1.2} />
-                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone/70">{t({ en: 'Next story', sw: 'Hadithi ijayo' })}</p>
+                  <Plus className="mx-auto text-stone/60" size={26} strokeWidth={1.2} />
+                  <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone">{t({ en: 'Next story', sw: 'Hadithi ijayo' })}</p>
                 </div>
               </div>
             ))}

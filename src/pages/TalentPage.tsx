@@ -52,7 +52,7 @@ export default function TalentPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Find the right face.', sw: 'Pata sura sahihi.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: "Every Blackhood model is trained in our academy. Browse the boards, then send us a brief and we'll confirm availability within 24 hours.",
               sw: 'Kila mwanamitindo wa Blackhood amefunzwa katika chuo chetu. Pitia orodha, kisha tutumie maelezo na tutathibitisha upatikanaji ndani ya saa 24.',
@@ -73,7 +73,7 @@ export default function TalentPage() {
                 className={`shrink-0 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition-colors ${
                   active === b
                     ? 'border-gold bg-gold text-ink'
-                    : 'border-white/20 text-ivory/70 hover:border-gold hover:text-gold'
+                    : 'border-white/20 text-ivory/85 hover:border-gold hover:text-gold'
                 }`}
               >
                 {boardName(b)}
@@ -101,7 +101,7 @@ export default function TalentPage() {
 
       <section>
         <div className="mx-auto max-w-7xl px-5 py-12 lg:px-10 lg:py-16">
-          <p className="text-sm text-ivory/50">
+          <p className="text-sm text-ivory/75">
             {t({
               en: `${results.length} ${results.length === 1 ? 'model' : 'models'} shown · more faces being added`,
               sw: `Wanamitindo ${results.length} wanaonyeshwa · sura zaidi zinaongezwa`,

@@ -43,7 +43,7 @@ export default function TalentPreview() {
               className={`shrink-0 rounded-full border px-5 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition-colors ${
                 active === b
                   ? 'border-gold bg-gold text-ink'
-                  : 'border-white/20 text-ivory/70 hover:border-gold hover:text-gold'
+                  : 'border-white/20 text-ivory/85 hover:border-gold hover:text-gold'
               }`}
             >
               {t(boardLabels[b])}

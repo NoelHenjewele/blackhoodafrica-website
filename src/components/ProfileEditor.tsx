@@ -50,8 +50,8 @@ const statusText: Record<ProfileRow['status'], L> = {
 }
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/30 focus:border-gold focus:outline-none'
-const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/70'
+  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
+const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 
 export const photoUrl = (path: string) => supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl
 
@@ -166,7 +166,7 @@ export default function ProfileEditor({ profile, onSaved }: { profile: ProfileRo
       {/* Photos */}
       <div>
         <h2 className="font-display text-3xl">{t({ en: 'Your photos', sw: 'Picha zako' })}</h2>
-        <p className="mt-2 text-sm text-ivory/60">
+        <p className="mt-2 text-sm text-ivory/80">
           {t({
             en: `Up to ${MAX_PHOTOS}. The first photo is your main picture. Use the arrows to change the order.`,
             sw: `Hadi ${MAX_PHOTOS}. Picha ya kwanza ndiyo picha yako kuu. Tumia mishale kubadilisha mpangilio.`,

@@ -30,8 +30,8 @@ const printLabels: Record<string, string> = {
 }
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/30 focus:border-gold focus:outline-none'
-const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/70'
+  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
+const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 
 export default function CompCardPage() {
   const { t } = useLang()
@@ -132,7 +132,7 @@ export default function CompCardPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl">
             {t({ en: 'Make your comp card in minutes.', sw: 'Tengeneza comp card yako kwa dakika chache.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'A comp card is the 2-page model CV that castings and brands ask for. Add your photos and measurements and download a print-ready PDF. Your photos stay on your phone: nothing is uploaded.',
               sw: 'Comp card ni wasifu wa kurasa 2 wa mwanamitindo ambao usaili na makampuni huuomba. Weka picha na vipimo vyako kisha pakua PDF iliyo tayari kuchapishwa. Picha zako zinabaki kwenye simu yako: hakuna kinachopakiwa.',
@@ -146,7 +146,7 @@ export default function CompCardPage() {
           {/* 1. Code */}
           <div>
             <h2 className="font-display text-3xl"><span className="text-gold lining-nums">01</span> {t({ en: 'Your talent code', sw: 'Namba yako ya kipaji' })}</h2>
-            <p className="mt-2 text-sm text-ivory/60">
+            <p className="mt-2 text-sm text-ivory/80">
               {t({
                 en: 'Approved Blackhood talent get a code by email (BHA-T-0001). With it, your card carries the agency logo, contacts and your code. Without one, the card is marked "Applicant".',
                 sw: 'Vipaji vilivyokubaliwa na Blackhood hupata namba kwa barua pepe (BHA-T-0001). Ukiwa nayo, kadi yako itakuwa na nembo ya wakala, mawasiliano na namba yako. Bila namba, kadi itaandikwa "Applicant".',
@@ -205,7 +205,7 @@ export default function CompCardPage() {
           {/* 3. Photos */}
           <div>
             <h2 className="font-display text-3xl"><span className="text-gold lining-nums">03</span> {t({ en: 'Your photos', sw: 'Picha zako' })}</h2>
-            <p className="mt-2 text-sm text-ivory/60">
+            <p className="mt-2 text-sm text-ivory/80">
               {t({
                 en: 'One strong main photo for the front, and up to 4 more for the back: headshot, full length, a smile, a different look.',
                 sw: 'Picha moja kuu yenye nguvu kwa mbele, na hadi picha 4 zaidi kwa nyuma: uso, mwili mzima, tabasamu, mwonekano tofauti.',
@@ -260,7 +260,7 @@ export default function CompCardPage() {
               {t({ en: 'Download comp card (PDF)', sw: 'Pakua comp card (PDF)' })}
             </button>
             {!verified && (
-              <p className="mt-3 text-xs text-ivory/50">
+              <p className="mt-3 text-xs text-ivory/75">
                 {t({ en: 'Without a talent code, your card will be marked "Applicant".', sw: 'Bila namba ya kipaji, kadi yako itaandikwa "Applicant".' })}
               </p>
             )}

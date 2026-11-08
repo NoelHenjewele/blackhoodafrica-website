@@ -49,7 +49,7 @@ export default function OurPromise() {
             <h2 className="mt-4 font-display text-4xl font-medium leading-tight sm:text-5xl">
               {t({ en: "Trust isn't a slogan. It's how we work.", sw: 'Uaminifu si kauli mbiu. Ndivyo tunavyofanya kazi.' })}
             </h2>
-            <p className="mt-6 max-w-md text-ivory/70">
+            <p className="mt-6 max-w-md text-ivory/85">
               {t({
                 en: 'For models, parents and brands alike: these are the rules we hold ourselves to, written down so you can hold us to them too.',
                 sw: 'Kwa wanamitindo, wazazi na makampuni: hizi ni kanuni tunazojiwekea, zimeandikwa ili nawe utuwajibishe.',
@@ -69,7 +69,7 @@ export default function OurPromise() {
               <article key={title.en} className="bg-ink p-8 lg:p-10">
                 <Icon className="text-gold" size={28} strokeWidth={1.4} />
                 <h3 className="mt-6 font-display text-2xl">{t(title)}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-ivory/65">{t(text)}</p>
+                <p className="mt-3 text-sm leading-relaxed text-ivory/85">{t(text)}</p>
               </article>
             ))}
           </div>

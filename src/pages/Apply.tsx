@@ -45,8 +45,8 @@ const photoSlots: { key: PhotoKey; required: boolean; title: L; text: L }[] = [
 type Photo = { base64: string; preview: string }
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/35 focus:border-gold focus:outline-none'
-const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/70'
+  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 
 export default function Apply() {
   const { t, lang } = useLang()
@@ -133,7 +133,7 @@ export default function Apply() {
           <h1 className="mt-6 font-display text-5xl font-medium">
             {t({ en: 'Application received.', sw: 'Ombi limepokelewa.' })}
           </h1>
-          <p className="mt-5 text-lg text-ivory/70">
+          <p className="mt-5 text-lg text-ivory/85">
             {t({
               en: `Thank you, ${done.name.split(' ')[0]}. That's all you need to do. If you're approved, you'll get one email with your talent code and your own page on our website.`,
               sw: `Asante, ${done.name.split(' ')[0]}. Hiyo ndiyo yote unayohitaji kufanya. Ukikubaliwa, utapata barua pepe moja yenye namba yako ya kipaji na ukurasa wako kwenye tovuti yetu.`,
@@ -144,7 +144,7 @@ export default function Apply() {
               {t({ en: 'Your reference:', sw: 'Namba yako:' })} {done.ref}
             </p>
           )}
-          <p className="mt-6 text-sm text-ivory/55">
+          <p className="mt-6 text-sm text-ivory/80">
             {t({
               en: `Only trust messages from ${site.phoneDisplay}. We never ask for money to apply.`,
               sw: `Amini ujumbe kutoka ${site.phoneDisplay} pekee. Hatuombi pesa kwa ajili ya kuomba.`,
@@ -181,7 +181,7 @@ export default function Apply() {
           <h1 className="mt-6 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Apply to Blackhood Africa.', sw: 'Omba kujiunga na Blackhood Africa.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: 'It takes about 5 minutes. Our scouting team reviews every application and replies on WhatsApp. No experience needed.',
               sw: 'Inachukua takriban dakika 5. Timu yetu ya usaili hupitia kila ombi na hujibu kwa WhatsApp. Huhitaji uzoefu.',
@@ -263,7 +263,7 @@ export default function Apply() {
               </select>
             </div>
             {interest === ACADEMY && (
-              <p className="border border-gold/40 p-4 text-sm text-ivory/80">
+              <p className="border border-gold/40 p-4 text-sm text-ivory/90">
                 {t({
                   en: 'Scouting and agency applications are free. The academy application fee is',
                   sw: 'Usaili na maombi ya wakala ni bure. Ada ya maombi ya chuo ni',
@@ -292,7 +292,7 @@ export default function Apply() {
             <legend className="mb-3 font-display text-3xl">
               <span className="text-gold lining-nums">04</span> {t({ en: 'Your photos', sw: 'Picha zako' })}
             </legend>
-            <p className="mb-6 flex items-start gap-2 text-sm text-ivory/65">
+            <p className="mb-6 flex items-start gap-2 text-sm text-ivory/85">
               <Camera size={18} className="mt-0.5 shrink-0 text-gold" />
               {t({
                 en: 'A phone camera is perfect. No make-up, filters or professional shoot needed.',
@@ -313,7 +313,7 @@ export default function Apply() {
                           <p className="mt-3 font-semibold">
                             {t(s.title)} {s.required ? '*' : `(${t({ en: 'optional', sw: 'si lazima' })})`}
                           </p>
-                          <p className="mt-1 text-xs text-ivory/55">{t(s.text)}</p>
+                          <p className="mt-1 text-xs text-ivory/80">{t(s.text)}</p>
                         </div>
                       )}
                       <input
@@ -327,7 +327,7 @@ export default function Apply() {
                       <button
                         type="button"
                         onClick={() => setPhotos((ph) => ({ ...ph, [s.key]: undefined }))}
-                        className="mt-2 inline-flex items-center gap-1 text-xs text-ivory/60 hover:text-gold"
+                        className="mt-2 inline-flex items-center gap-1 text-xs text-ivory/80 hover:text-gold"
                       >
                         <X size={14} /> {t({ en: 'Change', sw: 'Badilisha' })} {t(s.title).toLowerCase()}
                       </button>
@@ -342,7 +342,7 @@ export default function Apply() {
           {isMinor && (
             <fieldset className="grid gap-5 border border-gold/40 p-6 sm:grid-cols-2">
               <legend className="px-2 font-display text-2xl text-gold">{t({ en: 'Parent / guardian', sw: 'Mzazi / mlezi' })}</legend>
-              <p className="text-sm text-ivory/75 sm:col-span-2">
+              <p className="text-sm text-ivory/90 sm:col-span-2">
                 {t({
                   en: "You're under 18, so a parent or guardian needs to be part of your application.",
                   sw: 'Uko chini ya miaka 18, kwa hiyo mzazi au mlezi anahitajika kwenye ombi lako.',
@@ -363,7 +363,7 @@ export default function Apply() {
           )}
 
           <div className="space-y-6 border-t border-white/10 pt-10">
-            <label className="flex items-start gap-3 text-sm text-ivory/75">
+            <label className="flex items-start gap-3 text-sm text-ivory/90">
               <input
                 type="checkbox"
                 checked={consent}
@@ -398,7 +398,7 @@ export default function Apply() {
                 </>
               )}
             </button>
-            <p className="text-xs text-ivory/45">
+            <p className="text-xs text-ivory/75">
               {t({ en: 'Questions first? Message us on', sw: 'Una maswali kwanza? Tuandikie kwa' })}{' '}
               <a href={whatsappLink('Hello Blackhood Africa, I have a question about applying.')} target="_blank" rel="noreferrer" className="underline hover:text-gold">
                 {site.phoneDisplay}

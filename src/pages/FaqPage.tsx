@@ -101,7 +101,7 @@ export default function FaqPage() {
           <h1 className="mt-5 max-w-4xl font-display text-5xl font-medium leading-[1.05] sm:text-6xl lg:text-7xl">
             {t({ en: 'Questions, answered.', sw: 'Maswali, majibu.' })}
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-ivory/70">
+          <p className="mt-6 max-w-2xl text-lg text-ivory/85">
             {t({
               en: "Everything models, parents and brands usually ask us. Can't find yours? Message us on WhatsApp.",
               sw: 'Kila kitu ambacho wanamitindo, wazazi na makampuni hutuuliza. Hujapata swali lako? Tuandikie WhatsApp.',
@@ -122,7 +122,7 @@ export default function FaqPage() {
                       {t(f.q)}
                       <Plus size={20} className="shrink-0 text-gold transition-transform group-open:rotate-45" />
                     </summary>
-                    <p className="mt-3 text-sm leading-relaxed text-ivory/70">{t(f.a)}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-ivory/85">{t(f.a)}</p>
                   </details>
                 ))}
               </div>
