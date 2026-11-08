@@ -71,7 +71,7 @@ export default function ForBrands({ standalone = false }: { standalone?: boolean
   const { t } = useLang()
 
   return (
-    <section className="border-t border-ivory/10 bg-ink-soft">
+    <section className="border-t border-ivory/10 bg-ink">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-2xl">

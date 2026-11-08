@@ -19,7 +19,7 @@ export default function TalentPreview() {
   const placeholders = Math.max(0, SLOTS - named.length)
 
   return (
-    <section className="border-t border-ivory/10">
+    <section className="border-t border-ivory/10 bg-ink-soft">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-2xl">
