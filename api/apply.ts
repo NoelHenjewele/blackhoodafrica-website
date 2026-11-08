@@ -1,5 +1,8 @@
 // Vercel Function: receives an application from /apply and forwards it to the Google Sheet script.
 // Settings in Vercel: APPLY_SCRIPT_URL (the Apps Script web app URL) and APPLY_SECRET (shared with the script).
+// It also creates a pending profile so the team can approve her on /admin with one tap.
+import { adminClient } from './_lib/supabaseAdmin.js'
+import { createPendingProfile } from './_lib/applicants.js'
 
 type Body = {
   name?: string
@@ -58,6 +61,19 @@ export async function POST(request: Request) {
     })
     const result = (await res.json()) as { ok: boolean; ref?: string; error?: string }
     if (!result.ok) return Response.json({ ok: false, error: 'save failed' }, { status: 502 })
+
+    // The Sheet has it; a hiccup here must not fail her application (the team can still approve from the Sheet).
+    const db = adminClient()
+    if (db && result.ref) {
+      try {
+        await createPendingProfile(db, {
+          ref: result.ref, name: body.name!, email: body.email!, age, gender: body.gender, height: body.height,
+          city: body.city, social: body.social, interest: body.interest, experience: body.experience, photos: body.photos!,
+        })
+      } catch (err) {
+        console.error('pending profile failed', err)
+      }
+    }
     return Response.json({ ok: true, ref: result.ref })
   } catch {
     return Response.json({ ok: false, error: 'save failed' }, { status: 502 })

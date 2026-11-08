@@ -47,6 +47,7 @@ function doPost(e) {
       if (data.type === 'profile-live') return json(sendProfileLiveEmail(data))
       if (data.type === 'casting-alert') return json(sendCastingAlert(data))
       if (data.type === 'resend-approval') return json(resendApproval(data))
+      if (data.type === 'approve-ref') return json(approveByRef(data))
       if (data.type === 'list-bookings') return json(listBookings())
       if (data.type === 'booking-status') return json(setBookingStatus(data))
       return json(handleApplication(data))
@@ -281,7 +282,7 @@ function sendCastingAlert(data) {
       to: notifyTo(),
       bcc: emails.slice(i, i + 40).join(','),
       subject: 'New casting: ' + clean(c.title) + ' / Usaili mpya',
-      body: en.join('\n\n') + '\n\n— — —\n\n' + sw.join('\n\n'),
+      body: en.filter(Boolean).join('\n\n') + '\n\n— — —\n\n' + sw.filter(Boolean).join('\n\n'),
       htmlBody: html,
       name: 'Blackhood Africa',
     })
@@ -355,7 +356,7 @@ function sendConfirmation(data, ref) {
         'Habari ' + first + ',',
         'Asante kwa kuomba kujiunga na Blackhood Africa. Tumepokea ombi lako na picha zako, na timu yetu ya usaili inalipitia sasa.',
         'Namba yako ya ombi ni: ' + ref,
-        'Tutawasiliana nawe kupitia WhatsApp. Tafadhali amini ujumbe kutoka +255 711 505 927 pekee. Usaili na maombi ya wakala ni bure – hatutakuomba pesa kwa ajili ya kuomba.',
+        'Huhitaji kufanya kitu kingine. Ukikubaliwa, utapata barua pepe moja zaidi: namba yako ya kipaji na kiungo cha ukurasa wako kwenye tovuti yetu. Tunaweza pia kuwasiliana nawe WhatsApp – tafadhali amini ujumbe kutoka +255 711 505 927 pekee. Kuomba ni bure – hatutakuomba pesa.',
         'Kila la heri,',
         'Timu ya Blackhood Africa',
       ]
@@ -363,7 +364,7 @@ function sendConfirmation(data, ref) {
         'Hi ' + first + ',',
         'Thank you for applying to Blackhood Africa. We have received your application and photos, and our scouting team is reviewing it now.',
         'Your application reference is: ' + ref,
-        'We will contact you on WhatsApp. Please only trust messages from +255 711 505 927. Scouting and agency applications are free – we will never ask you for money to apply.',
+        'There is nothing else you need to do. If you are approved, you will get one more email: your talent code and the link to your own page on our website. We may also contact you on WhatsApp – please only trust messages from +255 711 505 927. Applying is free – we will never ask you for money to apply.',
         'Best wishes,',
         'The Blackhood Africa team',
       ]
@@ -514,6 +515,32 @@ function sendApprovalEmail(person, code) {
   }
 }
 
+// /admin "Approve & publish" for a website applicant: marks her Sheet row Approved and gives her a talent code.
+// No email here: the website sends one "you're live" email with the code instead.
+function approveByRef(data) {
+  const ref = String(data.ref || '').trim().toUpperCase()
+  const email = validEmail(data.email).toLowerCase()
+  if (!/^BHA-\d{6}-\d{4}$/.test(ref) || !email) return { ok: false, error: 'bad ref' }
+  const sheet = getSheet()
+  const last = sheet.getLastRow()
+  if (last < 2) return { ok: false, error: 'not found' }
+  const rows = sheet.getRange(2, 1, last - 1, COL.code).getValues()
+  for (let i = 0; i < rows.length; i++) {
+    if (String(rows[i][1]).toUpperCase() !== ref) continue
+    if (String(rows[i][COL.email - 1]).trim().toLowerCase() !== email) continue
+    const row = i + 2
+    let code = String(rows[i][COL.code - 1]).toUpperCase()
+    if (!/^BHA-T-\d{4}$/.test(code)) {
+      code = nextTalentCode()
+      sheet.getRange(row, COL.code).setValue(code)
+      sheet.getRange(row, COL.approvedOn).setValue(new Date())
+    }
+    sheet.getRange(row, COL.status).setValue('Approved')
+    return { ok: true, code: code }
+  }
+  return { ok: false, error: 'not found' }
+}
+
 // /admin "Resend talent code email": finds the approved row by talent code and sends the approval email again.
 function resendApproval(data) {
   const code = String(data.code || '').trim().toUpperCase()
@@ -607,11 +634,13 @@ function sendProfileLiveEmail(data) {
   const slug = String(data.slug || '').replace(/[^a-z0-9-]/g, '')
   if (!email || !slug) return { ok: false }
   const first = clean(data.name).split(' ')[0] || ''
+  const code = /^BHA-T-\d{4}$/.test(String(data.code || '')) ? String(data.code) : ''
   const page = SITE_URL + '/talent/' + slug
   const en = [
     'Dear ' + first + ',',
     "It gives me great pleasure to tell you that your Blackhood Africa profile is now live on our website. From today, brands can see your photos and details and book you directly.",
     page,
+    code ? 'Your talent code is ' + code + '. Keep it safe: brands and parents can check it on our website, and you use it if you ever log in.' : '',
     'Share this link proudly on your Instagram and TikTok bio. You can update your photos or details any time at ' + SITE_URL + '/account, and our team will review changes before they go live.',
     'Your Blackhood comp card is ready to download at ' + SITE_URL + '/compcard',
     "If you ever need support, call or WhatsApp us on +255 711 505 927. We are proud to have you with us, and I can't wait to see where your career goes.",
@@ -621,6 +650,7 @@ function sendProfileLiveEmail(data) {
     'Mpendwa ' + first + ',',
     'Nina furaha kubwa kukujulisha kuwa wasifu wako wa Blackhood Africa sasa uko hewani kwenye tovuti yetu. Kuanzia leo, makampuni yanaweza kuona picha na taarifa zako na kukuajiri moja kwa moja.',
     page,
+    code ? 'Namba yako ya kipaji ni ' + code + '. Ihifadhi: makampuni na wazazi wanaweza kuithibitisha kwenye tovuti yetu, na unaitumia ukiingia.' : '',
     'Weka kiungo hiki kwa fahari kwenye bio yako ya Instagram na TikTok. Unaweza kubadilisha picha au taarifa wakati wowote kupitia ' + SITE_URL + '/account, na timu yetu itakagua mabadiliko kabla hayajaonekana.',
     'Comp card yako ya Blackhood iko tayari kupakua: ' + SITE_URL + '/compcard',
     'Ukihitaji msaada wowote, tupigie au tuandikie WhatsApp +255 711 505 927. Tunajivunia kuwa nawe, na natarajia kuona safari yako ikifika mbali.',
@@ -628,6 +658,7 @@ function sendProfileLiveEmail(data) {
   ]
   const toHtml = function (lines) {
     return lines
+      .filter(Boolean)
       .map(function (l, i) {
         return i === 2 ? '<p><a href="' + l + '" style="font-size:18px;font-weight:bold;color:#b8935a">' + l + '</a></p>' : '<p>' + escapeHtml(l).replace(/\n/g, '<br>') + '</p>'
       })
@@ -637,7 +668,7 @@ function sendProfileLiveEmail(data) {
     to: email,
     subject: 'Your Blackhood profile is live / Wasifu wako uko hewani',
     replyTo: notifyTo(),
-    body: en.join('\n\n') + '\n\n— — —\n\n' + sw.join('\n\n'),
+    body: en.filter(Boolean).join('\n\n') + '\n\n— — —\n\n' + sw.filter(Boolean).join('\n\n'),
     htmlBody:
       '<p><img src="' + SITE_URL + '/brand/logo-black.png" alt="Blackhood Africa" height="48" style="height:48px;width:auto"></p>' +
       toHtml(en) + '<hr>' + toHtml(sw),

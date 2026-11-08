@@ -79,9 +79,17 @@ export async function POST(request: Request) {
   const patch: Record<string, unknown> = {}
   if (body.status && ['approved', 'hidden', 'pending'].includes(body.status)) patch.status = body.status
   if (typeof body.is_minor === 'boolean') patch.is_minor = body.is_minor
+  let talentCode: string = current.talent_code
+  if (patch.status === 'approved' && !/^BHA-T-\d{4}$/.test(talentCode)) {
+    // Applied on the website: her code is still the application number. Approve that Sheet row and get her BHA-T code.
+    const r = await callSheet<{ ok: boolean; code?: string; error?: string }>({ type: 'approve-ref', ref: talentCode, email: current.email })
+    if (!r?.ok || !r.code) return Response.json({ ok: false, error: 'sheet ' + (r?.error ?? 'unreachable') }, { status: 502 })
+    talentCode = r.code
+    patch.talent_code = talentCode
+  }
   if (patch.status === 'approved' && !current.slug) {
     // Page address from the name; the talent code's number keeps it unique.
-    patch.slug = `${slugify(current.full_name)}-${current.talent_code.slice(-4)}`
+    patch.slug = `${slugify(current.full_name)}-${talentCode.slice(-4)}`
   }
 
   const { error } = await db.from('profiles').update(patch).eq('id', body.id)
@@ -89,7 +97,7 @@ export async function POST(request: Request) {
 
   // First approval only: tell the model their page is live. Later re-approvals (after edits) stay quiet.
   if (patch.slug) {
-    await callSheet({ type: 'profile-live', email: current.email, name: current.full_name, slug: patch.slug })
+    await callSheet({ type: 'profile-live', email: current.email, name: current.full_name, slug: patch.slug, code: talentCode })
   }
   return Response.json({ ok: true })
 }

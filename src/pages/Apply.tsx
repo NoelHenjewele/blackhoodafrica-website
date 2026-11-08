@@ -135,8 +135,8 @@ export default function Apply() {
           </h1>
           <p className="mt-5 text-lg text-ivory/70">
             {t({
-              en: `Thank you, ${done.name.split(' ')[0]}. We've emailed you a confirmation. Our scouting team reviews every application and will contact you on WhatsApp.`,
-              sw: `Asante, ${done.name.split(' ')[0]}. Tumekutumia barua pepe ya uthibitisho. Timu yetu ya usaili hupitia kila ombi na itawasiliana nawe kwa WhatsApp.`,
+              en: `Thank you, ${done.name.split(' ')[0]}. That's all you need to do. If you're approved, you'll get one email with your talent code and your own page on our website.`,
+              sw: `Asante, ${done.name.split(' ')[0]}. Hiyo ndiyo yote unayohitaji kufanya. Ukikubaliwa, utapata barua pepe moja yenye namba yako ya kipaji na ukurasa wako kwenye tovuti yetu.`,
             })}
           </p>
           {done.ref && (
