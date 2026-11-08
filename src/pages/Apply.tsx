@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Camera, CheckCircle2, Loader2, Send, ShieldCheck, X } from 'lucide-react'
 import { site, whatsappLink } from '../config/site'
-import { useLang, type L } from '../i18n'
+import { useLang } from '../i18n'
 import { shrinkPhoto } from '../utils/photo'
 
 // Option values stay in English so the spreadsheet stays in one language.
@@ -20,27 +20,8 @@ const genders = [
   { value: 'Prefer not to say', label: { en: 'Prefer not to say', sw: 'Sipendi kusema' } },
 ]
 
-type PhotoKey = 'headshot' | 'full' | 'side'
-const photoSlots: { key: PhotoKey; required: boolean; title: L; text: L }[] = [
-  {
-    key: 'headshot',
-    required: true,
-    title: { en: 'Headshot', sw: 'Picha ya uso' },
-    text: { en: 'Face to camera, hair back, no filter.', sw: 'Uso kuelekea kamera, nywele nyuma, bila filter.' },
-  },
-  {
-    key: 'full',
-    required: true,
-    title: { en: 'Full length', sw: 'Mwili mzima' },
-    text: { en: 'Head to toe, fitted clothes, plain wall.', sw: 'Kichwa hadi miguu, nguo zinazobana kiasi, ukuta mtupu.' },
-  },
-  {
-    key: 'side',
-    required: false,
-    title: { en: 'Side profile', sw: 'Ubavuni' },
-    text: { en: 'Standing side-on, natural light.', sw: 'Umesimama kwa ubavu, mwanga wa asili.' },
-  },
-]
+// Three photos, any order: the first becomes her main picture.
+const PHOTO_COUNT = 3
 
 type Photo = { base64: string; preview: string }
 
@@ -53,17 +34,19 @@ export default function Apply() {
   const [age, setAge] = useState('')
   const [consent, setConsent] = useState(false)
   const [interest, setInterest] = useState('')
-  const [photos, setPhotos] = useState<Partial<Record<PhotoKey, Photo>>>({})
+  const [photos, setPhotos] = useState<Photo[]>([])
   const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle')
   const [error, setError] = useState('')
   const [done, setDone] = useState<{ ref: string; name: string } | null>(null)
   const isMinor = age !== '' && Number(age) < 18
 
-  async function pickPhoto(key: PhotoKey, file: File | undefined) {
-    if (!file) return
+  async function pickPhotos(files: FileList | null) {
+    if (!files?.length) return
+    setError('')
     try {
-      const shrunk = await shrinkPhoto(file)
-      setPhotos((p) => ({ ...p, [key]: shrunk }))
+      const room = PHOTO_COUNT - photos.length
+      const shrunk = await Promise.all(Array.from(files).slice(0, room).map((f) => shrinkPhoto(f)))
+      setPhotos((p) => [...p, ...shrunk].slice(0, PHOTO_COUNT))
     } catch {
       setError(t({ en: 'That photo could not be read. Try a JPG or PNG.', sw: 'Picha hiyo haikusomeka. Jaribu JPG au PNG.' }))
     }
@@ -72,8 +55,8 @@ export default function Apply() {
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
-    if (!photos.headshot || !photos.full) {
-      setError(t({ en: 'Please add your headshot and full-length photo.', sw: 'Tafadhali weka picha ya uso na ya mwili mzima.' }))
+    if (photos.length < PHOTO_COUNT) {
+      setError(t({ en: 'Please add 3 photos.', sw: 'Tafadhali weka picha 3.' }))
       return
     }
 
@@ -95,9 +78,9 @@ export default function Apply() {
       lang,
       website: get('website'),
       photos: {
-        headshot: photos.headshot.base64,
-        full: photos.full.base64,
-        side: photos.side?.base64,
+        headshot: photos[0].base64,
+        full: photos[1].base64,
+        side: photos[2]?.base64,
       },
     }
 
@@ -290,7 +273,7 @@ export default function Apply() {
           {/* 4. Photos */}
           <fieldset>
             <legend className="mb-3 font-display text-3xl">
-              <span className="text-gold lining-nums">04</span> {t({ en: 'Your photos', sw: 'Picha zako' })}
+              <span className="text-gold lining-nums">04</span> {t({ en: 'Add 3 photos', sw: 'Weka picha 3' })}
             </legend>
             <p className="mb-6 flex items-start gap-2 text-sm text-ivory/85">
               <Camera size={18} className="mt-0.5 shrink-0 text-gold" />
@@ -299,40 +282,38 @@ export default function Apply() {
                 sw: 'Kamera ya simu inatosha. Huhitaji vipodozi, filter wala mpiga picha wa kitaalamu.',
               })}
             </p>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              {photoSlots.map((s) => {
-                const p = photos[s.key]
-                return (
-                  <div key={s.key}>
-                    <label className="group relative grid aspect-[3/4] cursor-pointer place-items-center overflow-hidden border border-dashed border-ivory/25 bg-ink-soft text-center hover:border-gold">
-                      {p ? (
-                        <img src={p.preview} alt="" className="absolute inset-0 h-full w-full object-cover" />
-                      ) : (
-                        <div className="px-4">
-                          <Camera className="mx-auto text-gold" size={28} strokeWidth={1.4} />
-                          <p className="mt-3 font-semibold">
-                            {t(s.title)} {s.required ? '*' : `(${t({ en: 'optional', sw: 'si lazima' })})`}
-                          </p>
-                          <p className="mt-1 text-xs text-ivory/80">{t(s.text)}</p>
-                        </div>
-                      )}
-                      <input
-                        type="file"
-                        accept="image/*,.heic,.heif"
-                        className="sr-only"
-                        onChange={(e) => pickPhoto(s.key, e.target.files?.[0])}
-                      />
-                    </label>
-                    {p && (
-                      <button
-                        type="button"
-                        onClick={() => setPhotos((ph) => ({ ...ph, [s.key]: undefined }))}
-                        className="mt-2 inline-flex items-center gap-1 text-xs text-ivory/80 hover:text-gold"
-                      >
-                        <X size={14} /> {t({ en: 'Change', sw: 'Badilisha' })} {t(s.title).toLowerCase()}
-                      </button>
-                    )}
+            <div className="grid grid-cols-3 gap-3">
+              {Array.from({ length: PHOTO_COUNT }).map((_, i) => {
+                const p = photos[i]
+                return p ? (
+                  <div key={i} className="relative aspect-[3/4] overflow-hidden border border-ivory/15">
+                    <img src={p.preview} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setPhotos((ph) => ph.filter((_, j) => j !== i))}
+                      aria-label={t({ en: 'Remove photo', sw: 'Ondoa picha' })}
+                      className="absolute right-1.5 top-1.5 grid h-7 w-7 place-items-center rounded-full bg-ink/80 text-ivory hover:text-gold"
+                    >
+                      <X size={14} />
+                    </button>
                   </div>
+                ) : (
+                  <label key={i} className="grid aspect-[3/4] cursor-pointer place-items-center border border-dashed border-ivory/25 bg-ink-soft text-center hover:border-gold">
+                    <div className="px-2">
+                      <Camera className="mx-auto text-gold" size={26} strokeWidth={1.4} />
+                      <p className="mt-2 text-sm font-semibold">{t({ en: 'Add photo', sw: 'Weka picha' })}</p>
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*,.heic,.heif"
+                      multiple
+                      className="sr-only"
+                      onChange={(e) => {
+                        pickPhotos(e.target.files)
+                        e.target.value = ''
+                      }}
+                    />
+                  </label>
                 )
               })}
             </div>
