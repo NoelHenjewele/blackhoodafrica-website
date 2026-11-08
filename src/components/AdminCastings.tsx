@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { ImagePlus, Loader2, Plus, Trash2, User } from 'lucide-react'
 import { shrinkPhoto } from '../utils/photo'
+import { castingStatus } from '../utils/castingDate'
 
 // Team-only castings manager on /admin. English only, like the rest of the admin page.
 type Interested = {
@@ -27,6 +28,14 @@ type AdminCasting = {
   status: 'open' | 'closed'
   created_at: string
   interested: Interested[]
+}
+
+// "Saturday 14 Nov 2026, from 9:00am" from the date picker; the public list reads the date back from this text.
+function dateText(iso: string, time: string) {
+  if (!iso) return ''
+  const [y, m, d] = iso.split('-').map(Number)
+  const day = new Date(y, m - 1, d).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })
+  return time.trim() ? `${day}, from ${time.trim()}` : day
 }
 
 const field = 'w-full border border-ivory/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
@@ -76,7 +85,7 @@ export default function AdminCastings({ token }: { token: string }) {
       action: 'create',
       title: get('title'),
       type: get('type'),
-      date_text: get('date_text'),
+      date_text: dateText(get('date'), get('time')),
       place: get('place'),
       details: get('details'),
       notify: d.get('notify') === 'on',
@@ -94,7 +103,10 @@ export default function AdminCastings({ token }: { token: string }) {
         <h2 className="font-display text-3xl sm:col-span-2">Post a casting</h2>
         <input name="title" required placeholder="Title, e.g. TV ad for a bank" className={`${field} sm:col-span-2`} />
         <input name="type" placeholder="Type, e.g. TV ad / Runway / Photoshoot" className={field} />
-        <input name="date_text" placeholder="Date, e.g. 15 Nov 2026" className={field} />
+        <div className="grid grid-cols-[1fr_auto] gap-2">
+          <input name="date" type="date" required min={new Date().toISOString().slice(0, 10)} className={`${field} [color-scheme:dark]`} aria-label="Casting date" />
+          <input name="time" placeholder="9:00am" className={`${field} w-28`} aria-label="Start time (optional)" />
+        </div>
         <input name="place" placeholder="Place, e.g. Masaki, Dar es Salaam" className={`${field} sm:col-span-2`} />
         <textarea
           name="details"
@@ -144,6 +156,7 @@ export default function AdminCastings({ token }: { token: string }) {
                 {c.type && <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">{c.type}</p>}
                 <h3 className="font-display text-3xl">{c.title}</h3>
                 <p className="text-sm text-ivory/80">{[c.date_text, c.place].filter(Boolean).join(' · ')}</p>
+                {castingStatus(c.date_text).kind === 'ended' && <p className="text-xs font-semibold uppercase tracking-[0.15em] text-ivory/75">Ended: shown greyed out on the site, removed after 30 days</p>}
               </div>
               <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] ${

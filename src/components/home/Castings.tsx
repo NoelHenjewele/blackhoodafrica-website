@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, CalendarDays, Check, MapPin } from 'lucide-react'
 import { whatsappLink } from '../../config/site'
 import { useLang } from '../../i18n'
+import { castingStatus, sortCastings, type CastingStatus } from '../../utils/castingDate'
 
 type Casting = {
   id: string
@@ -83,10 +84,12 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
 
         {castings.length > 0 ? (
           <ul className="divide-y divide-ivory/10 border-y border-ivory/10">
-            {castings.map((c) => {
+            {sortCastings(castings).map((c) => {
               const on = interested.includes(c.id)
+              const status = castingStatus(c.date_text)
+              const ended = status.kind === 'ended'
               return (
-                <li key={c.id} className="grid gap-4 py-6 sm:grid-cols-[1fr_auto] sm:items-center">
+                <li key={c.id} className={`grid gap-4 py-6 sm:grid-cols-[1fr_auto] sm:items-center ${ended ? 'opacity-60' : ''}`}>
                   <div className="flex flex-col gap-5 sm:flex-row">
                     {c.photo && (
                       <a href={c.photo} target="_blank" rel="noreferrer" className="shrink-0">
@@ -94,7 +97,10 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
                       </a>
                     )}
                   <div>
-                    {c.type && <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">{c.type}</p>}
+                    <p className="flex flex-wrap items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.2em]">
+                      <StatusLabel status={status} />
+                      {c.type && <span className="text-gold">{c.type}</span>}
+                    </p>
                     <h3 className="mt-1 font-display text-2xl">{c.title}</h3>
                     <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-ivory/80">
                       {c.date_text && (
@@ -112,7 +118,11 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
                   </div>
                   </div>
                   <div className="flex flex-col items-stretch gap-2 sm:items-end">
-                    {canApply ? (
+                    {ended ? (
+                      <span className="rounded-full border border-ivory/20 px-6 py-3 text-center text-xs font-semibold uppercase tracking-[0.15em] text-ivory/75">
+                        {t({ en: 'This casting has ended', sw: 'Usaili huu umekwisha' })}
+                      </span>
+                    ) : canApply ? (
                       <button
                         type="button"
                         onClick={() => toggle(c.id)}
@@ -172,4 +182,25 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
       </div>
     </section>
   )
+}
+
+// Live label from the casting's date: counts down, glows on the day, greys out once it has passed.
+function StatusLabel({ status }: { status: CastingStatus }) {
+  const { t } = useLang()
+  if (status.kind === 'undated') return null
+  if (status.kind === 'today') {
+    return (
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-green-500/15 px-2.5 py-1 text-green-500">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-green-500" /> {t({ en: 'Today · Live', sw: 'Leo · Inaendelea' })}
+      </span>
+    )
+  }
+  if (status.kind === 'ended') {
+    return <span className="rounded-full bg-ivory/10 px-2.5 py-1 text-ivory/75">{t({ en: 'Ended', sw: 'Imekwisha' })}</span>
+  }
+  const text =
+    status.kind === 'tomorrow'
+      ? t({ en: 'Tomorrow', sw: 'Kesho' })
+      : t({ en: `Upcoming · in ${status.days} days`, sw: `Inakuja · baada ya siku ${status.days}` })
+  return <span className="rounded-full border border-gold/60 px-2.5 py-1 text-gold">{text}</span>
 }
