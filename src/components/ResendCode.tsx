@@ -40,10 +40,10 @@ function LoginCode({ token }: { token: string }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-3 flex flex-wrap items-center gap-3 border border-white/10 bg-ink-soft p-4 text-sm">
+    <form onSubmit={onSubmit} className="mt-3 flex flex-wrap items-center gap-3 border border-ivory/10 bg-ink-soft p-4 text-sm">
       <span className="text-ivory/90">Login code by WhatsApp (if her email doesn’t arrive):</span>
-      <input name="email" type="email" required placeholder="her email" className="w-56 border border-white/15 bg-ink px-3 py-2 text-ivory focus:border-gold focus:outline-none" />
-      <input name="code" placeholder="BHA-T-0003 (first login)" className="w-48 border border-white/15 bg-ink px-3 py-2 font-mono uppercase text-ivory focus:border-gold focus:outline-none" />
+      <input name="email" type="email" required placeholder="her email" className="w-56 border border-ivory/15 bg-ink px-3 py-2 text-ivory focus:border-gold focus:outline-none" />
+      <input name="code" placeholder="BHA-T-0003 (first login)" className="w-48 border border-ivory/15 bg-ink px-3 py-2 font-mono uppercase text-ivory focus:border-gold focus:outline-none" />
       <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-full border border-gold px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-gold hover:bg-gold hover:text-ink disabled:opacity-50">
         {busy ? <Loader2 size={14} className="animate-spin" /> : null} Get code
       </button>
@@ -82,9 +82,9 @@ export default function ResendCode({ token }: { token: string }) {
 
   return (
     <>
-    <form onSubmit={onSubmit} className="mt-6 flex flex-wrap items-center gap-3 border border-white/10 bg-ink-soft p-4 text-sm">
+    <form onSubmit={onSubmit} className="mt-6 flex flex-wrap items-center gap-3 border border-ivory/10 bg-ink-soft p-4 text-sm">
       <span className="text-ivory/90">Resend talent code email:</span>
-      <input name="code" required placeholder="BHA-T-0003" className="w-36 border border-white/15 bg-ink px-3 py-2 font-mono uppercase text-ivory focus:border-gold focus:outline-none" />
+      <input name="code" required placeholder="BHA-T-0003" className="w-36 border border-ivory/15 bg-ink px-3 py-2 font-mono uppercase text-ivory focus:border-gold focus:outline-none" />
       <button type="submit" disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-gold px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-ink hover:bg-ivory disabled:opacity-50">
         {busy ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />} Send
       </button>

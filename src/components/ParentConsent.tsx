@@ -7,7 +7,7 @@ import { useLang } from '../i18n'
 // Parent / guardian consent for under-18 models, signed on the model's own account page.
 type Consent = { parent_name: string; relationship: string; phone: string; signed_name: string; signed_at: string }
 
-const field = 'w-full border border-white/15 bg-ink-soft px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+const field = 'w-full border border-ivory/15 bg-ink-soft px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 
 export default function ParentConsent({ profileId, modelName }: { profileId: string; modelName: string }) {
   const { t } = useLang()
@@ -50,7 +50,7 @@ export default function ParentConsent({ profileId, modelName }: { profileId: str
   ]
 
   return (
-    <div className="mt-12 border-t border-white/10 pt-10">
+    <div className="mt-12 border-t border-ivory/10 pt-10">
       <h2 className="flex items-center gap-2 font-display text-3xl">
         <ShieldCheck className="text-gold" size={26} /> {t({ en: 'Parent / guardian consent', sw: 'Ridhaa ya mzazi / mlezi' })}
       </h2>

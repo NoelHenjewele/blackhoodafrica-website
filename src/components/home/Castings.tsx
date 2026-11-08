@@ -61,7 +61,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
   const { castings, interested, canApply, loggedIn, toggle } = useCastings()
 
   return (
-    <section className="border-t border-white/10 bg-ink-soft">
+    <section className="border-t border-ivory/10 bg-ink-soft">
       <div className={`mx-auto max-w-7xl px-5 lg:px-10 ${standalone ? 'py-12 lg:py-16' : 'py-20 lg:py-24'}`}>
         {!standalone && (
           <div className="mb-12 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
@@ -82,7 +82,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
         )}
 
         {castings.length > 0 ? (
-          <ul className="divide-y divide-white/10 border-y border-white/10">
+          <ul className="divide-y divide-ivory/10 border-y border-ivory/10">
             {castings.map((c) => {
               const on = interested.includes(c.id)
               return (
@@ -90,7 +90,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
                   <div className="flex flex-col gap-5 sm:flex-row">
                     {c.photo && (
                       <a href={c.photo} target="_blank" rel="noreferrer" className="shrink-0">
-                        <img src={c.photo} alt={c.title} loading="lazy" className="w-full max-w-[260px] border border-white/10 sm:w-48" />
+                        <img src={c.photo} alt={c.title} loading="lazy" className="w-full max-w-[260px] border border-ivory/10 sm:w-48" />
                       </a>
                     )}
                   <div>
@@ -147,7 +147,7 @@ export default function Castings({ standalone = false }: { standalone?: boolean 
             })}
           </ul>
         ) : (
-          <div className="flex flex-col items-start justify-between gap-6 border border-dashed border-white/15 p-8 sm:flex-row sm:items-center lg:p-10">
+          <div className="flex flex-col items-start justify-between gap-6 border border-dashed border-ivory/15 p-8 sm:flex-row sm:items-center lg:p-10">
             <div>
               <p className="font-display text-2xl">
                 {t({ en: 'New castings are announced soon.', sw: 'Usaili mpya utatangazwa hivi karibuni.' })}

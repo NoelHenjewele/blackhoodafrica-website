@@ -30,7 +30,7 @@ const printLabels: Record<string, string> = {
 }
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
+  'w-full border border-ivory/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
 const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 
 export default function CompCardPage() {
@@ -141,7 +141,7 @@ export default function CompCardPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-4xl space-y-12 px-5 py-14 lg:py-20">
           {/* 1. Code */}
           <div>
@@ -212,7 +212,7 @@ export default function CompCardPage() {
               })}
             </p>
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
-              <label className="relative col-span-2 row-span-2 grid aspect-[3/4] cursor-pointer place-items-center overflow-hidden border border-dashed border-white/25 bg-ink-soft text-center hover:border-gold sm:col-span-2">
+              <label className="relative col-span-2 row-span-2 grid aspect-[3/4] cursor-pointer place-items-center overflow-hidden border border-dashed border-ivory/25 bg-ink-soft text-center hover:border-gold sm:col-span-2">
                 {main ? (
                   <img src={main} alt="" className="absolute inset-0 h-full w-full object-cover" />
                 ) : (
@@ -237,7 +237,7 @@ export default function CompCardPage() {
                 </div>
               ))}
               {extras.length < 4 && (
-                <label className="grid aspect-[3/4] cursor-pointer place-items-center border border-dashed border-white/25 bg-ink-soft text-center text-xs hover:border-gold">
+                <label className="grid aspect-[3/4] cursor-pointer place-items-center border border-dashed border-ivory/25 bg-ink-soft text-center text-xs hover:border-gold">
                   <span>
                     <Camera className="mx-auto mb-1 text-gold" size={20} />
                     {t({ en: 'Add photos', sw: 'Ongeza picha' })} ({extras.length}/4)
@@ -248,7 +248,7 @@ export default function CompCardPage() {
             </div>
           </div>
 
-          <div className="border-t border-white/10 pt-8">
+          <div className="border-t border-ivory/10 pt-8">
             {error && <p className="mb-4 text-sm text-red-300">{error}</p>}
             <button
               type="button"

@@ -13,7 +13,7 @@ export default function NewFaces() {
   const placeholders = Math.max(0, SLOTS - newFaces.length)
 
   return (
-    <section className="relative overflow-hidden border-t border-white/10 bg-ink-soft">
+    <section className="relative overflow-hidden border-t border-ivory/10 bg-ink-soft">
       <div className="pointer-events-none absolute -left-40 bottom-0 h-[420px] w-[420px] rounded-full bg-gold/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
@@ -48,7 +48,7 @@ export default function NewFaces() {
           {Array.from({ length: placeholders }).map((_, i) => (
             <div key={i} className="w-[62vw] shrink-0 snap-start sm:w-[38vw] lg:w-auto">
               <div
-                className={`grid aspect-[3/4] place-items-center border border-dashed border-white/15 bg-ink/60 text-center ${
+                className={`grid aspect-[3/4] place-items-center border border-dashed border-ivory/15 bg-ink/60 text-center ${
                   i % 2 ? 'lg:translate-y-8' : ''
                 }`}
               >
@@ -63,7 +63,7 @@ export default function NewFaces() {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col items-start justify-between gap-6 border-t border-white/10 pt-10 sm:flex-row sm:items-center">
+        <div className="mt-16 flex flex-col items-start justify-between gap-6 border-t border-ivory/10 pt-10 sm:flex-row sm:items-center">
           <p className="font-display text-2xl sm:text-3xl">
             {t({ en: 'Think you could be next?', sw: 'Unadhani wewe ni anayefuata?' })}{' '}
             <span className="italic text-gold">{t({ en: 'Applying is free.', sw: 'Kuomba ni bure.' })}</span>

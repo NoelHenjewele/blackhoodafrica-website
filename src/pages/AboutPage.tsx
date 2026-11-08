@@ -49,10 +49,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-2 lg:items-center lg:px-10 lg:py-24">
           <figure>
-            <div className="aspect-[3/2] overflow-hidden border border-white/10">
+            <div className="aspect-[3/2] overflow-hidden border border-ivory/10">
               <img
                 src="/talent/eladia-edwin/crowned-with-host.webp"
                 alt="Eladia Edwin being crowned Miss Kinondoni"
@@ -89,10 +89,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 bg-ink-soft">
+      <section className="border-t border-ivory/10 bg-ink-soft">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-24">
           <h2 className="font-display text-4xl font-medium sm:text-5xl">{t({ en: 'How we work', sw: 'Jinsi tunavyofanya kazi' })}</h2>
-          <div className="mt-10 grid gap-px border border-white/10 bg-white/10 md:grid-cols-3">
+          <div className="mt-10 grid gap-px border border-ivory/10 bg-ivory/10 md:grid-cols-3">
             {pillars.map((p) => (
               <div key={p.title.en} className="bg-ink-soft p-8 lg:p-10">
                 <h3 className="font-display text-3xl text-gold">{t(p.title)}</h3>
@@ -104,13 +104,13 @@ export default function AboutPage() {
       </section>
 
       {/* Our legacy: replace with real dated milestones (founding year, shows, campaigns, alumni) */}
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-24">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">{t({ en: 'Our legacy', sw: 'Historia yetu' })}</p>
           <h2 className="mt-4 font-display text-4xl font-medium sm:text-5xl">{t({ en: 'Milestones', sw: 'Hatua muhimu' })}</h2>
           <ol className="mt-10 grid gap-4 md:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <li key={i} className="grid min-h-40 place-items-center border border-dashed border-white/15 p-6 text-center">
+              <li key={i} className="grid min-h-40 place-items-center border border-dashed border-ivory/15 p-6 text-center">
                 <div>
                   <Plus className="mx-auto text-stone/60" size={24} strokeWidth={1.2} />
                   <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone">{t({ en: 'Year · milestone', sw: 'Mwaka · tukio' })}</p>
@@ -121,7 +121,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 bg-gold text-ink">
+      <section className="border-t border-ivory/10 bg-gold text-ink">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 py-14 sm:flex-row sm:items-center lg:px-10">
           <p className="font-display text-3xl sm:text-4xl">{t({ en: 'Work with us.', sw: 'Fanya kazi nasi.' })}</p>
           <div className="flex flex-col gap-3 sm:flex-row">

@@ -109,10 +109,10 @@ export default function ParentsPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-5xl space-y-6 px-5 py-16 lg:py-20">
           {sections.map(({ icon: Icon, title, points }) => (
-            <article key={title.en} className="grid gap-6 border border-white/10 bg-ink-soft p-8 md:grid-cols-[220px_1fr]">
+            <article key={title.en} className="grid gap-6 border border-ivory/10 bg-ink-soft p-8 md:grid-cols-[220px_1fr]">
               <div>
                 <Icon className="text-gold" size={28} strokeWidth={1.4} />
                 <h2 className="mt-4 font-display text-3xl">{t(title)}</h2>
@@ -129,7 +129,7 @@ export default function ParentsPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 bg-ivory text-ink">
+      <section className="border-t border-ivory/10 bg-ivory text-ink">
         <div className="mx-auto grid max-w-7xl gap-8 px-5 py-14 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:px-10">
           <div>
             <h2 className="font-display text-4xl font-medium">{t({ en: 'Talk to us first', sw: 'Ongea nasi kwanza' })}</h2>

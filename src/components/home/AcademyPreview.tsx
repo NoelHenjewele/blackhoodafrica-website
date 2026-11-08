@@ -14,7 +14,7 @@ export default function AcademyPreview() {
   const { t } = useLang()
 
   return (
-    <section className="border-t border-white/10 bg-ivory text-ink">
+    <section className="border-t border-ivory/10 bg-ivory text-ink">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
         <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-end">
           <div>
@@ -45,7 +45,7 @@ export default function AcademyPreview() {
 
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {programmes.map((p) => (
-            <article key={p.name.en} className="flex flex-col border border-ink/10 bg-white p-8">
+            <article key={p.name.en} className="flex flex-col border border-ink/10 bg-ivory p-8">
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-deep">{t(p.level)}</p>
               <h3 className="mt-3 font-display text-3xl">{t(p.name)}</h3>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-ink/70">{t(p.text)}</p>

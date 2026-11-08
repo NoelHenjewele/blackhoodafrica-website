@@ -31,7 +31,7 @@ export default function AcademyPage() {
           <h2 className="font-display text-4xl font-medium sm:text-5xl">{t({ en: 'Programmes', sw: 'Programu' })}</h2>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {programmes.map((p) => (
-              <article key={p.name.en} className="flex flex-col border border-ink/10 bg-white p-8">
+              <article key={p.name.en} className="flex flex-col border border-ink/10 bg-ivory p-8">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold-deep">{t(p.level)}</p>
                 <h3 className="mt-3 font-display text-3xl">{t(p.name)}</h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-ink/70">{t(p.text)}</p>
@@ -46,7 +46,7 @@ export default function AcademyPage() {
             ))}
           </div>
 
-          <div className="mt-10 grid gap-6 border border-gold-deep/30 bg-white p-8 sm:grid-cols-[auto_1fr] sm:items-center">
+          <div className="mt-10 grid gap-6 border border-gold-deep/30 bg-ivory p-8 sm:grid-cols-[auto_1fr] sm:items-center">
             <p className="font-display text-4xl text-gold-deep lining-nums">{site.academyRegistrationFee}</p>
             <div>
               <p className="font-semibold">{t({ en: 'Academy application fee', sw: 'Ada ya maombi ya chuo' })}</p>
@@ -62,13 +62,13 @@ export default function AcademyPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-24">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">{t({ en: "What you'll learn", sw: 'Utakachojifunza' })}</p>
           <h2 className="mt-4 font-display text-4xl font-medium sm:text-5xl">
             {t({ en: 'Skills brands actually book for.', sw: 'Ujuzi ambao makampuni huajiri kwa ajili yake.' })}
           </h2>
-          <div className="mt-12 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-px border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-3">
             {curriculum.map((c) => (
               <div key={c.title.en} className="bg-ink p-8">
                 <Check className="text-gold" size={22} />
@@ -81,13 +81,13 @@ export default function AcademyPage() {
       </section>
 
       {/* Coaches: add real names, photos and credits when confirmed */}
-      <section className="border-t border-white/10 bg-ink-soft">
+      <section className="border-t border-ivory/10 bg-ink-soft">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-24">
           <h2 className="font-display text-4xl font-medium sm:text-5xl">{t({ en: 'Your coaches', sw: 'Walimu wako' })}</h2>
           <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i}>
-                <div className="grid aspect-square place-items-center border border-dashed border-white/15">
+                <div className="grid aspect-square place-items-center border border-dashed border-ivory/15">
                   <Plus className="text-stone/60" size={26} strokeWidth={1.2} />
                 </div>
                 <p className="mt-3 text-sm text-stone">{t({ en: 'Coach profile coming', sw: 'Wasifu wa mwalimu unakuja' })}</p>
@@ -97,7 +97,7 @@ export default function AcademyPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-24">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">
@@ -113,7 +113,7 @@ export default function AcademyPage() {
               {t({ en: 'Ask us on WhatsApp →', sw: 'Tuulize kwa WhatsApp →' })}
             </a>
           </div>
-          <div className="divide-y divide-white/10 border-y border-white/10">
+          <div className="divide-y divide-ivory/10 border-y border-ivory/10">
             {faqs.map((f) => (
               <details key={f.q.en} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-xl">
@@ -127,7 +127,7 @@ export default function AcademyPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 bg-gold text-ink">
+      <section className="border-t border-ivory/10 bg-gold text-ink">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 py-14 sm:flex-row sm:items-center lg:px-10">
           <p className="font-display text-3xl sm:text-4xl">{t({ en: 'Ready to start?', sw: 'Uko tayari kuanza?' })}</p>
           <Link

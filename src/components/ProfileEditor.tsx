@@ -50,7 +50,7 @@ const statusText: Record<ProfileRow['status'], L> = {
 }
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
+  'w-full border border-ivory/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
 const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 
 export const photoUrl = (path: string) => supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl
@@ -190,7 +190,7 @@ export default function ProfileEditor({ profile, onSaved }: { profile: ProfileRo
             </div>
           ))}
           {photos.length < MAX_PHOTOS && (
-            <label className="grid aspect-[3/4] cursor-pointer place-items-center border border-dashed border-white/25 bg-ink-soft text-center text-xs hover:border-gold">
+            <label className="grid aspect-[3/4] cursor-pointer place-items-center border border-dashed border-ivory/25 bg-ink-soft text-center text-xs hover:border-gold">
               {uploading ? (
                 <Loader2 className="animate-spin text-gold" />
               ) : (

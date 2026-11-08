@@ -16,7 +16,7 @@ const heightRanges = [
 ]
 
 const select =
-  'border border-white/15 bg-ink px-4 py-2.5 text-sm text-ivory focus:border-gold focus:outline-none'
+  'border border-ivory/15 bg-ink px-4 py-2.5 text-sm text-ivory focus:border-gold focus:outline-none'
 
 export default function TalentPage() {
   const { t } = useLang()
@@ -61,7 +61,7 @@ export default function TalentPage() {
         </div>
       </section>
 
-      <section className="sticky top-20 z-30 border-y border-white/10 bg-ink/95 backdrop-blur">
+      <section className="sticky top-20 z-30 border-y border-ivory/10 bg-ink/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-10">
           <div className="flex gap-2 overflow-x-auto" role="tablist" aria-label="Boards">
             {[ALL, ...boards].map((b) => (
@@ -73,7 +73,7 @@ export default function TalentPage() {
                 className={`shrink-0 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition-colors ${
                   active === b
                     ? 'border-gold bg-gold text-ink'
-                    : 'border-white/20 text-ivory/85 hover:border-gold hover:text-gold'
+                    : 'border-ivory/20 text-ivory/85 hover:border-gold hover:text-gold'
                 }`}
               >
                 {boardName(b)}
@@ -116,7 +116,7 @@ export default function TalentPage() {
             ))}
           </div>
 
-          <div className="mt-16 flex flex-col items-start justify-between gap-6 border border-white/10 bg-ink-soft p-8 sm:flex-row sm:items-center lg:p-10">
+          <div className="mt-16 flex flex-col items-start justify-between gap-6 border border-ivory/10 bg-ink-soft p-8 sm:flex-row sm:items-center lg:p-10">
             <p className="font-display text-2xl sm:text-3xl">{t({ en: 'Seen someone you like?', sw: 'Umeona unayempenda?' })}</p>
             <Link
               to="/clients#brief"

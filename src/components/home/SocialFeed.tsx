@@ -13,7 +13,7 @@ export default function SocialFeed() {
   const { t } = useLang()
 
   return (
-    <section className="border-t border-white/10">
+    <section className="border-t border-ivory/10">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:px-10 lg:py-24">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">@blackhoodafrica</p>
@@ -28,7 +28,7 @@ export default function SocialFeed() {
           </p>
         </div>
 
-        <div className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-3">
+        <div className="grid gap-px border border-ivory/10 bg-ivory/10 sm:grid-cols-3">
           {channels.map((c) => (
             <a
               key={c.name}

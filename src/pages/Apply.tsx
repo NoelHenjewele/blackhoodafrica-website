@@ -45,7 +45,7 @@ const photoSlots: { key: PhotoKey; required: boolean; title: L; text: L }[] = [
 type Photo = { base64: string; preview: string }
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+  'w-full border border-ivory/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 
 export default function Apply() {
@@ -193,7 +193,7 @@ export default function Apply() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <form onSubmit={onSubmit} className="mx-auto max-w-4xl space-y-12 px-5 py-16 lg:py-20" noValidate={false}>
           {/* 1. About you */}
           <fieldset className="grid gap-5 sm:grid-cols-2">
@@ -304,7 +304,7 @@ export default function Apply() {
                 const p = photos[s.key]
                 return (
                   <div key={s.key}>
-                    <label className="group relative grid aspect-[3/4] cursor-pointer place-items-center overflow-hidden border border-dashed border-white/25 bg-ink-soft text-center hover:border-gold">
+                    <label className="group relative grid aspect-[3/4] cursor-pointer place-items-center overflow-hidden border border-dashed border-ivory/25 bg-ink-soft text-center hover:border-gold">
                       {p ? (
                         <img src={p.preview} alt="" className="absolute inset-0 h-full w-full object-cover" />
                       ) : (
@@ -362,7 +362,7 @@ export default function Apply() {
             </fieldset>
           )}
 
-          <div className="space-y-6 border-t border-white/10 pt-10">
+          <div className="space-y-6 border-t border-ivory/10 pt-10">
             <label className="flex items-start gap-3 text-sm text-ivory/90">
               <input
                 type="checkbox"

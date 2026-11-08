@@ -7,7 +7,7 @@ type Review = { id: string; quote: string; name: string; role: string | null; ki
 const statusStyle: Record<Review['status'], string> = {
   pending: 'bg-gold text-ink',
   approved: 'bg-green-400/20 text-green-300',
-  hidden: 'bg-white/10 text-ivory/85',
+  hidden: 'bg-ivory/10 text-ivory/85',
 }
 
 export default function AdminReviews({ token }: { token: string }) {
@@ -47,11 +47,11 @@ export default function AdminReviews({ token }: { token: string }) {
 
   return (
     <div className="mt-8">
-      <div className="flex flex-wrap items-center gap-3 border border-white/10 bg-ink-soft p-5">
+      <div className="flex flex-wrap items-center gap-3 border border-ivory/10 bg-ink-soft p-5">
         <p className="text-sm text-ivory/90">Send this link to clients, graduates and parents:</p>
         <span className="font-mono text-sm text-gold">{link}</span>
         <button type="button" onClick={() => navigator.clipboard?.writeText(link).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000) })}
-          className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
+          className="inline-flex items-center gap-2 rounded-full border border-ivory/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
           {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? 'Copied' : 'Copy'}
         </button>
         <a href={`https://wa.me/?text=${encodeURIComponent(`Hello! Could you write 1–2 sentences about your experience with Blackhood Africa for our website? It takes a minute: ${link}`)}`}
@@ -67,7 +67,7 @@ export default function AdminReviews({ token }: { token: string }) {
 
       <div className="mt-8 space-y-5">
         {reviews?.map((r) => (
-          <article key={r.id} className="border border-white/10 bg-ink-soft p-6">
+          <article key={r.id} className="border border-ivory/10 bg-ink-soft p-6">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <p className="text-sm text-ivory/80">
                 <span className="font-semibold text-ivory">{r.name}</span>
@@ -80,7 +80,7 @@ export default function AdminReviews({ token }: { token: string }) {
               defaultValue={r.quote}
               rows={3}
               onBlur={(e) => e.target.value.trim() !== r.quote && act(r.id, { quote: e.target.value })}
-              className="mt-4 w-full border border-white/15 bg-ink px-4 py-3 font-display text-lg text-ivory focus:border-gold focus:outline-none"
+              className="mt-4 w-full border border-ivory/15 bg-ink px-4 py-3 font-display text-lg text-ivory focus:border-gold focus:outline-none"
             />
             <p className="mt-1 text-xs text-ivory/75">You can fix typos above; it saves when you click away.</p>
             <div className="mt-4 flex flex-wrap gap-3">
@@ -92,7 +92,7 @@ export default function AdminReviews({ token }: { token: string }) {
               )}
               {r.status !== 'hidden' && (
                 <button type="button" disabled={busy === r.id} onClick={() => act(r.id, { status: 'hidden' })}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold disabled:opacity-50">
+                  className="inline-flex items-center gap-2 rounded-full border border-ivory/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold disabled:opacity-50">
                   <EyeOff size={14} /> Hide
                 </button>
               )}

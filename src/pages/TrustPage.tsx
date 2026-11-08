@@ -77,7 +77,7 @@ export default function TrustPage() {
 
       <OurPromise />
 
-      <section className="border-t border-white/10 bg-ivory text-ink">
+      <section className="border-t border-ivory/10 bg-ivory text-ink">
         <div className="mx-auto max-w-4xl px-5 py-20 lg:py-24">
           <h2 className="font-display text-4xl font-medium sm:text-5xl">{t({ en: 'The Charter, in full', sw: 'Mkataba kamili' })}</h2>
           <ol className="mt-10 space-y-6">
@@ -91,7 +91,7 @@ export default function TrustPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-2 lg:px-10 lg:py-24">
           <div>
             <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-gold">
@@ -122,7 +122,7 @@ export default function TrustPage() {
           </div>
           <ul className="space-y-4">
             {redFlags.map((r) => (
-              <li key={r.en} className="border border-white/10 bg-ink-soft p-6 text-ivory/90">
+              <li key={r.en} className="border border-ivory/10 bg-ink-soft p-6 text-ivory/90">
                 {t(r)}
               </li>
             ))}

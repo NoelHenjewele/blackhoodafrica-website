@@ -5,7 +5,7 @@ import { shrinkPhoto } from '../utils/photo'
 // Team-only: write News & events posts for /news.
 type Post = { id: string; title: string; body: string | null; photo: string | null; video_url: string | null; created_at: string }
 
-const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+const field = 'w-full border border-ivory/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 
 export default function AdminNews({ token }: { token: string }) {
   const [posts, setPosts] = useState<Post[] | null>(null)
@@ -53,13 +53,13 @@ export default function AdminNews({ token }: { token: string }) {
 
   return (
     <div className="mt-8">
-      <form onSubmit={onCreate} className="grid gap-3 border border-white/10 bg-ink-soft p-6">
+      <form onSubmit={onCreate} className="grid gap-3 border border-ivory/10 bg-ink-soft p-6">
         <h2 className="font-display text-3xl">New post</h2>
         <input name="title" required placeholder="Title, e.g. Eladia crowned Miss Kinondoni" className={field} />
         <textarea name="body" rows={5} placeholder="The story (optional)" className={field} />
         <input name="video" type="url" placeholder="Video link (optional): paste a TikTok or YouTube link" className={field} />
         <div className="flex flex-wrap items-center gap-4">
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-ivory/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
             <ImagePlus size={14} /> {photo ? 'Change photo' : 'Add photo'}
             <input
               type="file"
@@ -85,7 +85,7 @@ export default function AdminNews({ token }: { token: string }) {
 
       <div className="mt-8 space-y-4">
         {posts?.map((p) => (
-          <article key={p.id} className="flex gap-4 border border-white/10 bg-ink-soft p-5">
+          <article key={p.id} className="flex gap-4 border border-ivory/10 bg-ink-soft p-5">
             {p.photo && <img src={p.photo} alt="" className="h-20 w-28 shrink-0 object-cover" />}
             <div className="min-w-0 flex-1">
               <h3 className="font-display text-2xl">{p.title}</h3>

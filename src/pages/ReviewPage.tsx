@@ -4,7 +4,7 @@ import { Check, Loader2 } from 'lucide-react'
 import { useLang } from '../i18n'
 
 // /review: a link the team sends to clients, models and parents. Reviews show only after approval.
-const field = 'w-full border border-white/15 bg-ink-soft px-4 py-3.5 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+const field = 'w-full border border-ivory/15 bg-ink-soft px-4 py-3.5 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 
 export default function ReviewPage() {
   const { t } = useLang()

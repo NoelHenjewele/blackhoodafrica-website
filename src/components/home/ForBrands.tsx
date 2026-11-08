@@ -71,7 +71,7 @@ export default function ForBrands({ standalone = false }: { standalone?: boolean
   const { t } = useLang()
 
   return (
-    <section className="border-t border-white/10 bg-ink-soft">
+    <section className="border-t border-ivory/10 bg-ink-soft">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-2xl">
@@ -96,7 +96,7 @@ export default function ForBrands({ standalone = false }: { standalone?: boolean
           )}
         </div>
 
-        <div className="mt-14 grid gap-px overflow-hidden border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-px overflow-hidden border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-4">
           {services.map(({ icon: Icon, title, text }) => (
             <article key={title.en} className="bg-ink-soft p-8 transition-colors hover:bg-ink">
               <Icon className="text-gold" size={28} strokeWidth={1.4} />
@@ -146,7 +146,7 @@ export default function ForBrands({ standalone = false }: { standalone?: boolean
 
         {/* Hidden until real, confirmed client logos are added to src/data/clients.ts */}
         {clients.length > 0 && (
-          <div className="mt-20 border-t border-white/10 pt-10">
+          <div className="mt-20 border-t border-ivory/10 pt-10">
             <p className="text-center text-xs uppercase tracking-[0.3em] text-stone">
               {t({ en: "Brands we've worked with", sw: 'Makampuni tuliyofanya nayo kazi' })}
             </p>

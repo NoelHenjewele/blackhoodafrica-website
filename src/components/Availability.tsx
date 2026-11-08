@@ -46,7 +46,7 @@ export default function Availability({ profileId }: { profileId: string }) {
   }
 
   return (
-    <div className="mt-12 border-t border-white/10 pt-10">
+    <div className="mt-12 border-t border-ivory/10 pt-10">
       <h2 className="font-display text-3xl">{t({ en: 'Your availability', sw: 'Upatikanaji wako' })}</h2>
       <p className="mt-2 text-sm text-ivory/80">
         {t({
@@ -85,7 +85,7 @@ export default function Availability({ profileId }: { profileId: string }) {
                 onClick={() => toggle(d)}
                 aria-pressed={on}
                 className={`aspect-square text-sm transition-colors ${
-                  past ? 'text-ivory/20' : on ? 'bg-red-400/25 text-red-200 line-through' : 'border border-white/10 hover:border-gold'
+                  past ? 'text-ivory/20' : on ? 'bg-red-400/25 text-red-200 line-through' : 'border border-ivory/10 hover:border-gold'
                 } ${d === today ? 'ring-1 ring-gold' : ''}`}
               >
                 {Number(d.slice(8))}
@@ -95,7 +95,7 @@ export default function Availability({ profileId }: { profileId: string }) {
         </div>
         <p className="mt-3 flex items-center gap-2 text-xs text-ivory/80">
           <span className="inline-block h-3 w-3 bg-red-400/25" /> {t({ en: 'Busy', sw: 'Nina shughuli' })}
-          <span className="ml-3 inline-block h-3 w-3 border border-white/20" /> {t({ en: 'Available', sw: 'Nipo' })}
+          <span className="ml-3 inline-block h-3 w-3 border border-ivory/20" /> {t({ en: 'Available', sw: 'Nipo' })}
         </p>
         {error && <p className="mt-2 text-sm text-red-300">{error}</p>}
       </div>

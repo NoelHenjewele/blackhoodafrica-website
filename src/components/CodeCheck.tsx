@@ -45,7 +45,7 @@ export default function CodeCheck() {
           required
           placeholder="BHA-T-0001"
           aria-label={t({ en: 'Talent code', sw: 'Namba ya kipaji' })}
-          className="min-w-0 flex-1 border border-white/15 bg-ink-soft px-4 py-3 font-mono text-sm uppercase tracking-wider text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none"
+          className="min-w-0 flex-1 border border-ivory/15 bg-ink-soft px-4 py-3 font-mono text-sm uppercase tracking-wider text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none"
         />
         <button
           type="submit"

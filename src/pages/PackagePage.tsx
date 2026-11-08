@@ -44,7 +44,7 @@ export default function PackagePage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-7xl px-5 py-14 lg:px-10">
           <div className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
             {models.map((p) => (
@@ -55,7 +55,7 @@ export default function PackagePage() {
             <p className="text-ivory/80">{t({ en: 'These models are no longer listed.', sw: 'Wanamitindo hawa hawapo tena.' })}</p>
           )}
 
-          <div className="mt-14 flex flex-col items-start gap-4 border-t border-white/10 pt-10 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-14 flex flex-col items-start gap-4 border-t border-ivory/10 pt-10 sm:flex-row sm:items-center sm:justify-between">
             <p className="font-display text-3xl">{t({ en: 'Like this selection?', sw: 'Umependa uchaguzi huu?' })}</p>
             <Link
               to={`/clients?model=${encodeURIComponent(`${pkg.title}: ${names}`)}#brief`}

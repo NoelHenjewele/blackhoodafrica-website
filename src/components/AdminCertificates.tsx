@@ -4,7 +4,7 @@ import { Download, Loader2, Plus, Trash2 } from 'lucide-react'
 // Team-only: issue academy certificates. Each gets a BHA-C-#### code that anyone can check on /verify.
 type Cert = { id: string; code: string; name: string; course: string; issued_on: string }
 
-const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none [color-scheme:dark]'
+const field = 'w-full border border-ivory/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none [color-scheme:dark]'
 const DEFAULT_COURSE = 'Professional Modelling Course'
 
 // The CEO's signature is only given to signed-in team members, so it's fetched with the login token.
@@ -72,7 +72,7 @@ export default function AdminCertificates({ token }: { token: string }) {
 
   return (
     <div className="mt-8">
-      <form onSubmit={onCreate} className="grid gap-3 border border-white/10 bg-ink-soft p-6 sm:grid-cols-2">
+      <form onSubmit={onCreate} className="grid gap-3 border border-ivory/10 bg-ink-soft p-6 sm:grid-cols-2">
         <h2 className="font-display text-3xl sm:col-span-2">Issue a certificate</h2>
         <input name="name" required placeholder="Graduate's full name, as it should print" className={`${field} sm:col-span-2`} />
         <input name="course" required defaultValue={DEFAULT_COURSE} placeholder="Course" className={field} />
@@ -89,7 +89,7 @@ export default function AdminCertificates({ token }: { token: string }) {
       {certs === null && <Loader2 className="mt-8 animate-spin text-gold" />}
       {certs?.length === 0 && !error && <p className="mt-8 text-ivory/80">No certificates yet.</p>}
 
-      <div className="mt-8 divide-y divide-white/10 border-y border-white/10">
+      <div className="mt-8 divide-y divide-ivory/10 border-y border-ivory/10">
         {certs?.map((c) => (
           <div key={c.id} className="flex flex-wrap items-center gap-4 py-4">
             <span className="font-mono text-sm text-gold">{c.code}</span>
@@ -97,7 +97,7 @@ export default function AdminCertificates({ token }: { token: string }) {
               <p className="font-medium">{c.name}</p>
               <p className="text-sm text-ivory/80">{c.course} · {new Date(c.issued_on + 'T00:00').toLocaleDateString('en-GB')}</p>
             </div>
-            <button type="button" onClick={() => download(c, token)} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
+            <button type="button" onClick={() => download(c, token)} className="inline-flex items-center gap-2 rounded-full border border-ivory/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
               <Download size={14} /> PDF
             </button>
             <button type="button" disabled={busy} onClick={() => confirm(`Delete certificate ${c.code}? Its code will stop verifying.`) && send({ action: 'delete', id: c.id })}

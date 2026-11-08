@@ -29,7 +29,7 @@ type AdminCasting = {
   interested: Interested[]
 }
 
-const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+const field = 'w-full border border-ivory/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 
 export default function AdminCastings({ token }: { token: string }) {
   const [castings, setCastings] = useState<AdminCasting[] | null>(null)
@@ -90,7 +90,7 @@ export default function AdminCastings({ token }: { token: string }) {
 
   return (
     <div className="mt-8">
-      <form onSubmit={onCreate} className="grid gap-3 border border-white/10 bg-ink-soft p-6 sm:grid-cols-2">
+      <form onSubmit={onCreate} className="grid gap-3 border border-ivory/10 bg-ink-soft p-6 sm:grid-cols-2">
         <h2 className="font-display text-3xl sm:col-span-2">Post a casting</h2>
         <input name="title" required placeholder="Title, e.g. TV ad for a bank" className={`${field} sm:col-span-2`} />
         <input name="type" placeholder="Type, e.g. TV ad / Runway / Photoshoot" className={field} />
@@ -103,7 +103,7 @@ export default function AdminCastings({ token }: { token: string }) {
           className={`${field} sm:col-span-2`}
         />
         <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-ivory/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
             <ImagePlus size={14} /> {poster ? 'Change poster' : 'Add poster (optional)'}
             <input
               type="file"
@@ -138,7 +138,7 @@ export default function AdminCastings({ token }: { token: string }) {
 
       <div className="mt-8 space-y-6">
         {castings?.map((c) => (
-          <article key={c.id} className={`border border-white/10 bg-ink-soft p-6 ${c.status === 'closed' ? 'opacity-70' : ''}`}>
+          <article key={c.id} className={`border border-ivory/10 bg-ink-soft p-6 ${c.status === 'closed' ? 'opacity-70' : ''}`}>
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 {c.type && <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">{c.type}</p>}
@@ -147,14 +147,14 @@ export default function AdminCastings({ token }: { token: string }) {
               </div>
               <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] ${
-                  c.status === 'open' ? 'bg-green-400/20 text-green-300' : 'bg-white/10 text-ivory/85'
+                  c.status === 'open' ? 'bg-green-400/20 text-green-300' : 'bg-ivory/10 text-ivory/85'
                 }`}
               >
                 {c.status}
               </span>
             </div>
             {c.details && <p className="mt-3 whitespace-pre-line text-sm text-ivory/90">{c.details}</p>}
-            {c.photo && <img src={c.photo} alt="" className="mt-3 h-40 w-auto border border-white/10" />}
+            {c.photo && <img src={c.photo} alt="" className="mt-3 h-40 w-auto border border-ivory/10" />}
 
             <h4 className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-ivory/80">
               Interested models ({c.interested.length})
@@ -190,12 +190,12 @@ export default function AdminCastings({ token }: { token: string }) {
               </div>
             )}
 
-            <div className="mt-6 flex flex-wrap gap-3 border-t border-white/10 pt-5">
+            <div className="mt-6 flex flex-wrap gap-3 border-t border-ivory/10 pt-5">
               <button
                 type="button"
                 disabled={busy}
                 onClick={() => send({ action: c.status === 'open' ? 'close' : 'open', id: c.id })}
-                className="rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold disabled:opacity-50"
+                className="rounded-full border border-ivory/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold disabled:opacity-50"
               >
                 {c.status === 'open' ? 'Close casting' : 'Reopen'}
               </button>

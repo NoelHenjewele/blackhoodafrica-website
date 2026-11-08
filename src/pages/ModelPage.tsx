@@ -73,7 +73,7 @@ export default function ModelPage() {
             )}
 
             {stats.length > 0 && !person.minor && (
-              <dl className="mt-8 grid grid-cols-3 gap-px border border-white/10 bg-white/10">
+              <dl className="mt-8 grid grid-cols-3 gap-px border border-ivory/10 bg-ivory/10">
                 {stats.map(([k, v]) => (
                   <div key={k} className="bg-ink p-4">
                     <dt className="text-[11px] uppercase tracking-[0.2em] text-gold">{t(statLabels[k])}</dt>
@@ -100,7 +100,7 @@ export default function ModelPage() {
               </p>
             )}
 
-            <div className="mt-10 border-t border-white/10 pt-8">
+            <div className="mt-10 border-t border-ivory/10 pt-8">
               <div className="flex flex-wrap gap-3">
               <Link
                 to={`/clients?model=${encodeURIComponent(person.name)}#brief`}
@@ -118,7 +118,7 @@ export default function ModelPage() {
                   if (navigator.share) navigator.share({ title: text, url }).catch(() => {})
                   else window.open(`https://wa.me/?text=${encodeURIComponent(`${text}\n${url}`)}`, '_blank', 'noopener')
                 }}
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ivory hover:border-gold hover:text-gold"
+                className="inline-flex items-center gap-2 rounded-full border border-ivory/25 px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-ivory hover:border-gold hover:text-gold"
               >
                 <Share2 size={18} /> {t({ en: 'Share', sw: 'Shiriki' })}
               </button>

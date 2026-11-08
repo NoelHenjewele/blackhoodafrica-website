@@ -110,12 +110,12 @@ export default function FaqPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-4xl space-y-14 px-5 py-16 lg:py-24">
           {groups.map((g) => (
             <div key={g.title.en}>
               <h2 className="font-display text-3xl text-gold">{t(g.title)}</h2>
-              <div className="mt-4 divide-y divide-white/10 border-y border-white/10">
+              <div className="mt-4 divide-y divide-ivory/10 border-y border-ivory/10">
                 {g.items.map((f) => (
                   <details key={f.q.en} className="group py-5">
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-xl">
@@ -129,7 +129,7 @@ export default function FaqPage() {
             </div>
           ))}
 
-          <div className="flex flex-col items-start justify-between gap-6 border border-white/10 bg-ink-soft p-8 sm:flex-row sm:items-center">
+          <div className="flex flex-col items-start justify-between gap-6 border border-ivory/10 bg-ink-soft p-8 sm:flex-row sm:items-center">
             <p className="font-display text-2xl">{t({ en: 'Still have a question?', sw: 'Bado una swali?' })}</p>
             <a
               href={whatsappLink('Hello Blackhood Africa, I have a question:')}

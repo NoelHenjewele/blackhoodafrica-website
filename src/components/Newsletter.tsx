@@ -39,7 +39,7 @@ export default function Newsletter() {
   }
 
   return (
-    <div className="border-b border-white/10 pb-12">
+    <div className="border-b border-ivory/10 pb-12">
       <div className="grid gap-6 lg:grid-cols-[1fr_1.2fr] lg:items-center">
         <div>
           <p className="font-display text-3xl">{t({ en: 'Be first to hear.', sw: 'Kuwa wa kwanza kujua.' })}</p>
@@ -64,13 +64,13 @@ export default function Newsletter() {
               autoComplete="email"
               placeholder={t({ en: 'Your email', sw: 'Barua pepe yako' })}
               aria-label={t({ en: 'Your email', sw: 'Barua pepe yako' })}
-              className="min-w-0 flex-1 border border-white/15 bg-ink-soft px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none"
+              className="min-w-0 flex-1 border border-ivory/15 bg-ink-soft px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none"
             />
             <select
               name="interest"
               defaultValue="Everything"
               aria-label={t({ en: 'Interested in', sw: 'Unavutiwa na' })}
-              className="border border-white/15 bg-ink-soft px-4 py-3 text-sm text-ivory focus:border-gold focus:outline-none"
+              className="border border-ivory/15 bg-ink-soft px-4 py-3 text-sm text-ivory focus:border-gold focus:outline-none"
             >
               {interests.map((i) => (
                 <option key={i.value} value={i.value}>{t(i.label)}</option>

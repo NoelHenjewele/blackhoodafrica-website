@@ -42,7 +42,7 @@ const statusStyle: Record<AdminProfile['status'], string> = {
   pending: 'bg-gold text-ink',
   approved: 'bg-green-400/20 text-green-300',
   hidden: 'bg-red-400/20 text-red-300',
-  draft: 'bg-white/10 text-ivory/85',
+  draft: 'bg-ivory/10 text-ivory/85',
 }
 
 export default function AdminPage() {
@@ -109,7 +109,7 @@ export default function AdminPage() {
           <p className="mt-8 text-red-300">Couldn't load profiles. Refresh to try again.</p>
         ) : (
           <>
-            <div className="mt-6 flex gap-6 overflow-x-auto whitespace-nowrap border-b border-white/10">
+            <div className="mt-6 flex gap-6 overflow-x-auto whitespace-nowrap border-b border-ivory/10">
               {(['profiles', 'bookings', 'packages', 'castings', 'news', 'reviews', 'certificates'] as const).map((k) => (
                 <button
                   key={k}
@@ -145,7 +145,7 @@ export default function AdminPage() {
                   type="button"
                   onClick={() => setFilter(f)}
                   className={`rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] ${
-                    filter === f ? 'border-gold bg-gold text-ink' : 'border-white/20 text-ivory/85 hover:border-gold'
+                    filter === f ? 'border-gold bg-gold text-ink' : 'border-ivory/20 text-ivory/85 hover:border-gold'
                   }`}
                 >
                   {f} ({count(f)})
@@ -153,7 +153,7 @@ export default function AdminPage() {
               ))}
               <label className="ml-auto flex items-center gap-2 text-sm text-ivory/85">
                 Free on
-                <input type="date" value={freeOn} onChange={(e) => setFreeOn(e.target.value)} className="border border-white/15 bg-ink px-3 py-1.5 text-ivory [color-scheme:dark]" />
+                <input type="date" value={freeOn} onChange={(e) => setFreeOn(e.target.value)} className="border border-ivory/15 bg-ink px-3 py-1.5 text-ivory [color-scheme:dark]" />
                 {freeOn && <button type="button" onClick={() => setFreeOn('')} className="text-gold underline">clear</button>}
               </label>
             </div>
@@ -162,7 +162,7 @@ export default function AdminPage() {
 
             <div className="mt-8 space-y-6">
               {shown.map((p) => (
-                <article key={p.id} className="border border-white/10 bg-ink-soft p-6">
+                <article key={p.id} className="border border-ivory/10 bg-ink-soft p-6">
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <h2 className="font-display text-3xl">{p.full_name}</h2>
@@ -214,7 +214,7 @@ export default function AdminPage() {
                       : 'no busy days marked'}
                   </p>
 
-                  <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
+                  <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-ivory/10 pt-5">
                     {p.status !== 'approved' && (
                       <button type="button" disabled={busy === p.id} onClick={() => act(p.id, { status: 'approved' })}
                         className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] text-ink hover:bg-ivory disabled:opacity-50">
@@ -229,7 +229,7 @@ export default function AdminPage() {
                     )}
                     {p.status === 'hidden' && (
                       <button type="button" disabled={busy === p.id} onClick={() => act(p.id, { status: 'pending' })}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold disabled:opacity-50">
+                        className="inline-flex items-center gap-2 rounded-full border border-ivory/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold disabled:opacity-50">
                         <RotateCcw size={14} /> Back to review
                       </button>
                     )}

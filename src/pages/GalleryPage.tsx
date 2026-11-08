@@ -27,13 +27,13 @@ export default function GalleryPage() {
       </section>
 
       {videos.length > 0 && (
-        <section className="border-t border-white/10">
+        <section className="border-t border-ivory/10">
           <div className="mx-auto max-w-7xl px-5 py-16 lg:px-10">
             <h2 className="font-display text-4xl font-medium">{t({ en: 'Training videos', sw: 'Video za mafunzo' })}</h2>
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {videos.map((v) => v.tiktokId ? (
                 <figure key={v.tiktokId}>
-                  <div className="relative mx-auto aspect-[9/16] max-w-[340px] overflow-hidden border border-white/10 bg-ink-soft">
+                  <div className="relative mx-auto aspect-[9/16] max-w-[340px] overflow-hidden border border-ivory/10 bg-ink-soft">
                     <iframe
                       src={`https://www.tiktok.com/player/v1/${v.tiktokId}?rel=0&description=0&music_info=0`}
                       title={t(v.title)}
@@ -50,7 +50,7 @@ export default function GalleryPage() {
                 </figure>
               ) : v.youtubeId && (
                 <figure key={v.youtubeId}>
-                  <div className="relative aspect-video overflow-hidden border border-white/10 bg-ink-soft">
+                  <div className="relative aspect-video overflow-hidden border border-ivory/10 bg-ink-soft">
                     {playing === v.youtubeId ? (
                       <iframe
                         src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}?autoplay=1&rel=0`}
@@ -79,12 +79,12 @@ export default function GalleryPage() {
         </section>
       )}
 
-      <section className="border-t border-white/10 bg-ink-soft">
+      <section className="border-t border-ivory/10 bg-ink-soft">
         <div className="mx-auto max-w-7xl px-5 py-16 lg:px-10">
           <h2 className="font-display text-4xl font-medium">{t({ en: 'Photos', sw: 'Picha' })}</h2>
           <div className="mt-8 columns-2 gap-3 md:columns-3 lg:columns-4">
             {photos.map((p, i) => (
-              <button key={p.src} type="button" onClick={() => setPhoto(i)} className="mb-3 block w-full overflow-hidden border border-white/10">
+              <button key={p.src} type="button" onClick={() => setPhoto(i)} className="mb-3 block w-full overflow-hidden border border-ivory/10">
                 <img src={p.src} alt={p.caption ? t(p.caption) : ''} loading="lazy" className="w-full transition-transform duration-500 hover:scale-105" />
               </button>
             ))}
@@ -92,7 +92,7 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 py-16 sm:flex-row sm:items-center lg:px-10">
           <p className="font-display text-3xl">{t({ en: 'Want to train with us next intake?', sw: 'Ungependa kufunzwa nasi awamu ijayo?' })}</p>
           <Link to="/academy" className="inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-ink hover:bg-ivory">

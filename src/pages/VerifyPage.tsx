@@ -79,7 +79,7 @@ export default function VerifyPage() {
       </section>
 
       {/* Official channels */}
-      <section className="border-t border-white/10 bg-ink-soft">
+      <section className="border-t border-ivory/10 bg-ink-soft">
         <div className="mx-auto max-w-7xl px-5 py-16 lg:px-10 lg:py-20">
           <h2 className="font-display text-4xl font-medium sm:text-5xl">
             {t({ en: 'Our only official contacts', sw: 'Mawasiliano yetu rasmi pekee' })}
@@ -90,7 +90,7 @@ export default function VerifyPage() {
               sw: 'Blackhood Africa huwasiliana na waombaji na wateja kupitia njia hizi pekee.',
             })}
           </p>
-          <div className="mt-10 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-10 grid gap-px border border-ivory/10 bg-ivory/10 sm:grid-cols-2 lg:grid-cols-5">
             {officialChannels.map(({ icon: Icon, label, value, href }) => {
               const internal = href.startsWith('/')
               const cls = 'group block bg-ink p-6 transition-colors hover:bg-ink-soft'
@@ -115,7 +115,7 @@ export default function VerifyPage() {
       </section>
 
       {/* Fees */}
-      <section className="border-t border-white/10 bg-ivory text-ink">
+      <section className="border-t border-ivory/10 bg-ivory text-ink">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-2 lg:px-10 lg:py-20">
           <div>
             <h2 className="font-display text-4xl font-medium sm:text-5xl">{t({ en: 'What we charge', sw: 'Tunachotoza' })}</h2>
@@ -127,11 +127,11 @@ export default function VerifyPage() {
             </p>
           </div>
           <div className="space-y-4">
-            <div className="border border-ink/10 bg-white p-6">
+            <div className="border border-ink/10 bg-ivory p-6">
               <p className="font-display text-3xl text-gold-deep">{t({ en: 'Free', sw: 'Bure' })}</p>
               <p className="mt-1 font-semibold">{t({ en: 'Scouting, castings and joining the agency', sw: 'Usaili, kuhudhuria casting na kujiunga na wakala' })}</p>
             </div>
-            <div className="border border-ink/10 bg-white p-6">
+            <div className="border border-ink/10 bg-ivory p-6">
               <p className="font-display text-3xl text-gold-deep lining-nums">{site.academyRegistrationFee}</p>
               <p className="mt-1 font-semibold">{t({ en: 'Academy application fee (optional)', sw: 'Ada ya maombi ya chuo (si lazima)' })}</p>
               <p className="mt-2 text-sm text-ink/70">
@@ -147,7 +147,7 @@ export default function VerifyPage() {
       </section>
 
       {/* Red flags */}
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-7xl px-5 py-16 lg:px-10 lg:py-20">
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-gold">
             <AlertTriangle size={14} /> {t({ en: 'Red flags', sw: 'Ishara za hatari' })}
@@ -157,7 +157,7 @@ export default function VerifyPage() {
           </h2>
           <ul className="mt-10 grid gap-4 md:grid-cols-2">
             {redFlags.map((r) => (
-              <li key={r.en} className="flex gap-4 border border-white/10 bg-ink-soft p-6 text-ivory/90">
+              <li key={r.en} className="flex gap-4 border border-ivory/10 bg-ink-soft p-6 text-ivory/90">
                 <AlertTriangle className="mt-0.5 shrink-0 text-red-300" size={18} />
                 {t(r)}
               </li>
@@ -168,14 +168,14 @@ export default function VerifyPage() {
 
       {/* Staff (hidden until real names are added) */}
       {staff.length > 0 && (
-        <section className="border-t border-white/10 bg-ink-soft">
+        <section className="border-t border-ivory/10 bg-ink-soft">
           <div className="mx-auto max-w-7xl px-5 py-16 lg:px-10 lg:py-20">
             <h2 className="font-display text-4xl font-medium sm:text-5xl">
               {t({ en: 'Who may contact you', sw: 'Nani anaweza kuwasiliana nawe' })}
             </h2>
             <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {staff.map((s) => (
-                <li key={s.name} className="border border-white/10 bg-ink p-6">
+                <li key={s.name} className="border border-ivory/10 bg-ink p-6">
                   <p className="font-display text-2xl">{s.name}</p>
                   <p className="text-sm text-gold">{t(s.role)}</p>
                 </li>
@@ -186,7 +186,7 @@ export default function VerifyPage() {
       )}
 
       {/* Report */}
-      <section className="border-t border-white/10 bg-gold text-ink">
+      <section className="border-t border-ivory/10 bg-gold text-ink">
         <div className="mx-auto grid max-w-7xl gap-8 px-5 py-14 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:px-10">
           <div>
             <h2 className="font-display text-4xl font-medium">{t({ en: 'Seen something suspicious?', sw: 'Umeona jambo la kutiliwa shaka?' })}</h2>

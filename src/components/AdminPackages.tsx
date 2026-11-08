@@ -5,7 +5,7 @@ import { useTalent } from '../data/talent'
 // Team-only: build a private link with a hand-picked set of models to send to a brand.
 type Pkg = { id: string; token: string; title: string; client: string | null; note: string | null; slugs: string[]; views: number; created_at: string }
 
-const field = 'w-full border border-white/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+const field = 'w-full border border-ivory/15 bg-ink px-4 py-3 text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 const linkFor = (token: string) => `${window.location.origin}/p/${token}`
 
 export default function AdminPackages({ token }: { token: string }) {
@@ -69,7 +69,7 @@ export default function AdminPackages({ token }: { token: string }) {
 
   return (
     <div className="mt-8">
-      <form onSubmit={onCreate} className="grid gap-3 border border-white/10 bg-ink-soft p-6 sm:grid-cols-2">
+      <form onSubmit={onCreate} className="grid gap-3 border border-ivory/10 bg-ink-soft p-6 sm:grid-cols-2">
         <h2 className="font-display text-3xl sm:col-span-2">New client package</h2>
         <input name="title" required placeholder="Title the brand sees, e.g. TV ad: women 20–28" className={`${field} sm:col-span-2`} />
         <input name="client" placeholder="Client (team only), e.g. CRDB marketing" className={field} />
@@ -104,7 +104,7 @@ export default function AdminPackages({ token }: { token: string }) {
 
       <div className="mt-8 space-y-4">
         {packages?.map((p) => (
-          <article key={p.id} className="border border-white/10 bg-ink-soft p-5">
+          <article key={p.id} className="border border-ivory/10 bg-ink-soft p-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h3 className="font-display text-2xl">{p.title}</h3>
@@ -116,7 +116,7 @@ export default function AdminPackages({ token }: { token: string }) {
             </div>
             <p className="mt-3 break-all font-mono text-sm text-gold">{linkFor(p.token)}</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              <button type="button" onClick={() => copy(p)} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
+              <button type="button" onClick={() => copy(p)} className="inline-flex items-center gap-2 rounded-full border border-ivory/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
                 {copied === p.id ? <Check size={14} /> : <Copy size={14} />} {copied === p.id ? 'Copied' : 'Copy link'}
               </button>
               <a

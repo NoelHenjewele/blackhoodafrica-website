@@ -15,7 +15,7 @@ export default function TalentPreview() {
   const placeholders = Math.max(0, SLOTS - named.length)
 
   return (
-    <section className="border-t border-white/10">
+    <section className="border-t border-ivory/10">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-2xl">
@@ -43,7 +43,7 @@ export default function TalentPreview() {
               className={`shrink-0 rounded-full border px-5 py-2 text-xs font-semibold uppercase tracking-[0.15em] transition-colors ${
                 active === b
                   ? 'border-gold bg-gold text-ink'
-                  : 'border-white/20 text-ivory/85 hover:border-gold hover:text-gold'
+                  : 'border-ivory/20 text-ivory/85 hover:border-gold hover:text-gold'
               }`}
             >
               {t(boardLabels[b])}

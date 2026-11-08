@@ -24,14 +24,14 @@ export default function StoriesPage() {
       </section>
 
       {stories.map((s, i) => (
-        <section key={s.slug} className={`border-t border-white/10 ${i % 2 ? 'bg-ink-soft' : ''}`}>
+        <section key={s.slug} className={`border-t border-ivory/10 ${i % 2 ? 'bg-ink-soft' : ''}`}>
           <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 lg:grid-cols-2 lg:items-center lg:px-10 lg:py-24">
             <div className={`grid grid-cols-[2fr_1fr] gap-3 ${i % 2 ? 'lg:order-2' : ''}`}>
-              <div className="row-span-2 aspect-[4/5] overflow-hidden border border-white/10">
+              <div className="row-span-2 aspect-[4/5] overflow-hidden border border-ivory/10">
                 <img src={s.photo} alt={s.name} loading="lazy" className="h-full w-full object-cover object-[40%_center]" />
               </div>
               {s.gallery?.slice(0, 2).map((g) => (
-                <div key={g} className="overflow-hidden border border-white/10">
+                <div key={g} className="overflow-hidden border border-ivory/10">
                   <img src={g} alt="" loading="lazy" className="h-full w-full object-cover object-top" />
                 </div>
               ))}
@@ -51,11 +51,11 @@ export default function StoriesPage() {
         </section>
       ))}
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-7xl px-5 py-16 lg:px-10">
           <div className="grid gap-4 md:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="grid min-h-48 place-items-center border border-dashed border-white/15 p-6 text-center">
+              <div key={i} className="grid min-h-48 place-items-center border border-dashed border-ivory/15 p-6 text-center">
                 <div>
                   <Plus className="mx-auto text-stone/60" size={26} strokeWidth={1.2} />
                   <p className="mt-2 text-xs uppercase tracking-[0.2em] text-stone">{t({ en: 'Next story', sw: 'Hadithi ijayo' })}</p>
@@ -66,7 +66,7 @@ export default function StoriesPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10 bg-gold text-ink">
+      <section className="border-t border-ivory/10 bg-gold text-ink">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 py-14 sm:flex-row sm:items-center lg:px-10">
           <p className="font-display text-3xl sm:text-4xl">{t({ en: 'Your story could be next.', sw: 'Hadithi yako inaweza kuwa inayofuata.' })}</p>
           <Link

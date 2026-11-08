@@ -23,7 +23,7 @@ function Video({ url, title }: { url: string; title: string }) {
     )
   }
   return (
-    <div className={`relative mb-6 overflow-hidden border border-white/10 bg-ink-soft ${embed.tall ? 'mx-auto aspect-[9/16] max-w-[340px]' : 'aspect-video'}`}>
+    <div className={`relative mb-6 overflow-hidden border border-ivory/10 bg-ink-soft ${embed.tall ? 'mx-auto aspect-[9/16] max-w-[340px]' : 'aspect-video'}`}>
       <iframe src={embed.src} title={title} loading="lazy" allow="encrypted-media; picture-in-picture; fullscreen" allowFullScreen className="absolute inset-0 h-full w-full" />
     </div>
   )
@@ -61,7 +61,7 @@ export default function NewsPage() {
         </div>
       </section>
 
-      <section className="border-t border-white/10">
+      <section className="border-t border-ivory/10">
         <div className="mx-auto max-w-4xl px-5 py-14 lg:px-10">
           {posts === null && <Loader2 className="animate-spin text-gold" />}
           {posts?.length === 0 && (
@@ -72,7 +72,7 @@ export default function NewsPage() {
               <article key={p.id}>
                 {p.video_url && <Video url={p.video_url} title={p.title} />}
                 {p.photo && (
-                  <div className="mb-6 overflow-hidden border border-white/10">
+                  <div className="mb-6 overflow-hidden border border-ivory/10">
                     <img src={p.photo} alt="" loading="lazy" className="max-h-[560px] w-full object-cover" />
                   </div>
                 )}

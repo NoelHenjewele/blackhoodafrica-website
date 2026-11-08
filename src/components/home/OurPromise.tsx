@@ -41,7 +41,7 @@ export default function OurPromise() {
   const { t } = useLang()
 
   return (
-    <section className="border-t border-white/10">
+    <section className="border-t border-ivory/10">
       <div className="mx-auto max-w-7xl px-5 py-20 lg:px-10 lg:py-28">
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="lg:sticky lg:top-28 lg:self-start">
@@ -64,7 +64,7 @@ export default function OurPromise() {
             </Link>
           </div>
 
-          <div className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2">
+          <div className="grid gap-px border border-ivory/10 bg-ivory/10 sm:grid-cols-2">
             {promises.map(({ icon: Icon, title, text }) => (
               <article key={title.en} className="bg-ink p-8 lg:p-10">
                 <Icon className="text-gold" size={28} strokeWidth={1.4} />

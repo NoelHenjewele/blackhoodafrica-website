@@ -25,7 +25,7 @@ export function ShortlistButton({ item, large = false }: { item: ShortlistItem; 
         onClick={onClick}
         aria-pressed={on}
         className={`inline-flex items-center gap-2 rounded-full border px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] transition-colors ${
-          on ? 'border-gold text-gold' : 'border-white/25 text-ivory hover:border-gold hover:text-gold'
+          on ? 'border-gold text-gold' : 'border-ivory/25 text-ivory hover:border-gold hover:text-gold'
         }`}
       >
         <Heart size={18} fill={on ? 'currentColor' : 'none'} /> {label}

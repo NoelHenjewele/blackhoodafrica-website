@@ -47,12 +47,13 @@ export default function Footer() {
   const { t } = useLang()
 
   return (
-    <footer className="border-t border-white/10 bg-ink">
+    <footer className="border-t border-ivory/10 bg-ink">
       <div className="mx-auto max-w-7xl px-5 py-16 lg:px-10">
         <Newsletter />
         <div className="mt-12 grid gap-12 lg:grid-cols-[1.2fr_2fr]">
           <div>
-            <img src="/brand/logo-white.webp" width={420} height={102} alt="Blackhood Africa" className="h-12 w-auto" />
+            <img src="/brand/logo-white.webp" width={420} height={102} alt="Blackhood Africa" className="only-dark h-12 w-auto" />
+            <img src="/brand/logo-black.webp" width={420} height={102} alt="Blackhood Africa" className="only-light h-12 w-auto" />
             <p className="mt-6 max-w-xs font-display text-2xl italic text-gold">{t(site.promise)}</p>
             <p className="mt-4 flex items-center gap-2 text-sm text-ivory/80">
               <MapPin size={16} /> {site.city}, Tanzania
@@ -101,7 +102,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col justify-between gap-4 border-t border-white/10 pt-8 text-xs text-ivory/75 sm:flex-row">
+        <div className="mt-16 flex flex-col justify-between gap-4 border-t border-ivory/10 pt-8 text-xs text-ivory/75 sm:flex-row">
           <p>
             © {new Date().getFullYear()} Blackhood Africa. {t({ en: 'All rights reserved.', sw: 'Haki zote zimehifadhiwa.' })}
           </p>

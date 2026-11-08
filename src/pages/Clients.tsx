@@ -25,7 +25,7 @@ const usageOptions = [
 ]
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
+  'w-full border border-ivory/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/50 focus:border-gold focus:outline-none'
 const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 
 export default function Clients() {
@@ -113,7 +113,7 @@ export default function Clients() {
 
       <ForBrands standalone />
 
-      <section id="brief" className="border-t border-white/10">
+      <section id="brief" className="border-t border-ivory/10">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:px-10 lg:py-28">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gold">{t({ en: 'Send a brief', sw: 'Tuma maelezo' })}</p>
@@ -169,7 +169,7 @@ export default function Clients() {
               </div>
             </div>
           ) : (
-          <form onSubmit={onSubmit} className="grid gap-5 border border-white/10 bg-ink-soft p-6 sm:grid-cols-2 sm:p-10">
+          <form onSubmit={onSubmit} className="grid gap-5 border border-ivory/10 bg-ink-soft p-6 sm:grid-cols-2 sm:p-10">
             <div>
               <label className={label} htmlFor="name">{t({ en: 'Your name *', sw: 'Jina lako *' })}</label>
               <input id="name" name="name" required autoComplete="name" className={field} />

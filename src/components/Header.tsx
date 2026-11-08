@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { Menu, ShieldCheck, UserRound, X } from 'lucide-react'
+import { Menu, Moon, ShieldCheck, Sun, UserRound, X } from 'lucide-react'
 import { useAuthStatus } from '../auth'
 import { useLang } from '../i18n'
 
@@ -12,10 +12,49 @@ const nav = [
   { to: '/about', label: { en: 'About', sw: 'Kuhusu' } },
 ]
 
+// Light / dark: follows the phone until the visitor taps this; the choice is remembered (see index.html).
+function ThemeToggle() {
+  const current = () =>
+    (document.documentElement.dataset.theme as 'light' | 'dark' | undefined) ??
+    (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+  const [theme, setTheme] = useState(current)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: light)')
+    const sync = () => setTheme(current())
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  function toggle() {
+    const next = theme === 'light' ? 'dark' : 'light'
+    document.documentElement.dataset.theme = next
+    try {
+      localStorage.setItem('bha-theme', next)
+    } catch {
+      // private mode: works for this visit only
+    }
+    setTheme(next)
+  }
+
+  const label = theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      title={label}
+      aria-label={label}
+      className="grid h-9 w-9 place-items-center rounded-full border border-ivory/20 text-ivory/85 transition-colors hover:border-gold hover:text-gold"
+    >
+      {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+    </button>
+  )
+}
+
 function LangToggle() {
   const { lang, setLang } = useLang()
   return (
-    <div className="flex rounded-full border border-white/20 p-0.5 text-[11px] font-semibold" role="group" aria-label="Language">
+    <div className="flex rounded-full border border-ivory/20 p-0.5 text-[11px] font-semibold" role="group" aria-label="Language">
       {(['en', 'sw'] as const).map((l) => (
         <button
           key={l}
@@ -52,12 +91,13 @@ export default function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled || open ? 'bg-ink/95 backdrop-blur border-b border-white/10' : 'bg-transparent'
+        scrolled || open ? 'bg-ink/95 backdrop-blur border-b border-ivory/10' : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-10">
         <Link to="/" aria-label="Blackhood Africa home" onClick={() => setOpen(false)}>
-          <img src="/brand/logo-white.webp" width={420} height={102} alt="Blackhood Africa" className="h-9 w-auto lg:h-10" />
+          <img src="/brand/logo-white.webp" width={420} height={102} alt="Blackhood Africa" className="only-dark h-9 w-auto lg:h-10" />
+          <img src="/brand/logo-black.webp" width={420} height={102} alt="Blackhood Africa" className="only-light h-9 w-auto lg:h-10" />
         </Link>
 
         <nav className="hidden items-center gap-7 xl:flex">
@@ -78,6 +118,7 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <LangToggle />
+          <ThemeToggle />
           {isAdmin && (
             <Link
               to="/admin"
@@ -92,7 +133,7 @@ export default function Header() {
             to="/account"
             title={accountLabel}
             aria-label={accountLabel}
-            className="relative grid h-9 w-9 place-items-center rounded-full border border-white/20 text-ivory/90 transition-colors hover:border-gold hover:text-gold"
+            className="relative grid h-9 w-9 place-items-center rounded-full border border-ivory/20 text-ivory/90 transition-colors hover:border-gold hover:text-gold"
           >
             <UserRound size={17} />
             {loggedIn && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-ink bg-gold" />}
@@ -116,13 +157,13 @@ export default function Header() {
       </div>
 
       {open && (
-        <nav className="border-t border-white/10 bg-ink px-5 pb-8 pt-4 xl:hidden">
+        <nav className="border-t border-ivory/10 bg-ink px-5 pb-8 pt-4 xl:hidden">
           {nav.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               onClick={() => setOpen(false)}
-              className="block border-b border-white/5 py-4 font-display text-2xl text-ivory"
+              className="block border-b border-ivory/5 py-4 font-display text-2xl text-ivory"
             >
               {t(item.label)}
             </NavLink>

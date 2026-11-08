@@ -164,19 +164,19 @@ export default function ChatWidget({ lang: langProp }: { lang?: Lang }) {
         <div
           role="dialog"
           aria-label={t.title}
-          className="flex h-[min(560px,calc(100dvh-6rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-white/10 bg-ink text-white shadow-2xl"
+          className="flex h-[min(560px,calc(100dvh-6rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-ivory/10 bg-ink text-ivory shadow-2xl"
         >
-          <div className="flex items-center justify-between gap-2 border-b border-white/10 bg-ink px-4 py-3">
+          <div className="flex items-center justify-between gap-2 border-b border-ivory/10 bg-ink px-4 py-3">
             <div>
               <p className="font-semibold">{t.title}</p>
-              <p className="text-xs text-white/60">{t.subtitle}</p>
+              <p className="text-xs text-ivory/60">{t.subtitle}</p>
             </div>
             <div className="flex items-center gap-1">
               {!langProp && (
                 <button
                   type="button"
                   onClick={() => setLang(lang === "en" ? "sw" : "en")}
-                  className="rounded-full border border-white/20 px-2 py-1 text-xs hover:bg-white/10"
+                  className="rounded-full border border-ivory/20 px-2 py-1 text-xs hover:bg-ivory/10"
                 >
                   {lang === "en" ? "SW" : "EN"}
                 </button>
@@ -185,7 +185,7 @@ export default function ChatWidget({ lang: langProp }: { lang?: Lang }) {
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label={t.close}
-                className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"
+                className="rounded-full p-2 text-ivory/70 hover:bg-ivory/10 hover:text-ivory"
               >
                 ✕
               </button>
@@ -242,13 +242,13 @@ export default function ChatWidget({ lang: langProp }: { lang?: Lang }) {
             <div ref={endRef} />
           </div>
 
-          <form onSubmit={submit} className="flex gap-2 border-t border-white/10 p-3">
+          <form onSubmit={submit} className="flex gap-2 border-t border-ivory/10 p-3">
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t.placeholder}
               aria-label={t.placeholder}
-              className="min-w-0 flex-1 rounded-full bg-white/10 px-4 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-1 focus:ring-gold"
+              className="min-w-0 flex-1 rounded-full bg-ivory/10 px-4 py-2 text-sm text-ivory placeholder:text-ivory/40 focus:outline-none focus:ring-1 focus:ring-gold"
             />
             <button
               type="submit"
@@ -264,7 +264,7 @@ export default function ChatWidget({ lang: langProp }: { lang?: Lang }) {
         type="button"
         onClick={() => setOpen(!open)}
         aria-label={open ? t.close : t.open}
-        className="flex h-14 items-center gap-2 rounded-full bg-ink px-5 font-semibold text-white shadow-xl ring-1 ring-gold/50 hover:ring-gold"
+        className="flex h-14 items-center gap-2 rounded-full bg-ink px-5 font-semibold text-ivory shadow-xl ring-1 ring-gold/50 hover:ring-gold"
       >
         <span aria-hidden className="text-xl">{open ? "✕" : "💬"}</span>
         {!open && <span className="hidden text-sm sm:inline">{t.open}</span>}
@@ -279,7 +279,7 @@ function Bubble({ from, text }: { from: "bot" | "user"; text: string }) {
       <p
         className={
           "max-w-[85%] whitespace-pre-line rounded-2xl px-3 py-2 " +
-          (from === "user" ? "bg-gold text-black" : "bg-white/10 text-white")
+          (from === "user" ? "bg-gold text-black" : "bg-ivory/10 text-ivory")
         }
       >
         {text}

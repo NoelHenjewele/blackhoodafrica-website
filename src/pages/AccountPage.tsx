@@ -43,7 +43,7 @@ const errors: Record<string, L> = {
 const fallback: L = { en: 'Something went wrong. Please try again.', sw: 'Kuna tatizo. Tafadhali jaribu tena.' }
 
 const field =
-  'w-full border border-white/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
+  'w-full border border-ivory/15 bg-ink px-4 py-3 text-sm text-ivory placeholder:text-ivory/45 focus:border-gold focus:outline-none'
 const label = 'mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85'
 const button =
   'inline-flex items-center justify-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] text-ink hover:bg-ivory disabled:opacity-50'
@@ -168,7 +168,7 @@ export default function AccountPage() {
               {t({ en: 'Blackhood team member?', sw: 'Mwanatimu wa Blackhood?' })}{' '}
               <Link to="/admin" className="text-gold underline">{t({ en: 'Open profile review', sw: 'Fungua ukaguzi wa wasifu' })}</Link>
             </p>
-            <div className="mt-12 flex flex-wrap gap-3 border-t border-white/10 pt-8">
+            <div className="mt-12 flex flex-wrap gap-3 border-t border-ivory/10 pt-8">
               <Link to="/compcard" className={button}>{t({ en: 'Make my comp card', sw: 'Tengeneza comp card yangu' })}</Link>
               <button type="button" onClick={signOut} className="inline-flex items-center gap-2 rounded-full border border-ivory/30 px-6 py-3.5 text-sm font-semibold uppercase tracking-[0.12em] hover:border-gold hover:text-gold">
                 <LogOut size={16} /> {t({ en: 'Log out', sw: 'Toka' })}
