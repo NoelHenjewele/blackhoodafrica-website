@@ -221,7 +221,7 @@ export default function CompCardPage() {
                     {t({ en: 'Main photo *', sw: 'Picha kuu *' })}
                   </span>
                 )}
-                <input type="file" accept="image/*" className="sr-only" onChange={(e) => addPhotos(e.target.files, true)} />
+                <input type="file" accept="image/*,.heic,.heif" className="sr-only" onChange={(e) => addPhotos(e.target.files, true)} />
               </label>
               {extras.map((src, i) => (
                 <div key={i} className="relative aspect-[3/4] overflow-hidden">
@@ -242,7 +242,7 @@ export default function CompCardPage() {
                     <Camera className="mx-auto mb-1 text-gold" size={20} />
                     {t({ en: 'Add photos', sw: 'Ongeza picha' })} ({extras.length}/4)
                   </span>
-                  <input type="file" accept="image/*" multiple className="sr-only" onChange={(e) => addPhotos(e.target.files, false)} />
+                  <input type="file" accept="image/*,.heic,.heif" multiple className="sr-only" onChange={(e) => addPhotos(e.target.files, false)} />
                 </label>
               )}
             </div>

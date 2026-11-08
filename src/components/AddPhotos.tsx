@@ -41,7 +41,7 @@ export default function AddPhotos({ token, profileId, onDone }: { token: string;
     <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
       <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-gold/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-gold hover:bg-gold hover:text-ink">
         {busy ? <Loader2 size={14} className="animate-spin" /> : <ImagePlus size={14} />} {busy || 'Add photos'}
-        <input type="file" accept="image/*" multiple className="hidden" disabled={!!busy} onChange={(e) => { upload(e.target.files); e.target.value = '' }} />
+        <input type="file" accept="image/*,.heic,.heif" multiple className="hidden" disabled={!!busy} onChange={(e) => { upload(e.target.files); e.target.value = '' }} />
       </label>
       <label className="flex items-center gap-2 text-ivory/85">
         <input type="checkbox" checked={first} onChange={(e) => setFirst(e.target.checked)} className="h-4 w-4 accent-[#c9a45c]" />

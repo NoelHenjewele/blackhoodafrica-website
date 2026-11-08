@@ -318,7 +318,7 @@ export default function Apply() {
                       )}
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/*,.heic,.heif"
                         className="sr-only"
                         onChange={(e) => pickPhoto(s.key, e.target.files?.[0])}
                       />

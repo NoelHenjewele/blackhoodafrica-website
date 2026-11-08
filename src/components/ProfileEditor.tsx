@@ -215,7 +215,7 @@ export default function ProfileEditor({ profile, onSaved }: { profile: ProfileRo
                   {t({ en: 'Add photos', sw: 'Ongeza picha' })}
                 </span>
               )}
-              <input type="file" accept="image/*" multiple className="sr-only" disabled={uploading} onChange={(e) => upload(e.target.files)} />
+              <input type="file" accept="image/*,.heic,.heif" multiple className="sr-only" disabled={uploading} onChange={(e) => upload(e.target.files)} />
             </label>
           )}
         </div>

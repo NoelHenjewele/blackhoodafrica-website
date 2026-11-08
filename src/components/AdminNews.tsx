@@ -63,7 +63,7 @@ export default function AdminNews({ token }: { token: string }) {
             <ImagePlus size={14} /> {photo ? 'Change photo' : 'Add photo'}
             <input
               type="file"
-              accept="image/*"
+              accept="image/*,.heic,.heif"
               className="hidden"
               onChange={async (e) => {
                 const file = e.target.files?.[0]

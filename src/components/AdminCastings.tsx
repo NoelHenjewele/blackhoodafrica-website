@@ -107,7 +107,7 @@ export default function AdminCastings({ token }: { token: string }) {
             <ImagePlus size={14} /> {poster ? 'Change poster' : 'Add poster (optional)'}
             <input
               type="file"
-              accept="image/*"
+              accept="image/*,.heic,.heif"
               className="hidden"
               onChange={async (e) => {
                 const file = e.target.files?.[0]
