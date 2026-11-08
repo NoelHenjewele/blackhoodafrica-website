@@ -37,6 +37,16 @@ type AdminProfile = {
   consent: { parent_name: string; relationship: string; phone: string; signed_at: string } | null
 }
 
+// What a profile needs before it can go public (Instagram, TikTok and bio are optional).
+function missingFor(p: AdminProfile) {
+  const m: string[] = []
+  if (!p.photos.length) m.push('a photo')
+  if (!p.board) m.push('board')
+  if (!p.city) m.push('city')
+  if (!p.height_cm) m.push('height')
+  return m
+}
+
 const filters = ['pending', 'approved', 'hidden', 'draft', 'all'] as const
 const statusStyle: Record<AdminProfile['status'], string> = {
   pending: 'bg-gold text-ink',
@@ -215,8 +225,11 @@ export default function AdminPage() {
                   </p>
 
                   <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-ivory/10 pt-5">
+                    {p.status !== 'approved' && missingFor(p).length > 0 && (
+                      <span className="text-sm text-gold">Can’t publish yet. Missing: {missingFor(p).join(', ')}.</span>
+                    )}
                     {p.status !== 'approved' && (
-                      <button type="button" disabled={busy === p.id} onClick={() => act(p.id, { status: 'approved' })}
+                      <button type="button" disabled={busy === p.id || missingFor(p).length > 0} onClick={() => act(p.id, { status: 'approved' })}
                         className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] text-ink hover:bg-ivory disabled:opacity-50">
                         <Check size={14} /> Approve & publish
                       </button>

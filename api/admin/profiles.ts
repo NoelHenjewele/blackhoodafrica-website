@@ -79,6 +79,13 @@ export async function POST(request: Request) {
   const patch: Record<string, unknown> = {}
   if (body.status && ['approved', 'hidden', 'pending'].includes(body.status)) patch.status = body.status
   if (typeof body.is_minor === 'boolean') patch.is_minor = body.is_minor
+  if (patch.status === 'approved') {
+    // Same rule as the /admin button: no empty profiles on the public site.
+    const { data: full } = await db.from('profiles').select('board, city, height_cm').eq('id', body.id).single()
+    const { count } = await db.from('photos').select('id', { count: 'exact', head: true }).eq('profile_id', body.id)
+    if (!count || !full?.board || !full?.city || !full?.height_cm) return Response.json({ ok: false, error: 'incomplete' }, { status: 400 })
+  }
+
   let talentCode: string = current.talent_code
   if (patch.status === 'approved' && !/^BHA-T-\d{4}$/.test(talentCode)) {
     // Applied on the website: her code is still the application number. Approve that Sheet row and get her BHA-T code.

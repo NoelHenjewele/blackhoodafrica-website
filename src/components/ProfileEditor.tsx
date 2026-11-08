@@ -30,7 +30,8 @@ export type ProfileRow = {
 }
 type Photo = { id: string; path: string; position: number }
 
-const textFields: { key: keyof ProfileRow; label: L; placeholder: string }[] = [
+// Everything except Instagram, TikTok and bio is required before a profile can be sent for review.
+const textFields: { key: keyof ProfileRow; label: L; placeholder: string; optional?: boolean }[] = [
   { key: 'city', label: { en: 'City', sw: 'Mji' }, placeholder: 'Dar es Salaam' },
   { key: 'bust', label: { en: 'Bust / chest', sw: 'Kifua' }, placeholder: '86 cm' },
   { key: 'waist', label: { en: 'Waist', sw: 'Kiuno' }, placeholder: '62 cm' },
@@ -38,8 +39,8 @@ const textFields: { key: keyof ProfileRow; label: L; placeholder: string }[] = [
   { key: 'shoes', label: { en: 'Shoes', sw: 'Viatu' }, placeholder: 'EU 39' },
   { key: 'hair', label: { en: 'Hair', sw: 'Nywele' }, placeholder: 'Black' },
   { key: 'eyes', label: { en: 'Eyes', sw: 'Macho' }, placeholder: 'Brown' },
-  { key: 'instagram', label: { en: 'Instagram', sw: 'Instagram' }, placeholder: '@yourname' },
-  { key: 'tiktok', label: { en: 'TikTok', sw: 'TikTok' }, placeholder: '@yourname' },
+  { key: 'instagram', label: { en: 'Instagram', sw: 'Instagram' }, placeholder: '@yourname', optional: true },
+  { key: 'tiktok', label: { en: 'TikTok', sw: 'TikTok' }, placeholder: '@yourname', optional: true },
 ]
 
 const statusText: Record<ProfileRow['status'], L> = {
@@ -76,6 +77,10 @@ export default function ProfileEditor({ profile, onSaved }: { profile: ProfileRo
 
   async function save(e: FormEvent) {
     e.preventDefault()
+    if (photos.length === 0) {
+      setMessage({ ok: false, text: t({ en: 'Add at least one photo first.', sw: 'Weka angalau picha moja kwanza.' }) })
+      return
+    }
     setSaving(true)
     setMessage(null)
     const { data, error } = await supabase
@@ -210,8 +215,8 @@ export default function ProfileEditor({ profile, onSaved }: { profile: ProfileRo
         <h2 className="font-display text-3xl">{t({ en: 'Your details', sw: 'Taarifa zako' })}</h2>
         <div className="grid gap-5 sm:grid-cols-2">
           <div>
-            <label className={label} htmlFor="pf-board">{t({ en: 'Board', sw: 'Orodha' })}</label>
-            <select id="pf-board" value={form.board ?? ''} onChange={(e) => set('board', e.target.value)} className={field}>
+            <label className={label} htmlFor="pf-board">{t({ en: 'Board', sw: 'Orodha' })} *</label>
+            <select id="pf-board" required value={form.board ?? ''} onChange={(e) => set('board', e.target.value)} className={field}>
               <option value="">{t({ en: 'Choose', sw: 'Chagua' })}</option>
               {boards.map((b) => (
                 <option key={b} value={b}>{t(boardLabels[b])}</option>
@@ -219,13 +224,13 @@ export default function ProfileEditor({ profile, onSaved }: { profile: ProfileRo
             </select>
           </div>
           <div>
-            <label className={label} htmlFor="pf-height">{t({ en: 'Height (cm)', sw: 'Urefu (sm)' })}</label>
-            <input id="pf-height" type="number" min={120} max={220} value={form.height_cm ?? ''} onChange={(e) => set('height_cm', e.target.value)} className={field} />
+            <label className={label} htmlFor="pf-height">{t({ en: 'Height (cm)', sw: 'Urefu (sm)' })} *</label>
+            <input id="pf-height" type="number" required min={120} max={220} value={form.height_cm ?? ''} onChange={(e) => set('height_cm', e.target.value)} className={field} />
           </div>
           {textFields.map((f) => (
             <div key={f.key}>
-              <label className={label} htmlFor={`pf-${f.key}`}>{t(f.label)}</label>
-              <input id={`pf-${f.key}`} placeholder={f.placeholder} value={(form[f.key] as string | null) ?? ''} onChange={(e) => set(f.key, e.target.value)} className={field} />
+              <label className={label} htmlFor={`pf-${f.key}`}>{t(f.label)}{f.optional ? '' : ' *'}</label>
+              <input id={`pf-${f.key}`} required={!f.optional} placeholder={f.placeholder} value={(form[f.key] as string | null) ?? ''} onChange={(e) => set(f.key, e.target.value)} className={field} />
             </div>
           ))}
           <div className="sm:col-span-2">
