@@ -2,12 +2,14 @@ import type { L } from '../i18n'
 
 type Programme = { name: L; level: L; price?: L; text: L }
 
-// Prices and dates still to confirm with the team. Leave `price` out to show "Price to be announced".
+// Every academy programme starts with the TZS 60,000 registration (site.academyRegistrationFee).
+const registration: L = { en: 'Registration TZS 60,000', sw: 'Usajili TZS 60,000' }
+
 export const programmes: Programme[] = [
   {
     name: { en: 'Open masterclass', sw: 'Darasa la wazi' },
     level: { en: 'Start here', sw: 'Anza hapa' },
-    price: { en: 'Free', sw: 'Bure' },
+    price: registration,
     text: {
       en: 'A taster session in walk, posing and confidence. Meet the coaches and see if modeling is for you.',
       sw: 'Kipindi cha majaribio cha mwendo, kupozi na kujiamini. Kutana na walimu na ujue kama uanamitindo ni wako.',
@@ -16,6 +18,7 @@ export const programmes: Programme[] = [
   {
     name: { en: 'Weekend bootcamp', sw: 'Mafunzo ya wikendi' },
     level: { en: 'Foundations', sw: 'Misingi' },
+    price: registration,
     text: {
       en: 'An intensive in runway, posing, grooming and camera basics, ending with your first test shoot.',
       sw: 'Mafunzo makali ya jukwaa, kupozi, kujipamba na misingi ya kamera, yakihitimishwa na upigaji picha wako wa kwanza.',
@@ -24,6 +27,7 @@ export const programmes: Programme[] = [
   {
     name: { en: 'Full academy programme', sw: 'Programu kamili ya chuo' },
     level: { en: 'Career track', sw: 'Njia ya kitaaluma' },
+    price: registration,
     text: {
       en: 'The complete path to professional work: portfolio, castings, contracts and a direct route onto our boards.',
       sw: 'Njia kamili ya kazi ya kitaaluma: albamu ya picha, usaili, mikataba na nafasi ya moja kwa moja kwenye orodha zetu.',
