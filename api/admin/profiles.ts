@@ -58,6 +58,26 @@ export async function POST(request: Request) {
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
   if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
   if (new URL(request.url).searchParams.has('certificates')) return certificatesPOST(db, request)
+  if (new URL(request.url).searchParams.has('upload')) {
+    // Team uploads a photo (e.g. a portrait from a shoot) straight onto a model's profile. JPEG base64, shrunk in the browser.
+    const { id, photo, first } = (await request.json().catch(() => ({}))) as { id?: string; photo?: string; first?: boolean }
+    if (!id || !photo) return Response.json({ ok: false }, { status: 400 })
+    const bytes = Buffer.from(photo, 'base64')
+    if (bytes.length > 2_000_000) return Response.json({ ok: false, error: 'too big' }, { status: 400 })
+    const path = `${id}/team-${randomBytes(8).toString('hex')}.jpg`
+    const up = await db.storage.from('talent-photos').upload(path, bytes, { contentType: 'image/jpeg' })
+    if (up.error) return Response.json({ ok: false, error: 'upload' }, { status: 500 })
+    const { data: rows } = await db.from('photos').select('id, position').eq('profile_id', id).order('position')
+    if (first) {
+      // New main picture: shift the others down one place.
+      for (const r of [...(rows ?? [])].reverse()) await db.from('photos').update({ position: r.position + 1 }).eq('id', r.id)
+      await db.from('photos').insert({ profile_id: id, path, position: 0 })
+    } else {
+      const next = rows?.length ? rows[rows.length - 1].position + 1 : 0
+      await db.from('photos').insert({ profile_id: id, path, position: next })
+    }
+    return Response.json({ ok: true })
+  }
   if (new URL(request.url).searchParams.has('message')) {
     // A note from the team (e.g. "please replace photo 2"): saved on her profile, shown on her account page and emailed.
     const { id, note } = (await request.json().catch(() => ({}))) as { id?: string; note?: string }

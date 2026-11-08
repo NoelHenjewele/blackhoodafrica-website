@@ -10,6 +10,7 @@ import AdminReviews from '../components/AdminReviews'
 import AdminCertificates from '../components/AdminCertificates'
 import ResendCode from '../components/ResendCode'
 import TeamMessage from '../components/TeamMessage'
+import AddPhotos from '../components/AddPhotos'
 
 // Team-only review page. English only: it's an internal tool.
 type AdminProfile = {
@@ -242,6 +243,7 @@ export default function AdminPage() {
                   ) : (
                     <p className="mt-5 text-sm text-ivory/75">No photos yet.</p>
                   )}
+                  <AddPhotos token={token} profileId={p.id} onDone={load} />
 
                   <dl className="mt-5 grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-4">
                     {(
