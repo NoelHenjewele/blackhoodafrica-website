@@ -9,6 +9,7 @@ import AdminNews from '../components/AdminNews'
 import AdminReviews from '../components/AdminReviews'
 import AdminCertificates from '../components/AdminCertificates'
 import ResendCode from '../components/ResendCode'
+import TeamMessage from '../components/TeamMessage'
 
 // Team-only review page. English only: it's an internal tool.
 type AdminProfile = {
@@ -35,6 +36,8 @@ type AdminProfile = {
   photos: string[]
   busy: string[]
   consent: { parent_name: string; relationship: string; phone: string; signed_at: string } | null
+  team_note?: string | null
+  team_note_at?: string | null
 }
 
 // What a profile needs before it can go public (Instagram, TikTok and bio are optional).
@@ -230,8 +233,9 @@ export default function AdminPage() {
                   {p.photos.length > 0 ? (
                     <div className="mt-5 flex gap-2 overflow-x-auto pb-2">
                       {p.photos.map((src, i) => (
-                        <a key={src} href={src} target="_blank" rel="noreferrer" className="shrink-0">
+                        <a key={src} href={src} target="_blank" rel="noreferrer" className="relative shrink-0">
                           <img src={src} alt="" loading="lazy" className={`h-40 w-auto object-cover ${i === 0 ? 'ring-2 ring-gold' : ''}`} />
+                          <span className="absolute left-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-gold text-xs font-bold text-ink">{i + 1}</span>
                         </a>
                       ))}
                     </div>
@@ -254,6 +258,7 @@ export default function AdminPage() {
                     ))}
                   </dl>
                   {p.bio && <p className="mt-3 text-sm text-ivory/90">{p.bio}</p>}
+                  <TeamMessage token={token} profile={p} onSent={load} />
                   {p.is_minor && (
                     <p className={`mt-3 text-sm ${p.consent ? 'text-green-300' : 'text-gold'}`}>
                       {p.consent

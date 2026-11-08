@@ -49,6 +49,7 @@ function doPost(e) {
       if (data.type === 'resend-approval') return json(resendApproval(data))
       if (data.type === 'approve-ref') return json(approveByRef(data))
       if (data.type === 'profile-reminder') return json(sendProfileReminder(data))
+      if (data.type === 'team-message') return json(sendTeamMessage(data))
       if (data.type === 'list-bookings') return json(listBookings())
       if (data.type === 'booking-status') return json(setBookingStatus(data))
       return json(handleApplication(data))
@@ -544,6 +545,36 @@ function sendDailyReminders() {
       console.warn('Reminder summary failed: ' + err)
     }
   }
+}
+
+// /admin "Message / request changes": the team's note to a model, also shown on her account page.
+function sendTeamMessage(data) {
+  const email = validEmail(data.email)
+  if (!email) return { ok: false, error: 'no email' }
+  if (MailApp.getRemainingDailyQuota() < 1) return { ok: false, error: 'quota' }
+  const first = clean(data.name).split(' ')[0] || ''
+  const note = String(data.note || '').slice(0, 1000)
+  const link = SITE_URL + '/account'
+  const html =
+    '<p>Hi ' + escapeHtml(first) + ' / Habari ' + escapeHtml(first) + ',</p>' +
+    '<p>A message from the Blackhood Africa team about your profile / Ujumbe kutoka timu ya Blackhood Africa kuhusu wasifu wako:</p>' +
+    '<blockquote style="border-left:3px solid #b8935a;margin:12px 0;padding:8px 14px;background:#faf6ef">' + escapeHtml(note).replace(/\n/g, '<br>') + '</blockquote>' +
+    '<p>Please log in at <a href="' + link + '">' + link + '</a>, make the change and tap “Save and send for review”.<br>' +
+    'Tafadhali ingia ' + link + ', fanya mabadiliko kisha bonyeza “Hifadhi na tuma kwa ukaguzi”.</p>' +
+    '<p>Questions? WhatsApp +255 711 505 927.</p><p>The Blackhood Africa team</p>'
+  try {
+    MailApp.sendEmail({
+      to: email,
+      subject: 'A message about your Blackhood profile / Ujumbe kuhusu wasifu wako',
+      body: 'Hi ' + first + ',\n\nA message from the Blackhood Africa team about your profile:\n\n' + note + '\n\nPlease log in at ' + link + ', make the change and tap "Save and send for review".\n\nQuestions? WhatsApp +255 711 505 927.',
+      htmlBody: html,
+      name: 'Blackhood Africa',
+      replyTo: notifyTo(),
+    })
+  } catch (err) {
+    return { ok: false, error: 'send failed' }
+  }
+  return { ok: true, email: email }
 }
 
 // /admin "Remind her": tells a model what her profile still needs before it can go live.

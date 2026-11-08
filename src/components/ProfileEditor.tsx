@@ -15,6 +15,8 @@ export type ProfileRow = {
   email: string
   status: 'draft' | 'pending' | 'approved' | 'hidden'
   is_minor?: boolean
+  team_note?: string | null
+  team_note_at?: string | null
   board: string | null
   city: string | null
   height_cm: number | null
@@ -98,6 +100,8 @@ export default function ProfileEditor({ profile, onSaved }: { profile: ProfileRo
         instagram: form.instagram,
         tiktok: form.tiktok,
         bio: form.bio,
+        // Saving answers the team's request, so the note clears and the profile goes back for review.
+        ...(profile.team_note ? { team_note: null } : {}),
       })
       .eq('id', profile.id)
       .select()
@@ -164,6 +168,13 @@ export default function ProfileEditor({ profile, onSaved }: { profile: ProfileRo
 
   return (
     <div className="mt-10 space-y-12">
+      {profile.team_note && (
+        <div className="border border-gold bg-gold/10 p-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">{t({ en: 'Message from the Blackhood team', sw: 'Ujumbe kutoka timu ya Blackhood' })}</p>
+          <p className="mt-2 whitespace-pre-line text-ivory">{profile.team_note}</p>
+          <p className="mt-3 text-sm text-ivory/85">{t({ en: 'Make the change below, then tap “Save and send for review”.', sw: 'Fanya mabadiliko hapa chini, kisha bonyeza “Hifadhi na tuma kwa ukaguzi”.' })}</p>
+        </div>
+      )}
       <p className="inline-block border border-gold/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-gold">
         {t(statusText[form.status])}
       </p>

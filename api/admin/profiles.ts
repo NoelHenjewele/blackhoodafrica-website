@@ -58,6 +58,19 @@ export async function POST(request: Request) {
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
   if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
   if (new URL(request.url).searchParams.has('certificates')) return certificatesPOST(db, request)
+  if (new URL(request.url).searchParams.has('message')) {
+    // A note from the team (e.g. "please replace photo 2"): saved on her profile, shown on her account page and emailed.
+    const { id, note } = (await request.json().catch(() => ({}))) as { id?: string; note?: string }
+    const text = String(note ?? '').trim().slice(0, 1000)
+    const { data: p } = await db.from('profiles').select('full_name, email, status').eq('id', id ?? '').maybeSingle()
+    if (!p || !text) return Response.json({ ok: false, error: 'missing' }, { status: 400 })
+    const patch: Record<string, unknown> = { team_note: text, team_note_at: new Date().toISOString() }
+    if (p.status !== 'approved') patch.status = 'draft' // back to her until she makes the changes; live models stay live
+    const { error } = await db.from('profiles').update(patch).eq('id', id!)
+    if (error) return Response.json({ ok: false, error: 'save' }, { status: 500 })
+    const r = await callSheet<{ ok: boolean; error?: string; email?: string }>({ type: 'team-message', email: p.email, name: p.full_name, note: text })
+    return Response.json({ ok: true, emailed: !!r?.ok, email: p.email, emailError: r?.error })
+  }
   if (new URL(request.url).searchParams.has('remind')) {
     // Email a model what her profile still needs (the list comes from /admin).
     const { id, missing } = (await request.json().catch(() => ({}))) as { id?: string; missing?: string }
