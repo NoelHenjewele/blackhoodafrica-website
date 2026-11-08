@@ -6,12 +6,16 @@ import { TalentCard, TalentPlaceholder } from '../TalentCard'
 import { useLang } from '../../i18n'
 
 const SLOTS = 8
+const ALL = 'All'
+const tabs = [ALL, ...boards] as const
+const allLabel = { en: 'All', sw: 'Wote' }
 
 export default function TalentPreview() {
   const { t } = useLang()
   const [talent] = useTalent()
-  const [active, setActive] = useState<Board>('Women')
-  const named = talent.filter((p) => p.boards.includes(active)).slice(0, SLOTS)
+  const [active, setActive] = useState<Board | typeof ALL>(ALL)
+  const named = talent.filter((p) => active === ALL || p.boards.includes(active)).slice(0, SLOTS)
+  const labelOf = (b: Board | typeof ALL) => (b === ALL ? t(allLabel) : t(boardLabels[b]))
   const placeholders = Math.max(0, SLOTS - named.length)
 
   return (
@@ -34,7 +38,7 @@ export default function TalentPreview() {
         </div>
 
         <div className="mt-10 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Talent boards">
-          {boards.map((b) => (
+          {tabs.map((b) => (
             <button
               key={b}
               role="tab"
@@ -46,7 +50,7 @@ export default function TalentPreview() {
                   : 'border-ivory/20 text-ivory/85 hover:border-gold hover:text-gold'
               }`}
             >
-              {t(boardLabels[b])}
+              {labelOf(b)}
             </button>
           ))}
         </div>
@@ -56,7 +60,7 @@ export default function TalentPreview() {
             <TalentCard key={p.slug} person={p} />
           ))}
           {Array.from({ length: placeholders }).map((_, i) => (
-            <TalentPlaceholder key={i} label={t(boardLabels[active])} />
+            <TalentPlaceholder key={i} label={active === ALL ? t({ en: 'Talent', sw: 'Kipaji' }) : labelOf(active)} />
           ))}
         </div>
       </div>
