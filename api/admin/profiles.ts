@@ -40,10 +40,13 @@ export async function GET(request: Request) {
   const { data: busyRows } = await db.from('busy_days').select('profile_id, day').gte('day', today).order('day')
   const { data: consentRows } = await db.from('parent_consents').select('profile_id, parent_name, relationship, phone, signed_at')
   const consent = new Map((consentRows ?? []).map((c) => [c.profile_id, c]))
+  const { data: msgRows } = await db.from('model_messages').select('profile_id, kind, body, sent_by, emailed, created_at').order('created_at', { ascending: false }).limit(500)
+  const messages = new Map<string, unknown[]>()
+  for (const m of msgRows ?? []) messages.set(m.profile_id, [...(messages.get(m.profile_id) ?? []), m])
   const busy = new Map<string, string[]>()
   for (const b of busyRows ?? []) busy.set(b.profile_id, [...(busy.get(b.profile_id) ?? []), b.day])
   const profiles = rows
-    .map((r) => ({ ...r, photos: photos.get(r.id) ?? [], busy: busy.get(r.id) ?? [], consent: consent.get(r.id) ?? null }))
+    .map((r) => ({ ...r, photos: photos.get(r.id) ?? [], busy: busy.get(r.id) ?? [], consent: consent.get(r.id) ?? null, messages: messages.get(r.id) ?? [] }))
     .sort((a, b) => (ORDER[a.status] ?? 9) - (ORDER[b.status] ?? 9))
   return Response.json({ ok: true, profiles })
 }
@@ -53,7 +56,11 @@ type Action = { id?: string; status?: 'approved' | 'hidden' | 'pending'; is_mino
 export async function POST(request: Request) {
   const db = adminClient()
   if (!db) return Response.json({ ok: false }, { status: 503 })
-  if (!(await requireAdmin(db, request))) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
+  const adminEmail = await requireAdmin(db, request)
+  if (!adminEmail) return Response.json({ ok: false, error: 'not admin' }, { status: 403 })
+  // History of what the team sent each model (shown under her profile on /admin).
+  const logMessage = (profile_id: string, kind: string, body: string, emailed: boolean) =>
+    db.from('model_messages').insert({ profile_id, kind, body, emailed, sent_by: adminEmail }).then(() => undefined)
   if (new URL(request.url).searchParams.has('packages')) return packagesPOST(db, request)
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
   if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
@@ -89,7 +96,15 @@ export async function POST(request: Request) {
     const { error } = await db.from('profiles').update(patch).eq('id', id!)
     if (error) return Response.json({ ok: false, error: 'save' }, { status: 500 })
     const r = await callSheet<{ ok: boolean; error?: string; email?: string }>({ type: 'team-message', email: p.email, name: p.full_name, note: text })
+    await logMessage(id!, 'message', text, !!r?.ok)
     return Response.json({ ok: true, emailed: !!r?.ok, email: p.email, emailError: r?.error })
+  }
+  if (new URL(request.url).searchParams.has('logwhatsapp')) {
+    // Copy WhatsApp message pressed: keep a record of the text the team is about to send.
+    const { id, text } = (await request.json().catch(() => ({}))) as { id?: string; text?: string }
+    if (!id || !text) return Response.json({ ok: false }, { status: 400 })
+    await logMessage(id, 'whatsapp', String(text).slice(0, 1500), false)
+    return Response.json({ ok: true })
   }
   if (new URL(request.url).searchParams.has('remind')) {
     // Email a model what her profile still needs (the list comes from /admin).
@@ -97,6 +112,7 @@ export async function POST(request: Request) {
     const { data: p } = await db.from('profiles').select('full_name, email').eq('id', id ?? '').maybeSingle()
     if (!p) return Response.json({ ok: false, error: 'not found' }, { status: 404 })
     const r = await callSheet<{ ok: boolean; error?: string; email?: string }>({ type: 'profile-reminder', email: p.email, name: p.full_name, missing: String(missing ?? '').slice(0, 200) })
+    await logMessage(id!, 'reminder', 'Reminder: still missing ' + String(missing ?? ''), !!r?.ok)
     return Response.json(r ?? { ok: false, error: 'server' })
   }
   if (new URL(request.url).searchParams.has('resend')) {

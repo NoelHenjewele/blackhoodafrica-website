@@ -189,6 +189,7 @@ async function dueReminders(db: NonNullable<ReturnType<typeof adminClient>>, req
     ]
     if (!missing.length) continue
     await db.from('profiles').update({ reminder_count: (r.reminder_count ?? 0) + 1, last_reminded_at: new Date().toISOString() }).eq('id', r.id)
+    await db.from('model_messages').insert({ profile_id: r.id, kind: 'auto-reminder', body: 'Automatic reminder: still missing ' + missing.join(', '), sent_by: 'system', emailed: true })
     due.push({ email: r.email, name: r.full_name, missing: missing.join(', '), code: /^BHA-T-/.test(r.talent_code) ? r.talent_code : '' })
   }
   return Response.json({ ok: true, due })

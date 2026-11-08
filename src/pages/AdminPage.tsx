@@ -39,6 +39,7 @@ type AdminProfile = {
   consent: { parent_name: string; relationship: string; phone: string; signed_at: string } | null
   team_note?: string | null
   team_note_at?: string | null
+  messages?: { kind: string; body: string; sent_by: string | null; emailed: boolean; created_at: string }[]
 }
 
 // What a profile needs before it can go public (Instagram, TikTok and bio are optional).
@@ -111,6 +112,7 @@ export default function AdminPage() {
     }).catch(() => null)
     const r = res ? ((await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; email?: string }) : {}
     setBusy(null)
+    load()
     setNotice({
       id: p.id,
       ok: !!r.ok,
@@ -129,6 +131,11 @@ export default function AdminPage() {
       `Still missing: ${reminderList(p).join(', ')}. ` +
       `Please log in at ${window.location.origin}/account with your email and talent code ${/^BHA-T-/.test(p.talent_code) ? p.talent_code : ''}, ` +
       `add what's missing and tap "Save and send for review". Thank you!`
+    fetch('/api/admin/profiles?logwhatsapp=1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ id: p.id, text: text.replace(/\s+,/g, ',') }),
+    }).then(load, () => {})
     navigator.clipboard?.writeText(text.replace(/\s+,/g, ',')).then(() => {
       setCopied(p.id)
       setTimeout(() => setCopied(null), 2500)

@@ -5,9 +5,14 @@ import { Loader2, Send } from 'lucide-react'
 // It's saved on her profile (gold box on her account page), emailed, and can be copied for WhatsApp.
 type Props = {
   token: string
-  profile: { id: string; full_name: string; talent_code: string; photos: string[]; team_note?: string | null; team_note_at?: string | null }
+  profile: {
+    id: string; full_name: string; talent_code: string; photos: string[]; team_note?: string | null; team_note_at?: string | null
+    messages?: { kind: string; body: string; sent_by: string | null; emailed: boolean; created_at: string }[]
+  }
   onSent: () => void
 }
+
+const kindLabel: Record<string, string> = { message: 'Message', reminder: 'Reminder', 'auto-reminder': 'Auto reminder', whatsapp: 'WhatsApp (copied)' }
 
 export default function TeamMessage({ token, profile, onSent }: Props) {
   const [note, setNote] = useState('')
@@ -48,6 +53,12 @@ export default function TeamMessage({ token, profile, onSent }: Props) {
     const text = `Hi ${first}, this is Blackhood Africa about your profile:\n${note || profile.team_note || ''}\nPlease log in at ${window.location.origin}/account${
       /^BHA-T-/.test(profile.talent_code) ? ` (talent code ${profile.talent_code})` : ''
     }, make the change and tap "Save and send for review". Thank you!`
+    // Keep a record of what was sent on WhatsApp too.
+    fetch('/api/admin/profiles?logwhatsapp=1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ id: profile.id, text }),
+    }).then(onSent, () => {})
     navigator.clipboard?.writeText(text).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2500)
@@ -91,6 +102,25 @@ export default function TeamMessage({ token, profile, onSent }: Props) {
         </button>
       </div>
       {result && <p className={`mt-2 text-sm ${result.ok ? 'text-green-300' : 'text-red-300'}`}>{result.text}</p>}
+      {!!profile.messages?.length && (
+        <details className="mt-4">
+          <summary className="cursor-pointer text-xs font-semibold uppercase tracking-[0.15em] text-ivory/85">
+            History ({profile.messages.length})
+          </summary>
+          <ul className="mt-2 space-y-2 text-sm">
+            {profile.messages.map((m, i) => (
+              <li key={i} className="border-l-2 border-gold/50 pl-3">
+                <p className="text-xs text-ivory/75">
+                  {new Date(m.created_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} ·{' '}
+                  {kindLabel[m.kind] ?? m.kind} · {m.sent_by === 'system' ? 'automatic' : m.sent_by}
+                  {m.kind !== 'whatsapp' && (m.emailed ? ' · emailed' : ' · email not sent')}
+                </p>
+                <p className="whitespace-pre-line">{m.body}</p>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </div>
   )
 }
