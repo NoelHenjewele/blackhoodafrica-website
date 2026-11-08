@@ -10,6 +10,8 @@ export default function NewFaces() {
   // Approved models on the New Faces board (set on their account, approved on /admin).
   const [talent] = useTalent()
   const newFaces = talent.filter((p) => p.boards.includes('New Faces')).slice(0, SLOTS)
+  // Hidden until at least one New Faces model is approved: an empty row of placeholders looks unfinished.
+  if (newFaces.length === 0) return null
   const placeholders = Math.max(0, SLOTS - newFaces.length)
 
   return (
