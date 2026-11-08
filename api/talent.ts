@@ -140,6 +140,7 @@ async function reviewList() {
 // /review form: anyone can send a review. It stays hidden until the team approves it on /admin.
 export async function POST(request: Request) {
   const db = adminClient()
+  if (db && new URL(request.url).searchParams.has('reminders')) return dueReminders(db, request)
   if (!db || !new URL(request.url).searchParams.has('review')) return Response.json({ ok: false }, { status: 400 })
   let body: Record<string, unknown>
   try {
@@ -155,4 +156,40 @@ export async function POST(request: Request) {
   const kind = ['client', 'model', 'parent', 'other'].includes(s('kind', 10)) ? s('kind', 10) : 'other'
   const { error } = await db.from('reviews').insert({ quote, name, role: s('role', 100), kind, contact: s('contact', 100) })
   return Response.json({ ok: !error }, { status: error ? 500 : 200 })
+}
+// Daily "finish your profile" reminders, called by the Sheet script (same shared secret as applications).
+// Picks profiles not yet live that are still missing something, at most every 3 days and 3 times in total,
+// marks them as reminded, and returns who to email and what to list.
+const NEEDED: [string, string][] = [
+  ['board', 'board'], ['city', 'city'], ['height_cm', 'height'], ['bust', 'bust'], ['waist', 'waist'],
+  ['hips', 'hips'], ['shoes', 'shoe size'], ['hair', 'hair colour'], ['eyes', 'eye colour'],
+]
+
+async function dueReminders(db: NonNullable<ReturnType<typeof adminClient>>, request: Request) {
+  const { secret } = (await request.json().catch(() => ({}))) as { secret?: string }
+  if (!process.env.APPLY_SECRET || secret !== process.env.APPLY_SECRET) return Response.json({ ok: false }, { status: 403 })
+
+  const dayAgo = new Date(Date.now() - 24 * 3600_000).toISOString()
+  const threeDaysAgo = new Date(Date.now() - 3 * 24 * 3600_000).toISOString()
+  const { data } = await db
+    .from('profiles')
+    .select('*')
+    .in('status', ['draft', 'pending'])
+    .lt('reminder_count', 3)
+    .lt('created_at', dayAgo)
+    .or(`last_reminded_at.is.null,last_reminded_at.lt.${threeDaysAgo}`)
+  const rows = data ?? []
+  const photos = await photosByProfile(db, rows.map((r) => r.id))
+
+  const due = []
+  for (const r of rows) {
+    const missing = [
+      ...(photos.get(r.id)?.length ? [] : ['a photo']),
+      ...NEEDED.filter(([k]) => !r[k]).map(([, label]) => label),
+    ]
+    if (!missing.length) continue
+    await db.from('profiles').update({ reminder_count: (r.reminder_count ?? 0) + 1, last_reminded_at: new Date().toISOString() }).eq('id', r.id)
+    due.push({ email: r.email, name: r.full_name, missing: missing.join(', '), code: /^BHA-T-/.test(r.talent_code) ? r.talent_code : '' })
+  }
+  return Response.json({ ok: true, due })
 }

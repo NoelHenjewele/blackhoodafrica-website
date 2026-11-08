@@ -38,7 +38,7 @@ function doPost(e) {
     lock.waitLock(30000)
     try {
       // First request after an update switches on the hourly summary, so nobody has to press Run.
-      if (!PropertiesService.getScriptProperties().getProperty('TRIGGERS_V2')) installTrigger()
+      if (!PropertiesService.getScriptProperties().getProperty('TRIGGERS_V3')) installTrigger()
       if (data.type === 'booking') return json(handleBooking(data))
       if (data.type === 'subscribe') return json(handleSubscribe(data))
       if (data.type === 'verify') return json(handleVerify(data))
@@ -516,6 +516,36 @@ function sendApprovalEmail(person, code) {
   }
 }
 
+// Every day at 10:00: asks the website which models still have incomplete profiles (every 3 days, max 3 times),
+// emails each a reminder, then sends the team one summary so they can follow up on WhatsApp.
+function sendDailyReminders() {
+  const secret = PropertiesService.getScriptProperties().getProperty('SHARED_SECRET')
+  if (!secret) return
+  const res = UrlFetchApp.fetch(SITE_URL + '/api/talent?reminders=1', {
+    method: 'post', contentType: 'application/json', payload: JSON.stringify({ secret: secret }), muteHttpExceptions: true,
+  })
+  let due = []
+  try { due = JSON.parse(res.getContentText()).due || [] } catch (err) { return }
+  if (!due.length) return
+  const lines = due.map(function (d) {
+    const r = sendProfileReminder(d)
+    return (r.ok ? '✓ ' : '✗ (email failed) ') + d.name + (d.code ? ' (' + d.code + ')' : '') + ' – missing: ' + d.missing
+  })
+  const to = notifyTo()
+  if (to) {
+    try {
+      MailApp.sendEmail({
+        to: to,
+        subject: 'Profile reminders sent today: ' + due.length,
+        body: 'These models were reminded to finish their profile:\n\n' + lines.join('\n') + '\n\nFollow up on WhatsApp if they don’t act. /admin → Profiles has a “Copy WhatsApp message” button.',
+        name: 'Blackhood Website',
+      })
+    } catch (err) {
+      console.warn('Reminder summary failed: ' + err)
+    }
+  }
+}
+
 // /admin "Remind her": tells a model what her profile still needs before it can go live.
 function sendProfileReminder(data) {
   const email = validEmail(data.email)
@@ -719,7 +749,8 @@ function installTrigger() {
   const handlers = ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction() })
   if (handlers.indexOf('onStatusEdit') === -1) ScriptApp.newTrigger('onStatusEdit').forSpreadsheet(SpreadsheetApp.getActive()).onEdit().create()
   if (handlers.indexOf('sendApplicationDigest') === -1) ScriptApp.newTrigger('sendApplicationDigest').timeBased().everyHours(1).create()
-  PropertiesService.getScriptProperties().setProperty('TRIGGERS_V2', 'yes')
+  if (handlers.indexOf('sendDailyReminders') === -1) ScriptApp.newTrigger('sendDailyReminders').timeBased().atHour(10).everyDays(1).create()
+  PropertiesService.getScriptProperties().setProperty('TRIGGERS_V3', 'yes')
   const props = PropertiesService.getScriptProperties()
   if (!props.getProperty('LAST_DIGEST')) props.setProperty('LAST_DIGEST', String(Date.now()))
 }
