@@ -40,6 +40,7 @@ type AdminProfile = {
   team_note?: string | null
   team_note_at?: string | null
   messages?: { kind: string; body: string; sent_by: string | null; emailed: boolean; created_at: string }[]
+  photoItems?: { id: string; url: string }[]
 }
 
 // What a profile needs before it can go public (Instagram, TikTok and bio are optional).
@@ -103,6 +104,17 @@ export default function AdminPage() {
   useEffect(() => {
     load()
   }, [load])
+
+  async function photoAction(profileId: string, photoId: string, action: 'main' | 'left' | 'right' | 'delete') {
+    setBusy(profileId)
+    await fetch('/api/admin/profiles?photo=1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ profileId, photoId, action }),
+    }).catch(() => null)
+    setBusy(null)
+    await load()
+  }
 
   async function remind(p: AdminProfile) {
     setBusy(p.id)
@@ -241,11 +253,22 @@ export default function AdminPage() {
 
                   {p.photos.length > 0 ? (
                     <div className="mt-5 flex gap-2 overflow-x-auto pb-2">
-                      {p.photos.map((src, i) => (
-                        <a key={src} href={src} target="_blank" rel="noreferrer" className="relative shrink-0">
-                          <img src={src} alt="" loading="lazy" className={`h-40 w-auto object-cover ${i === 0 ? 'ring-2 ring-gold' : ''}`} />
-                          <span className="absolute left-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-gold text-xs font-bold text-ink">{i + 1}</span>
-                        </a>
+                      {(p.photoItems ?? p.photos.map((url) => ({ id: '', url }))).map((ph, i, all) => (
+                        <div key={ph.url} className="shrink-0">
+                          <a href={ph.url} target="_blank" rel="noreferrer" className="relative block">
+                            <img src={ph.url} alt="" loading="lazy" className={`h-40 w-auto object-cover ${i === 0 ? 'ring-2 ring-gold' : ''}`} />
+                            <span className="absolute left-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-gold text-xs font-bold text-ink">{i + 1}</span>
+                            {i === 0 && <span className="absolute bottom-1.5 left-1.5 bg-gold px-1.5 text-[10px] font-bold uppercase text-ink">Main</span>}
+                          </a>
+                          {ph.id && (
+                            <div className="mt-1 flex justify-between gap-1 text-xs">
+                              <button type="button" title="Move left" disabled={i === 0 || busy === p.id} onClick={() => photoAction(p.id, ph.id, 'left')} className="px-1.5 py-1 hover:text-gold disabled:opacity-30">←</button>
+                              <button type="button" title="Make main picture" disabled={i === 0 || busy === p.id} onClick={() => photoAction(p.id, ph.id, 'main')} className="px-1.5 py-1 hover:text-gold disabled:opacity-30">★ Main</button>
+                              <button type="button" title="Move right" disabled={i === all.length - 1 || busy === p.id} onClick={() => photoAction(p.id, ph.id, 'right')} className="px-1.5 py-1 hover:text-gold disabled:opacity-30">→</button>
+                              <button type="button" title="Delete photo" disabled={busy === p.id} onClick={() => confirm('Delete this photo? It is removed from her profile.') && photoAction(p.id, ph.id, 'delete')} className="px-1.5 py-1 text-red-300 hover:text-red-200 disabled:opacity-30">🗑</button>
+                            </div>
+                          )}
+                        </div>
                       ))}
                     </div>
                   ) : (

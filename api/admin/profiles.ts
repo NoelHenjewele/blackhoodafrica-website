@@ -1,7 +1,7 @@
 // Team review API for /admin. Only emails in the `admins` table can use it.
 import { randomBytes } from 'node:crypto'
 import { adminClient, callSheet } from '../_lib/supabaseAdmin.js'
-import { photosByProfile, requireAdmin, slugify } from '../_lib/profiles.js'
+import { photosByProfile, photoUrl, requireAdmin, slugify } from '../_lib/profiles.js'
 
 const ORDER: Record<string, number> = { pending: 0, draft: 1, approved: 2, hidden: 3 }
 
@@ -36,6 +36,12 @@ export async function GET(request: Request) {
   const { data } = await db.from('profiles').select('*').order('updated_at', { ascending: false })
   const rows = data ?? []
   const photos = await photosByProfile(db, rows.map((r) => r.id))
+  // Photo ids too, so the team can reorder or delete them.
+  const { data: photoRows } = rows.length
+    ? await db.from('photos').select('id, profile_id, path, position').in('profile_id', rows.map((r) => r.id)).order('position')
+    : { data: [] }
+  const photoItems = new Map<string, { id: string; url: string }[]>()
+  for (const p of photoRows ?? []) photoItems.set(p.profile_id, [...(photoItems.get(p.profile_id) ?? []), { id: p.id, url: photoUrl(p.path) }])
   const today = new Date().toISOString().slice(0, 10)
   const { data: busyRows } = await db.from('busy_days').select('profile_id, day').gte('day', today).order('day')
   const { data: consentRows } = await db.from('parent_consents').select('profile_id, parent_name, relationship, phone, signed_at')
@@ -46,7 +52,7 @@ export async function GET(request: Request) {
   const busy = new Map<string, string[]>()
   for (const b of busyRows ?? []) busy.set(b.profile_id, [...(busy.get(b.profile_id) ?? []), b.day])
   const profiles = rows
-    .map((r) => ({ ...r, photos: photos.get(r.id) ?? [], busy: busy.get(r.id) ?? [], consent: consent.get(r.id) ?? null, messages: messages.get(r.id) ?? [] }))
+    .map((r) => ({ ...r, photos: photos.get(r.id) ?? [], busy: busy.get(r.id) ?? [], consent: consent.get(r.id) ?? null, messages: messages.get(r.id) ?? [], photoItems: photoItems.get(r.id) ?? [] }))
     .sort((a, b) => (ORDER[a.status] ?? 9) - (ORDER[b.status] ?? 9))
   return Response.json({ ok: true, profiles })
 }
@@ -65,6 +71,26 @@ export async function POST(request: Request) {
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
   if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
   if (new URL(request.url).searchParams.has('certificates')) return certificatesPOST(db, request)
+  if (new URL(request.url).searchParams.has('photo')) {
+    // Team reorders or deletes a model's photo. Position 0 is her main picture.
+    const { profileId, photoId, action } = (await request.json().catch(() => ({}))) as { profileId?: string; photoId?: string; action?: 'main' | 'left' | 'right' | 'delete' }
+    const { data: rows } = await db.from('photos').select('id, path, position').eq('profile_id', profileId ?? '').order('position')
+    const list = rows ?? []
+    const i = list.findIndex((p) => p.id === photoId)
+    if (i < 0) return Response.json({ ok: false, error: 'not found' }, { status: 404 })
+    if (action === 'delete') {
+      await db.from('photos').delete().eq('id', photoId!)
+      await db.storage.from('talent-photos').remove([list[i].path])
+      list.splice(i, 1)
+    } else {
+      const [item] = list.splice(i, 1)
+      const to = action === 'main' ? 0 : action === 'left' ? Math.max(0, i - 1) : Math.min(list.length, i + 1)
+      list.splice(to, 0, item)
+    }
+    for (const [n, p] of list.entries()) if (p.position !== n) await db.from('photos').update({ position: n }).eq('id', p.id)
+    await logMessage(profileId!, 'photo', action === 'delete' ? 'Team deleted a photo' : action === 'main' ? 'Team set a new main picture' : 'Team reordered photos', false)
+    return Response.json({ ok: true })
+  }
   if (new URL(request.url).searchParams.has('upload')) {
     // Team uploads a photo (e.g. a portrait from a shoot) straight onto a model's profile. JPEG base64, shrunk in the browser.
     const { id, photo, first } = (await request.json().catch(() => ({}))) as { id?: string; photo?: string; first?: boolean }
