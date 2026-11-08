@@ -86,7 +86,8 @@ export default function AdminPage() {
 
   const load = useCallback(async () => {
     if (!token) return
-    setState('loading')
+    // Only show the spinner the first time; refreshes keep the list (and any success messages) on screen.
+    setState((s) => (s === 'ready' ? s : 'loading'))
     try {
       const res = await fetch('/api/admin/profiles', { headers: { Authorization: `Bearer ${token}` } })
       if (res.status === 403) return setState('denied')

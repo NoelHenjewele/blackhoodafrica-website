@@ -12,7 +12,7 @@ type Props = {
   onSent: () => void
 }
 
-const kindLabel: Record<string, string> = { message: 'Message', reminder: 'Reminder', 'auto-reminder': 'Auto reminder', whatsapp: 'WhatsApp (copied)' }
+const kindLabel: Record<string, string> = { message: 'Message', reminder: 'Reminder', 'auto-reminder': 'Auto reminder', whatsapp: 'WhatsApp (copied)', photo: 'Photo added' }
 
 export default function TeamMessage({ token, profile, onSent }: Props) {
   const [note, setNote] = useState('')
@@ -113,7 +113,7 @@ export default function TeamMessage({ token, profile, onSent }: Props) {
                 <p className="text-xs text-ivory/75">
                   {new Date(m.created_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} ·{' '}
                   {kindLabel[m.kind] ?? m.kind} · {m.sent_by === 'system' ? 'automatic' : m.sent_by}
-                  {m.kind !== 'whatsapp' && (m.emailed ? ' · emailed' : ' · email not sent')}
+                  {m.kind !== 'whatsapp' && m.kind !== 'photo' && (m.emailed ? ' · emailed' : ' · email not sent')}
                 </p>
                 <p className="whitespace-pre-line">{m.body}</p>
               </li>

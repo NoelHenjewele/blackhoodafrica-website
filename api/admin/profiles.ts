@@ -83,6 +83,7 @@ export async function POST(request: Request) {
       const next = rows?.length ? rows[rows.length - 1].position + 1 : 0
       await db.from('photos').insert({ profile_id: id, path, position: next })
     }
+    await logMessage(id, 'photo', first ? 'Team added a photo as her main picture' : 'Team added a photo', false)
     return Response.json({ ok: true })
   }
   if (new URL(request.url).searchParams.has('message')) {
