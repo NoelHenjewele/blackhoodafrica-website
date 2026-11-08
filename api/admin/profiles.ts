@@ -58,6 +58,14 @@ export async function POST(request: Request) {
   if (new URL(request.url).searchParams.has('news')) return newsPOST(db, request)
   if (new URL(request.url).searchParams.has('reviews')) return reviewsPOST(db, request)
   if (new URL(request.url).searchParams.has('certificates')) return certificatesPOST(db, request)
+  if (new URL(request.url).searchParams.has('remind')) {
+    // Email a model what her profile still needs (the list comes from /admin).
+    const { id, missing } = (await request.json().catch(() => ({}))) as { id?: string; missing?: string }
+    const { data: p } = await db.from('profiles').select('full_name, email').eq('id', id ?? '').maybeSingle()
+    if (!p) return Response.json({ ok: false, error: 'not found' }, { status: 404 })
+    const r = await callSheet<{ ok: boolean; error?: string; email?: string }>({ type: 'profile-reminder', email: p.email, name: p.full_name, missing: String(missing ?? '').slice(0, 200) })
+    return Response.json(r ?? { ok: false, error: 'server' })
+  }
   if (new URL(request.url).searchParams.has('resend')) {
     // Resend the approval email (with the talent code) from the Sheet script.
     const { code } = (await request.json().catch(() => ({}))) as { code?: string }

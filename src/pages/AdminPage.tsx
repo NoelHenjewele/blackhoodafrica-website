@@ -47,6 +47,15 @@ function missingFor(p: AdminProfile) {
   return m
 }
 
+// Everything worth asking her to fill in (the publish rule above, plus measurements).
+function reminderList(p: AdminProfile) {
+  const m = missingFor(p)
+  for (const [k, label] of [['bust', 'bust'], ['waist', 'waist'], ['hips', 'hips'], ['shoes', 'shoe size'], ['hair', 'hair colour'], ['eyes', 'eye colour']] as const) {
+    if (!p[k]) m.push(label)
+  }
+  return m
+}
+
 const filters = ['pending', 'approved', 'hidden', 'draft', 'all'] as const
 const statusStyle: Record<AdminProfile['status'], string> = {
   pending: 'bg-gold text-ink',
@@ -61,6 +70,8 @@ export default function AdminPage() {
   const [state, setState] = useState<'loading' | 'ready' | 'denied' | 'error'>('loading')
   const [filter, setFilter] = useState<(typeof filters)[number]>('pending')
   const [busy, setBusy] = useState<string | null>(null)
+  const [copied, setCopied] = useState<string | null>(null)
+  const [notice, setNotice] = useState<{ id: string; ok: boolean; text: string } | null>(null)
   const [freeOn, setFreeOn] = useState('')
   const [tab, setTab] = useState<'profiles' | 'bookings' | 'packages' | 'castings' | 'news' | 'reviews' | 'certificates'>('profiles')
 
@@ -86,6 +97,39 @@ export default function AdminPage() {
   useEffect(() => {
     load()
   }, [load])
+
+  async function remind(p: AdminProfile) {
+    setBusy(p.id)
+    const res = await fetch('/api/admin/profiles?remind=1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ id: p.id, missing: reminderList(p).join(', ') }),
+    }).catch(() => null)
+    const r = res ? ((await res.json().catch(() => ({}))) as { ok?: boolean; error?: string; email?: string }) : {}
+    setBusy(null)
+    setNotice({
+      id: p.id,
+      ok: !!r.ok,
+      text: r.ok
+        ? `Reminder emailed to ${r.email}.`
+        : r.error === 'quota'
+          ? 'Google’s daily email limit is used up. Use “Copy WhatsApp message” instead.'
+          : 'The email didn’t send. Use “Copy WhatsApp message” instead.',
+    })
+  }
+
+  function copyReminder(p: AdminProfile) {
+    const first = p.full_name.split(' ')[0]
+    const text =
+      `Hi ${first}, this is Blackhood Africa. Your profile is almost ready but we can't publish it yet. ` +
+      `Still missing: ${reminderList(p).join(', ')}. ` +
+      `Please log in at ${window.location.origin}/account with your email and talent code ${/^BHA-T-/.test(p.talent_code) ? p.talent_code : ''}, ` +
+      `add what's missing and tap "Save and send for review". Thank you!`
+    navigator.clipboard?.writeText(text.replace(/\s+,/g, ',')).then(() => {
+      setCopied(p.id)
+      setTimeout(() => setCopied(null), 2500)
+    })
+  }
 
   async function act(id: string, change: { status?: AdminProfile['status']; is_minor?: boolean }) {
     setBusy(id)
@@ -228,6 +272,19 @@ export default function AdminPage() {
                     {p.status !== 'approved' && missingFor(p).length > 0 && (
                       <span className="text-sm text-gold">Can’t publish yet. Missing: {missingFor(p).join(', ')}.</span>
                     )}
+                    {p.status !== 'approved' && reminderList(p).length > 0 && (
+                      <>
+                        <button type="button" disabled={busy === p.id} onClick={() => remind(p)}
+                          className="rounded-full border border-gold/60 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-gold hover:bg-gold hover:text-ink disabled:opacity-50">
+                          Email reminder
+                        </button>
+                        <button type="button" onClick={() => copyReminder(p)}
+                          className="rounded-full border border-ivory/20 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] hover:border-gold">
+                          {copied === p.id ? 'Copied ✓' : 'Copy WhatsApp message'}
+                        </button>
+                      </>
+                    )}
+                    {notice?.id === p.id && <span className={`w-full text-sm ${notice.ok ? 'text-green-300' : 'text-red-300'}`}>{notice.text}</span>}
                     {p.status !== 'approved' && (
                       <button type="button" disabled={busy === p.id || missingFor(p).length > 0} onClick={() => act(p.id, { status: 'approved' })}
                         className="inline-flex items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] text-ink hover:bg-ivory disabled:opacity-50">

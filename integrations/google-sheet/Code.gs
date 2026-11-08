@@ -48,6 +48,7 @@ function doPost(e) {
       if (data.type === 'casting-alert') return json(sendCastingAlert(data))
       if (data.type === 'resend-approval') return json(resendApproval(data))
       if (data.type === 'approve-ref') return json(approveByRef(data))
+      if (data.type === 'profile-reminder') return json(sendProfileReminder(data))
       if (data.type === 'list-bookings') return json(listBookings())
       if (data.type === 'booking-status') return json(setBookingStatus(data))
       return json(handleApplication(data))
@@ -513,6 +514,43 @@ function sendApprovalEmail(person, code) {
     console.warn('Approval email failed: ' + err)
     return false
   }
+}
+
+// /admin "Remind her": tells a model what her profile still needs before it can go live.
+function sendProfileReminder(data) {
+  const email = validEmail(data.email)
+  if (!email) return { ok: false, error: 'no email' }
+  if (MailApp.getRemainingDailyQuota() < 1) return { ok: false, error: 'quota' }
+  const first = clean(data.name).split(' ')[0] || ''
+  const missing = clean(data.missing)
+  const link = SITE_URL + '/account'
+  const en = [
+    'Hi ' + first + ',',
+    'Your Blackhood Africa profile is almost ready, but we can’t publish it yet. Still missing: ' + missing + '.',
+    'Please log in at ' + link + ' with your email and talent code, add what’s missing, and tap “Save and send for review”.',
+    'Need help? WhatsApp us on +255 711 505 927.',
+    'The Blackhood Africa team',
+  ]
+  const sw = [
+    'Habari ' + first + ',',
+    'Wasifu wako wa Blackhood Africa unakaribia kukamilika, lakini bado hatuwezi kuuweka hewani. Bado inakosekana: ' + missing + '.',
+    'Tafadhali ingia ' + link + ' kwa barua pepe na namba yako ya kipaji, jaza kinachokosekana, kisha bonyeza “Hifadhi na tuma kwa ukaguzi”.',
+    'Unahitaji msaada? Tuandikie WhatsApp +255 711 505 927.',
+    'Timu ya Blackhood Africa',
+  ]
+  try {
+    MailApp.sendEmail({
+      to: email,
+      subject: 'Finish your Blackhood profile / Kamilisha wasifu wako',
+      body: en.join('\n\n') + '\n\n— — —\n\n' + sw.join('\n\n'),
+      htmlBody: en.map(function (l) { return '<p>' + escapeHtml(l) + '</p>' }).join('') + '<hr>' + sw.map(function (l) { return '<p>' + escapeHtml(l) + '</p>' }).join(''),
+      name: 'Blackhood Africa',
+      replyTo: notifyTo(),
+    })
+  } catch (err) {
+    return { ok: false, error: 'send failed' }
+  }
+  return { ok: true, email: email }
 }
 
 // /admin "Approve & publish" for a website applicant: marks her Sheet row Approved and gives her a talent code.
